@@ -50,7 +50,7 @@ Ok, version suffisante
 **result if not ok** :
 ```
 ======================================================================
-== 02/03/2020 09:39:47 == Installation des dépendances de hkControl
+== 01/01/2020 01:01:01 == Installation des dépendances de PLUGIN
 ======================================================================
 [   0% ] : Vérification des droits...
 [   9% ] : Vérification des droits : [  OK  ]
@@ -72,7 +72,7 @@ Ok, version suffisante
 ======================================================================
 == KO == Erreur d'Installation
 ======================================================================
-== Erreur à 20% à la ligne 75: la commande `sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libudev-dev lsb-release fdsfqfqfsqdf' pose problème le code de retour 100.
+== Erreur à 20% à la ligne 75: la commande `sudo DEBIAN_FRONTEND=noninteractive apt-get install -y fdsfqfqfsqdf' pose problème le code de retour 100.
 ======================================================================
 Reading package lists...
 Building dependency tree...
