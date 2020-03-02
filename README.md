@@ -73,8 +73,10 @@ Ok, version suffisante
 == KO == Erreur d'Installation
 ======================================================================
 == Erreur à 20% à la ligne 75: la commande `sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libudev-dev lsb-release fdsfqfqfsqdf' pose problème le code de retour 100.
+======================================================================
 Reading package lists...
 Building dependency tree...
 Reading state information...
 E: Unable to locate package fdsfqfqfsqdf
+======================================================================
 ```
