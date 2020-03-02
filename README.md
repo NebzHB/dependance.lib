@@ -1,6 +1,6 @@
 # dependance.lib
 
-Bash Home Made Dependance Library for Jeedom
+Bash HomeMade Dependance Library for Jeedom
 
 **usage** :
 ```
