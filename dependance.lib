@@ -1,0 +1,137 @@
+#!/bin/bash
+
+# Use pre(), step(), try() and post() to perform a series of commands and print
+# [  OK  ] or [ERREUR] at the end. The step as a whole fails if any individual
+# command fails.
+#
+# Example:
+#     BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+#     PLUGIN=$(basename "$(realpath $BASEDIR/..)")
+#     . ${BASEDIR}/dependance.lib
+#     pre
+#     step 10 "Installation des paquets"
+#     try sudo apt-get install this that
+#     try sudo rm -f /oldFolder
+#     silent sudo rm -f /anotherFolderNotSure
+#
+#     step 50 "Configuration du plugin"
+#     try wget ...
+#     post
+
+TMPFOLDER=/tmp/jeedom/${PLUGIN}
+PROGRESS_FILE=${TMPFOLDER}/dependance
+LINE=$(printf '=%.0s' {1..70})
+TAB="echo -n "________""
+
+echo_success() {
+	echo -en "[  OK  ]\r"
+	return 0
+}
+
+echo_failure() {
+	echo -en "[ERREUR]\r"
+	return 1
+}
+
+info() {
+  $TAB
+  if [ "$1" != "echo" ]; then
+    echo "$@"
+  else
+    $@
+  fi;
+  return $?
+}
+
+pre() {
+	echo "$LINE"
+	echo "== $(date +'%d/%m/%Y %H:%M:%S') == Installation des dépendances de $PLUGIN"
+	echo "$LINE"
+	echo
+	touch $TMPFOLDER/errorLog.$$
+	echo 0 > $TMPFOLDER/hasError.$$
+	touch $PROGRESS_FILE
+	STEP_IN_PROG=0
+}
+
+step() {
+	if [[ $STEP_IN_PROG -eq 1 ]]; then
+		STEP=$(($1-1))
+		next
+	fi
+	echo $1 > $PROGRESS_FILE
+	STEP_IN_PROG=1
+	STEP=$1
+	shift
+	STEP_NAME=$@
+	if [[ $STEP -lt 10 ]]; then
+		echo -e "[   $STEP% ] : $STEP_NAME..."
+	else
+		echo -e "[ $STEP% ] : $STEP_NAME..."
+	fi 
+	STEP_OK=0
+	echo $STEP_OK > $TMPFOLDER/step.$$
+}
+
+try() {
+	cmdout="$("$@" 2>&1)"
+	local EXIT_CODE=$?
+	if [[ $EXIT_CODE -ne 0 ]]; then
+		STEP_OK=$EXIT_CODE
+		echo $STEP_OK > $TMPFOLDER/step.$$
+		echo 1 > $TMPFOLDER/hasError.$$
+
+		local LINE=${BASH_LINENO[0]}
+		echo -e "== Erreur à $STEP% à la ligne $LINE: la commande \`$*' pose problème le code de retour $EXIT_CODE." >> $TMPFOLDER/errorLog.$$
+		echo -e "$LINE" >> $TMPFOLDER/errorLog.$$
+		echo -e "$cmdout\n" >> $TMPFOLDER/errorLog.$$
+		echo -e "$LINE" >> $TMPFOLDER/errorLog.$$
+	fi
+	return $EXIT_CODE
+}
+
+silent() {
+	"$@" &>/dev/null
+	return $?
+}
+
+next() {
+	echo $STEP > ${PROGRESS_FILE}
+	[[ -f $TMPFOLDER/step.$$ ]] && { STEP_OK=$(< $TMPFOLDER/step.$$); rm -f $TMPFOLDER/step.$$; }
+	if [[ $STEP -lt 10 ]]; then
+		echo -en "[   $STEP% ] : "
+	else
+		echo -en "[ $STEP% ] : "
+	fi 
+	echo -n "$STEP_NAME : "
+	if [[ $STEP_OK -eq 0 ]]; then
+		echo_success
+	else
+		echo_failure
+	fi
+	echo
+	STEP_IN_PROG=0
+	return $STEP_OK
+}
+
+post() {
+	if [[ $STEP_IN_PROG -eq 1 ]]; then
+		STEP=99
+		next
+	fi
+	echo 100 > ${PROGRESS_FILE}
+	echo "[100%] : Terminé !"
+	[[ -f $TMPFOLDER/hasError.$$ ]] && { hasError=$(< $TMPFOLDER/hasError.$$); rm -f $TMPFOLDER/hasError.$$; }
+	echo
+	if [[ $hasError -eq 1 ]]; then
+		echo "$LINE"
+		echo "== KO == Erreur d'Installation"
+		echo "$LINE"
+		[[ -f $TMPFOLDER/errorLog.$$ ]] && { cat $TMPFOLDER/errorLog.$$; rm -f $TMPFOLDER/errorLog.$$; }
+	else
+		echo "$LINE"
+		echo "== OK == Installation Réussie"
+		echo "$LINE"
+	fi
+	rm -f ${PROGRESS_FILE}
+}
