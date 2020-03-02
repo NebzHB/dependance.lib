@@ -17,6 +17,7 @@ silent sudo rm -f /anotherFolderNotSure
 
 step 50 "Configuration du plugin"
 try wget ...
+echo "not silent"
 post
 ```
 
