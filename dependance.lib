@@ -1,23 +1,5 @@
 #!/bin/bash
 
-# Use pre(), step(), try() and post() to perform a series of commands and print
-# [  OK  ] or [ERREUR] at the end. The step as a whole fails if any individual
-# command fails.
-#
-# Example:
-#     BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-#     PLUGIN=$(basename "$(realpath $BASEDIR/..)")
-#     . ${BASEDIR}/dependance.lib
-#     pre
-#     step 10 "Installation des paquets"
-#     try sudo apt-get install this that
-#     try sudo rm -f /oldFolder
-#     silent sudo rm -f /anotherFolderNotSure
-#
-#     step 50 "Configuration du plugin"
-#     try wget ...
-#     post
-
 TMPFOLDER=/tmp/jeedom/${PLUGIN}
 PROGRESS_FILE=${TMPFOLDER}/dependance
 LINE=$(printf '=%.0s' {1..70})
