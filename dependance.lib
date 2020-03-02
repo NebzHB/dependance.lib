@@ -64,7 +64,10 @@ try() {
 		echo 1 > $TMPFOLDER/hasError.$$
 
 		local LINE=${BASH_LINENO[0]}
-		echo -e "== Erreur à $STEP% à la ligne $LINE: la commande \`$*' pose problème le code de retour $EXIT_CODE." >> $TMPFOLDER/errorLog.$$
+		echo -e "== Erreur à l'étape $STEP_NAME" >> $TMPFOLDER/errorLog.$$
+		echo -e "=== la ligne $LINE" >> $TMPFOLDER/errorLog.$$
+		echo -e "=== la commande \`$*' pose problème" >> $TMPFOLDER/errorLog.$$
+		echo -e "=== le code de retour est $EXIT_CODE." >> $TMPFOLDER/errorLog.$$
 		echo -e "$HR" >> $TMPFOLDER/errorLog.$$
 		echo -e "$cmdout\n" >> $TMPFOLDER/errorLog.$$
 		echo -e "$HR" >> $TMPFOLDER/errorLog.$$
