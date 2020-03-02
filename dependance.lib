@@ -2,7 +2,7 @@
 
 TMPFOLDER=/tmp/jeedom/${PLUGIN}
 PROGRESS_FILE=${TMPFOLDER}/dependance
-LINE=$(printf '=%.0s' {1..70})
+HR=$(printf '=%.0s' {1..70})
 TAB="echo -n "________""
 
 echo_success() {
@@ -26,9 +26,9 @@ info() {
 }
 
 pre() {
-	echo "$LINE"
+	echo "$HR"
 	echo "== $(date +'%d/%m/%Y %H:%M:%S') == Installation des dépendances de $PLUGIN"
-	echo "$LINE"
+	echo "$HR"
 	echo
 	touch $TMPFOLDER/errorLog.$$
 	echo 0 > $TMPFOLDER/hasError.$$
@@ -65,9 +65,9 @@ try() {
 
 		local LINE=${BASH_LINENO[0]}
 		echo -e "== Erreur à $STEP% à la ligne $LINE: la commande \`$*' pose problème le code de retour $EXIT_CODE." >> $TMPFOLDER/errorLog.$$
-		echo -e "$LINE" >> $TMPFOLDER/errorLog.$$
+		echo -e "$HR" >> $TMPFOLDER/errorLog.$$
 		echo -e "$cmdout\n" >> $TMPFOLDER/errorLog.$$
-		echo -e "$LINE" >> $TMPFOLDER/errorLog.$$
+		echo -e "$HR" >> $TMPFOLDER/errorLog.$$
 	fi
 	return $EXIT_CODE
 }
@@ -106,14 +106,14 @@ post() {
 	[[ -f $TMPFOLDER/hasError.$$ ]] && { hasError=$(< $TMPFOLDER/hasError.$$); rm -f $TMPFOLDER/hasError.$$; }
 	echo
 	if [[ $hasError -eq 1 ]]; then
-		echo "$LINE"
+		echo "$HR"
 		echo "== KO == Erreur d'Installation"
-		echo "$LINE"
+		echo "$HR"
 		[[ -f $TMPFOLDER/errorLog.$$ ]] && { cat $TMPFOLDER/errorLog.$$; rm -f $TMPFOLDER/errorLog.$$; }
 	else
-		echo "$LINE"
+		echo "$HR"
 		echo "== OK == Installation Réussie"
-		echo "$LINE"
+		echo "$HR"
 	fi
 	rm -f ${PROGRESS_FILE}
 }
