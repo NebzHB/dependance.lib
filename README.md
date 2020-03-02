@@ -20,7 +20,7 @@ try wget ...
 post
 ```
 
-**result** :
+**result if ok** :
 ```
 ======================================================================
 == 01/01/2020 01:01:01 == Installation des dépendances de PLUGIN
@@ -45,4 +45,36 @@ Ok, version suffisante
 ======================================================================
 == OK == Installation Réussie
 ======================================================================
+```
+
+**result if not ok** :
+```
+======================================================================
+== 02/03/2020 09:39:47 == Installation des dépendances de hkControl
+======================================================================
+[   0% ] : Vérification des droits...
+[   9% ] : Vérification des droits : [  OK  ]
+[ 10% ] : Prérequis...
+[ 19% ] : Prérequis : [  OK  ]
+[ 20% ] : Mise à jour APT et installation des packages nécessaires...
+[ 29% ] : Mise à jour APT et installation des packages nécessaires : [ERREUR]
+[ 30% ] : Vérification de la version de NodeJS installée...
+Version actuelle : v12.14.1
+Ok, version suffisante
+[ 49% ] : Vérification de la version de NodeJS installée : [  OK  ]
+[ 50% ] : Nettoyage anciens modules...
+[ 59% ] : Nettoyage anciens modules : [  OK  ]
+[ 60% ] : Installation des librairies, veuillez patienter svp...
+[ 89% ] : Installation des librairies, veuillez patienter svp : [  OK  ]
+[ 90% ] : Nettoyage...
+[ 99% ] : Nettoyage : [  OK  ]
+[100%] : Terminé !
+======================================================================
+== KO == Erreur d'Installation
+======================================================================
+== Erreur à 20% à la ligne 75: la commande `sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libudev-dev lsb-release fdsfqfqfsqdf' pose problème le code de retour 100.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+E: Unable to locate package fdsfqfqfsqdf
 ```
