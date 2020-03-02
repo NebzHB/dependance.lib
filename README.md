@@ -72,8 +72,11 @@ Ok, version suffisante
 ======================================================================
 == KO == Erreur d'Installation
 ======================================================================
-== Erreur à 20% à la ligne 75: la commande `sudo DEBIAN_FRONTEND=noninteractive apt-get install -y fdsfqfqfsqdf' pose problème le code de retour 100.
-======================================================================
+== Erreur à l'étape : Mise à jour APT et installation des packages nécessaires
+== Ligne 75
+== La commande `sudo DEBIAN_FRONTEND=noninteractive apt-get install -y fdsfqfqfsqdf' pose problème 
+== Le code de retour est 100
+== Le message d'erreur :
 Reading package lists...
 Building dependency tree...
 Reading state information...
