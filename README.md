@@ -25,8 +25,8 @@ post
 ======================================================================
 == 01/01/2020 01:01:01 == Installation des dépendances de PLUGIN
 ======================================================================
-[   0% ] : Vérification des droits...
-[   9% ] : Vérification des droits : [  OK  ]
+[  0% ] : Vérification des droits...
+[  9% ] : Vérification des droits : [  OK  ]
 [ 10% ] : Prérequis...
 [ 19% ] : Prérequis : [  OK  ]
 [ 20% ] : Mise à jour APT et installation des packages nécessaires...
@@ -41,7 +41,7 @@ Ok, version suffisante
 [ 89% ] : Installation des librairies, veuillez patienter svp : [  OK  ]
 [ 90% ] : Nettoyage...
 [ 99% ] : Nettoyage : [  OK  ]
-[100%] : Terminé !
+[100% ] : Terminé !
 ======================================================================
 == OK == Installation Réussie
 ======================================================================
@@ -52,8 +52,8 @@ Ok, version suffisante
 ======================================================================
 == 01/01/2020 01:01:01 == Installation des dépendances de PLUGIN
 ======================================================================
-[   0% ] : Vérification des droits...
-[   9% ] : Vérification des droits : [  OK  ]
+[  0% ] : Vérification des droits...
+[  9% ] : Vérification des droits : [  OK  ]
 [ 10% ] : Prérequis...
 [ 19% ] : Prérequis : [  OK  ]
 [ 20% ] : Mise à jour APT et installation des packages nécessaires...
@@ -68,7 +68,7 @@ Ok, version suffisante
 [ 89% ] : Installation des librairies, veuillez patienter svp : [  OK  ]
 [ 90% ] : Nettoyage...
 [ 99% ] : Nettoyage : [  OK  ]
-[100%] : Terminé !
+[100% ] : Terminé !
 ======================================================================
 == KO == Erreur d'Installation
 ======================================================================
