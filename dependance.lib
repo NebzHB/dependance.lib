@@ -41,6 +41,7 @@ step() {
 		STEP=$(($1-1))
 		next
 	fi
+	[[ $TIMED -eq 1 ]] && startStep=`date +%s`
 	echo $1 > $PROGRESS_FILE
 	STEP_IN_PROG=1
 	STEP=$1
@@ -89,6 +90,7 @@ next() {
 		echo -en "[ $STEP% ] : "
 	fi 
 	echo -n "$STEP_NAME : "
+	[[ $TIMED -eq 1 ]] && echo "[$((`date +%s`-$startStep))sec] : "
 	if [[ $STEP_OK -eq 0 ]]; then
 		echo_success
 	else
