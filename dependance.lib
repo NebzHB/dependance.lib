@@ -90,7 +90,7 @@ next() {
 		echo -en "[ $STEP% ] : "
 	fi 
 	echo -n "$STEP_NAME : "
-	[[ $TIMED -eq 1 ]] && echo "[$((`date +%s`-$startStep))sec] : "
+	[[ $TIMED -eq 1 ]] && echo -n "[$((`date +%s`-$startStep))sec] : "
 	if [[ $STEP_OK -eq 0 ]]; then
 		echo_success
 	else
