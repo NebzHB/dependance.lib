@@ -65,7 +65,7 @@ step() {
 	shift
 	STEP_NAME=$@
 	if [[ $STEP -lt 10 ]]; then
-		echo -e "[   $STEP% ] : $STEP_NAME..."
+		echo -e "[  $STEP% ] : $STEP_NAME..."
 	else
 		echo -e "[ $STEP% ] : $STEP_NAME..."
 	fi 
@@ -102,7 +102,7 @@ next() {
 	echo $STEP > ${PROGRESS_FILE}
 	[[ -f $TMPFOLDER/step.$$ ]] && { STEP_OK=$(< $TMPFOLDER/step.$$); rm -f $TMPFOLDER/step.$$; }
 	if [[ $STEP -lt 10 ]]; then
-		echo -en "[   $STEP% ] : "
+		echo -en "[  $STEP% ] : "
 	else
 		echo -en "[ $STEP% ] : "
 	fi 
@@ -124,7 +124,7 @@ post() {
 		next
 	fi
 	echo 100 > ${PROGRESS_FILE}
-	echo "[100%] : Terminé !"
+	echo "[100% ] : Terminé !"
 	[[ -f $TMPFOLDER/hasError.$$ ]] && { hasError=$(< $TMPFOLDER/hasError.$$); rm -f $TMPFOLDER/hasError.$$; }
 	echo
 	if [[ $hasError -eq 1 ]]; then
