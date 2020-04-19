@@ -74,7 +74,7 @@ step() {
 }
 
 try() {
-	cmdout="$("$@" 2>&1)"
+	cmdout="$($@ 2>&1)"
 	local EXIT_CODE=$?
 	if [[ $EXIT_CODE -ne 0 ]]; then
 		STEP_OK=$EXIT_CODE
