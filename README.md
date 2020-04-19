@@ -22,6 +22,8 @@ try wget ...
 echo "not silent"
 post
 ```
+**IMPORTANT** : dont use try or silent if the command have >> | or > or < (output/input redirections)
+
 
 **result if ok** :
 ```
