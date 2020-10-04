@@ -139,14 +139,14 @@ post() {
 			FOUND_FIX_BROKEN=$?
 			if [[ $FOUND_FIX_BROKEN -eq 0 ]]; then
 				echo "== TROUVÉ 'sudo apt --fix-broken install' dans l'erreur, je lance la commande, attendez 45sec et relancez les dépendances pour réessayer"
-				sudo apt --fix-broken install
+				yes | sudo apt --fix-broken install
 				HAS_FIX=1
 			fi
 			grep "sudo dpkg --configure -a" $TMPFOLDER/errorLog.$$ &>/dev/null
 			FOUND_DPKG_CONFIGURE_A=$?
 			if [[ $FOUND_DPKG_CONFIGURE_A -eq 0 ]]; then
 				echo "== TROUVÉ 'dpkg --configure -a' dans l'erreur, je lance la commande, attendez 45sec et relancez les dépendances pour réessayer"
-				sudo dpkg --configure -a
+				sudo dpkg --configure -a --force-confdef
 				HAS_FIX=1
 			fi
 			
