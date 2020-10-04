@@ -149,6 +149,13 @@ post() {
 				sudo dpkg --configure -a --force-confdef
 				HAS_FIX=1
 			fi
+			grep "EINTEGRITY" $TMPFOLDER/errorLog.$$ &>/dev/null
+			FOUND_EINTEGRITY=$?
+			if [[ $FOUND_EINTEGRITY -eq 0 ]]; then
+				echo "== TROUVÉ 'EINTEGRITY' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
+				sudo npm cache clean --force
+				HAS_FIX=1
+			fi
 			
 			if [[ $HAS_FIX -eq 0 ]]; then
 				#show the error
