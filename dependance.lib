@@ -131,7 +131,32 @@ post() {
 		echo "$HR"
 		echo "== KO == Erreur d'Installation"
 		echo "$HR"
-		[[ -f $TMPFOLDER/errorLog.$$ ]] && { cat $TMPFOLDER/errorLog.$$; rm -f $TMPFOLDER/errorLog.$$; }
+		[[ -f $TMPFOLDER/errorLog.$$ ]] && {
+			HAS_FIX=0
+			echo "== ANALYSE DES ERREURS..."
+			#try to fix if possible
+			grep "apt --fix-broken install" $TMPFOLDER/errorLog.$$ &>/dev/null
+			FOUND_FIX_BROKEN=$?
+			if [[ $FOUND_FIX_BROKEN -eq 0 ]]; then
+				echo "== TROUVÉ 'sudo apt --fix-broken install' dans l'erreur, je lance la commande, attendez 45sec et relancez les dépendances pour réessayer"
+				sudo apt --fix-broken install
+				HAS_FIX=1
+			fi
+			grep "sudo dpkg --configure -a" $TMPFOLDER/errorLog.$$ &>/dev/null
+			FOUND_DPKG_CONFIGURE_A=$?
+			if [[ $FOUND_DPKG_CONFIGURE_A -eq 0 ]]; then
+				echo "== TROUVÉ 'dpkg --configure -a' dans l'erreur, je lance la commande, attendez 45sec et relancez les dépendances pour réessayer"
+				sudo dpkg --configure -a
+				HAS_FIX=1
+			fi
+			
+			if [[ $HAS_FIX -eq 0 ]]; then
+				#show the error
+				echo "== AUCUNE ERREUR CONNUE DÉTECTÉE"
+				cat $TMPFOLDER/errorLog.$$;
+			fi
+			rm -f $TMPFOLDER/errorLog.$$; 
+		}
 	else
 		echo "$HR"
 		echo "== OK == Installation Réussie"
