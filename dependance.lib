@@ -156,6 +156,13 @@ post() {
 				sudo npm cache clean --force
 				HAS_FIX=1
 			fi
+			grep "npm ERR! fatal: could not create leading directories of '/root/.npm/_cacache/tmp/" $TMPFOLDER/errorLog.$$ &>/dev/null
+			FOUND_E128=$?
+			if [[ $FOUND_E128 -eq 0 ]]; then
+				echo "== TROUVÉ 'code 128' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
+				sudo chown -R root:root /root/.npm
+				HAS_FIX=1
+			fi
 			
 			if [[ $HAS_FIX -eq 0 ]]; then
 				#show the error
