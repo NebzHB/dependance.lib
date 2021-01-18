@@ -90,7 +90,11 @@ E: Unable to locate package fdsfqfqfsqdf
 ```
 
 Auto fix for this common errors :
+
  `apt --fix-broken install`
+ 
  `sudo dpkg --configure -a`
+ 
  `EINTEGRITY`
+ 
  `npm ERR! fatal: could not create leading directories of '/root/.npm/_cacache/tmp/'`
