@@ -23,7 +23,7 @@ try wget ...
 echo "not silent"
 post
 ```
-**IMPORTANT** : dont use try or silent if the command have >> | or > or < (output/input redirections), or in the last part
+**IMPORTANT** : dont use try or silent if the command have >> | or > or < (output/input redirections), or in the last part of a piped command
 
 
 **result if ok** :
