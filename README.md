@@ -15,6 +15,7 @@ pre
 step 10 "Installation des paquets"
 try sudo apt-get install this that
 try sudo rm -f /oldFolder
+wget http://aScript.com/script.sh | try sudo -E bash -
 silent sudo rm -f /anotherFolderNotSure
 
 step 50 "Configuration du plugin"
@@ -22,7 +23,7 @@ try wget ...
 echo "not silent"
 post
 ```
-**IMPORTANT** : dont use try or silent if the command have >> | or > or < (output/input redirections)
+**IMPORTANT** : dont use try or silent if the command have >> | or > or < (output/input redirections), or in the last part
 
 
 **result if ok** :
