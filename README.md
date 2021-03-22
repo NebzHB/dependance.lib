@@ -25,6 +25,8 @@ post
 ```
 **IMPORTANT** : dont use try or silent if the command have >> | or > or < (output/input redirections), or in the last part of a piped command
 
+try : will try the commands of the line and catch errors (and display them)
+silent : no matter if the commands fails 
 
 **result if ok** :
 ```
