@@ -101,3 +101,5 @@ Auto fix for this common errors :
  `EINTEGRITY`
  
  `npm ERR! fatal: could not create leading directories of '/root/.npm/_cacache/tmp/'`
+ 
+ `changed its 'Suite' value from 'testing' to 'oldstable'`
