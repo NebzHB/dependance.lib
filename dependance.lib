@@ -163,6 +163,13 @@ post() {
 				sudo chown -R root:root /root/.npm
 				HAS_FIX=1
 			fi
+			grep "changed its 'Suite' value from 'testing' to 'oldstable'" $TMPFOLDER/errorLog.$$ &>/dev/null
+			FOUND_OLDSTABLE=$?
+			if [[ $FOUND_OLDSTABLE -eq 0 ]]; then
+				echo "== TROUVÉ 'changed its 'Suite' value from 'testing' to 'oldstable'' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
+				sudo apt-get --allow-releaseinfo-change update
+				HAS_FIX=1
+			fi
 			
 			if [[ $HAS_FIX -eq 0 ]]; then
 				#show the error
