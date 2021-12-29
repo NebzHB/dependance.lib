@@ -156,7 +156,7 @@ post() {
 		if [ "$LANG_DEP" = "fr" ];then
 			echo "== KO == Erreur d'Installation"
 		else
-			echo "== KO == Installatino Error"
+			echo "== KO == Installation Error"
 		fi
 		echo "$HR"
 		[[ -f $TMPFOLDER/errorLog.$$ ]] && {
