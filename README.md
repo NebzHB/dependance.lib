@@ -29,7 +29,9 @@ try : will try the commands of the line and catch errors (and display them at th
 
 silent : no matter if the commands fails, it'll be silent
 
+
 add LANG_DEP=en before the `. ${BASEDIR}/dependance.lib` line if you want messages in english instead of french.
+
 **example** :
 ```
 ######################### INCLUSION LIB ##########################
@@ -43,7 +45,9 @@ LANG_DEP=en
 pre
 ```
 
+
 add TIMED=1 before the `. ${BASEDIR}/dependance.lib` line to time each step.
+
 **example** :
 ```
 ######################### INCLUSION LIB ##########################
@@ -56,6 +60,7 @@ TIMED=1
 
 pre
 ```
+
 
 **result if ok** :
 ```
