@@ -43,15 +43,15 @@ LANG_DEP=en
 pre
 ```
 
-add TIMED=1 after the second `#####...` line (before the `pre`) to time each step.
+add TIMED=1 before the `. ${BASEDIR}/dependance.lib` line to time each step.
 **example** :
 ```
 ######################### INCLUSION LIB ##########################
 BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib -O $BASEDIR/dependance.lib &>/dev/null
 PLUGIN=$(basename "$(realpath $BASEDIR/..)")
-. ${BASEDIR}/dependance.lib
 TIMED=1
+. ${BASEDIR}/dependance.lib
 ##################################################################
 
 pre
