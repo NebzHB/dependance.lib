@@ -51,8 +51,8 @@ BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib -O $BASEDIR/dependance.lib &>/dev/null
 PLUGIN=$(basename "$(realpath $BASEDIR/..)")
 . ${BASEDIR}/dependance.lib
-##################################################################
 TIMED=1
+##################################################################
 
 pre
 ```
