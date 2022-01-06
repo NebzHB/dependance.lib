@@ -25,8 +25,42 @@ post
 ```
 **IMPORTANT** : dont use try or silent if the command have >> | or > or < (output/input redirections), or in the last part of a piped command
 
-try : will try the commands of the line and catch errors (and display them)
-silent : no matter if the commands fails 
+try : will try the commands of the line and catch errors (and display them at the end)
+
+silent : no matter if the commands fails, it'll be silent
+
+
+add LANG_DEP=en before the `. ${BASEDIR}/dependance.lib` line if you want messages in english instead of french.
+
+**example** :
+```
+######################### INCLUSION LIB ##########################
+BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib -O $BASEDIR/dependance.lib &>/dev/null
+PLUGIN=$(basename "$(realpath $BASEDIR/..)")
+LANG_DEP=en
+. ${BASEDIR}/dependance.lib
+##################################################################
+
+pre
+```
+
+
+add TIMED=1 before the `. ${BASEDIR}/dependance.lib` line to time each step.
+
+**example** :
+```
+######################### INCLUSION LIB ##########################
+BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib -O $BASEDIR/dependance.lib &>/dev/null
+PLUGIN=$(basename "$(realpath $BASEDIR/..)")
+TIMED=1
+. ${BASEDIR}/dependance.lib
+##################################################################
+
+pre
+```
+
 
 **result if ok** :
 ```
