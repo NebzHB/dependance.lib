@@ -211,18 +211,17 @@ post() {
 				sudo chown -R root:root /root/.npm
 				HAS_FIX=1
 			fi
-			grep "changed its 'Suite' value from 'testing' to 'oldstable'" $TMPFOLDER/errorLog.$$ &>/dev/null
-			FOUND_OLDSTABLE=$?
-			if [[ $FOUND_OLDSTABLE -eq 0 ]]; then
+			grep "changed its 'Suite' value from" $TMPFOLDER/errorLog.$$ &>/dev/null
+			FOUND_SUITECHANGED=$?
+			if [[ $FOUND_SUITECHANGED -eq 0 ]]; then
 				if [ "$LANG_DEP" = "fr" ];then
-					echo "== TROUVÉ -changed its 'Suite' value from 'testing' to 'oldstable'- dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
+					echo "== TROUVÉ -changed its 'Suite' value from- dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
 				else
-					echo "== FOUND -changed its 'Suite' value from 'testing' to 'oldstable'- in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
+					echo "== FOUND -changed its 'Suite' value from- in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
 				fi
 				sudo apt-get --allow-releaseinfo-change update
 				HAS_FIX=1
 			fi
-			
 			if [[ $HAS_FIX -eq 0 ]]; then
 				#show the error
 				if [ "$LANG_DEP" = "fr" ];then
