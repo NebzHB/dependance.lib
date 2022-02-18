@@ -1,7 +1,10 @@
 #!/bin/bash
 
 TMPFOLDER=/tmp/jeedom/${PLUGIN}
-PROGRESS_FILE=${TMPFOLDER}/dependance
+if [ -z $PROGRESS_FILENAME ]; then
+    PROGRESS_FILENAME=dependance
+fi
+PROGRESS_FILE=${TMPFOLDER}/${PROGRESS_FILENAME}
 HR=$(printf '=%.0s' {1..70})
 TAB="echo -n "________""
 
