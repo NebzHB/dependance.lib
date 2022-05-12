@@ -236,6 +236,17 @@ post() {
 				sudo rm -fR /usr/local/lib/node_modules/.homebridge-config-ui-x-*
 				HAS_FIX=1
 			fi
+			grep "npm ERR! dest /usr/lib/node_modules/.homebridge-config-ui-x-" $TMPFOLDER/errorLog.$$ &>/dev/null
+			FOUND_ENOTEMPTY=$?
+			if [[ $FOUND_ENOTEMPTY -eq 0 ]]; then
+				if [ "$LANG_DEP" = "fr" ];then
+					echo "== TROUVÉ 'ENOTEMPTY' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
+				else
+					echo "== FOUND 'ENOTEMPTY' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
+				fi
+				sudo rm -fR /usr/lib/node_modules/.homebridge-config-ui-x-*
+				HAS_FIX=1
+			fi
 			if [[ $HAS_FIX -eq 0 ]]; then
 				#show the error
 				if [ "$LANG_DEP" = "fr" ];then
