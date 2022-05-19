@@ -40,7 +40,7 @@ show_time() {
     ret+="$sec"
     [[ $min -lt 1 ]] && ret+="sec"
     ret+="]"
-    if [ "$2" != "noEndPoints" ]; then ret+=" : ";fi
+    [ "$2" != "noEndPoints" ] && ret+=" : "
     echo -n "$ret"
 }
 
