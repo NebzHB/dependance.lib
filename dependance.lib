@@ -54,6 +54,7 @@ info() {
 }
 
 pre() {
+	[[ $TIMED -eq 1 ]] && startFull=`date +%s`
 	echo "$HR"
 	if [ "$LANG_DEP" = "fr" ];then
 		echo "== $(date +'%d/%m/%Y %H:%M:%S') == Installation des dépendances de $PLUGIN"
@@ -157,9 +158,11 @@ post() {
 	if [[ $hasError -eq 1 ]]; then
 		echo "$HR"
 		if [ "$LANG_DEP" = "fr" ];then
-			echo "== KO == Erreur d'Installation"
+			echo -n "== KO == Erreur d'Installation"
+			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull))
 		else
-			echo "== KO == Installation Error"
+			echo -n "== KO == Installation Error"
+			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull))
 		fi
 		echo "$HR"
 		[[ -f $TMPFOLDER/errorLog.$$ ]] && {
@@ -261,9 +264,11 @@ post() {
 	else
 		echo "$HR"
 		if [ "$LANG_DEP" = "fr" ];then
-			echo "== OK == Installation Réussie"
+			echo -n "== OK == Installation Réussie"
+			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull))
 		else
-			echo "== OK == Installation Successful"
+			echo -n "== OK == Installation Successful"
+			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull))
 		fi
 		echo "$HR"
 	fi
