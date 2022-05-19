@@ -160,9 +160,11 @@ post() {
 		if [ "$LANG_DEP" = "fr" ];then
 			echo -n "== KO == Erreur d'Installation"
 			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull))
+			echo
 		else
 			echo -n "== KO == Installation Error"
 			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull))
+			echo
 		fi
 		echo "$HR"
 		[[ -f $TMPFOLDER/errorLog.$$ ]] && {
@@ -266,9 +268,11 @@ post() {
 		if [ "$LANG_DEP" = "fr" ];then
 			echo -n "== OK == Installation Réussie"
 			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull))
+			echo
 		else
 			echo -n "== OK == Installation Successful"
 			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull))
+			echo
 		fi
 		echo "$HR"
 	fi
