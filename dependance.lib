@@ -160,11 +160,11 @@ post() {
 		echo "$HR"
 		if [ "$LANG_DEP" = "fr" ];then
 			echo -n "== KO == Erreur d'Installation "
-			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) noEndPoints
+			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
 			echo
 		else
 			echo -n "== KO == Installation Error "
-			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) noEndPoints
+			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
 			echo
 		fi
 		echo "$HR"
@@ -268,11 +268,11 @@ post() {
 		echo "$HR"
 		if [ "$LANG_DEP" = "fr" ];then
 			echo -n "== OK == Installation Réussie "
-			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) noEndPoints
+			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
 			echo
 		else
 			echo -n "== OK == Installation Successful "
-			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) noEndPoints
+			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
 			echo
 		fi
 		echo "$HR"
