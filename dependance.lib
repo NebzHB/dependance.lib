@@ -37,7 +37,8 @@ show_time() {
     fi
     ret="["
     [[ $min -gt 0 ]] && ret+="$min:"
-    ret+="$sec"
+    [[ $min -gt 0 ]] && ret+=$(printf "%02d" $sec)
+    [[ $min -lt 1 ]] && ret+="$sec"
     [[ $min -lt 1 ]] && ret+="sec"
     ret+="]"
     [ "$2" != "noEndPoints" ] && ret+=" : "
