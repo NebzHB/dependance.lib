@@ -18,7 +18,7 @@ echo_success() {
 }
 
 echo_failure() {
-	if [ "$LANG_DEP" = "fr" ];then
+	if [ "$LANG_DEP" = "fr" ]; then
 		echo -en "[ERREUR]\r"
 	else
 		echo -en "[ERROR]\r"
@@ -29,7 +29,7 @@ echo_failure() {
 show_time() {
     num=$1
     min=0
-    if((num>59));then
+    if((num>59)); then
         ((sec=num%60))
         ((min=num/60))
     else
@@ -58,7 +58,7 @@ info() {
 pre() {
 	[[ $TIMED -eq 1 ]] && startFull=`date +%s`
 	echo "$HR"
-	if [ "$LANG_DEP" = "fr" ];then
+	if [ "$LANG_DEP" = "fr" ]; then
 		echo "== $(date +'%d/%m/%Y %H:%M:%S') == Installation des dépendances de $PLUGIN"
 	else
 		echo "== $(date +'%d/%m/%Y %H:%M:%S') == Dependencies installation for $PLUGIN"
@@ -100,7 +100,7 @@ try() {
 		echo 1 > $TMPFOLDER/hasError.$$
 
 		local LINE=${BASH_LINENO[0]}
-		if [ "$LANG_DEP" = "fr" ];then
+		if [ "$LANG_DEP" = "fr" ]; then
 			echo -e "== Erreur à l'étape : $STEP_NAME" >> $TMPFOLDER/errorLog.$$
 			echo -e "== Ligne $LINE" >> $TMPFOLDER/errorLog.$$
 			echo -e "== La commande \`$*' pose problème" >> $TMPFOLDER/errorLog.$$
@@ -150,7 +150,7 @@ post() {
 		next
 	fi
 	echo 100 > ${PROGRESS_FILE}
-	if [ "$LANG_DEP" = "fr" ];then
+	if [ "$LANG_DEP" = "fr" ]; then
 		echo "[100% ] : Terminé !"
 	else
 		echo "[100% ] : Finished !"
@@ -159,7 +159,7 @@ post() {
 	echo
 	if [[ $hasError -eq 1 ]]; then
 		echo "$HR"
-		if [ "$LANG_DEP" = "fr" ];then
+		if [ "$LANG_DEP" = "fr" ]; then
 			echo -n "== KO == Erreur d'Installation "
 			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
 			echo
@@ -171,7 +171,7 @@ post() {
 		echo "$HR"
 		[[ -f $TMPFOLDER/errorLog.$$ ]] && {
 			HAS_FIX=0
-			if [ "$LANG_DEP" = "fr" ];then
+			if [ "$LANG_DEP" = "fr" ]; then
 				echo "== ANALYSE DES ERREURS..."
 			else
 				echo "== ANALYSING ERRORS..."
@@ -180,7 +180,7 @@ post() {
 			grep "apt --fix-broken install" $TMPFOLDER/errorLog.$$ &>/dev/null
 			FOUND_FIX_BROKEN=$?
 			if [[ $FOUND_FIX_BROKEN -eq 0 ]]; then
-				if [ "$LANG_DEP" = "fr" ];then
+				if [ "$LANG_DEP" = "fr" ]; then
 					echo "== TROUVÉ 'sudo apt --fix-broken install' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
 				else
 					echo "== FOUND 'sudo apt --fix-broken install' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
@@ -191,7 +191,7 @@ post() {
 			grep "sudo dpkg --configure -a" $TMPFOLDER/errorLog.$$ &>/dev/null
 			FOUND_DPKG_CONFIGURE_A=$?
 			if [[ $FOUND_DPKG_CONFIGURE_A -eq 0 ]]; then
-				if [ "$LANG_DEP" = "fr" ];then
+				if [ "$LANG_DEP" = "fr" ]; then
 					echo "== TROUVÉ 'dpkg --configure -a' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
 				else
 					echo "== FOUND 'dpkg --configure -a' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
@@ -202,7 +202,7 @@ post() {
 			grep "EINTEGRITY" $TMPFOLDER/errorLog.$$ &>/dev/null
 			FOUND_EINTEGRITY=$?
 			if [[ $FOUND_EINTEGRITY -eq 0 ]]; then
-				if [ "$LANG_DEP" = "fr" ];then
+				if [ "$LANG_DEP" = "fr" ]; then
 					echo "== TROUVÉ 'EINTEGRITY' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
 				else
 					echo "== FOUND 'EINTEGRITY' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
@@ -213,7 +213,7 @@ post() {
 			grep "npm ERR! fatal: could not create leading directories of '/root/.npm/_cacache/tmp/" $TMPFOLDER/errorLog.$$ &>/dev/null
 			FOUND_E128=$?
 			if [[ $FOUND_E128 -eq 0 ]]; then
-				if [ "$LANG_DEP" = "fr" ];then
+				if [ "$LANG_DEP" = "fr" ]; then
 					echo "== TROUVÉ 'code 128' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
 				else
 					echo "== FOUND 'code 128' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
@@ -224,7 +224,7 @@ post() {
 			grep "changed its 'Suite' value from" $TMPFOLDER/errorLog.$$ &>/dev/null
 			FOUND_SUITECHANGED=$?
 			if [[ $FOUND_SUITECHANGED -eq 0 ]]; then
-				if [ "$LANG_DEP" = "fr" ];then
+				if [ "$LANG_DEP" = "fr" ]; then
 					echo "== TROUVÉ -changed its 'Suite' value from- dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
 				else
 					echo "== FOUND -changed its 'Suite' value from- in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
@@ -235,7 +235,7 @@ post() {
 			grep "npm ERR! dest /usr/local/lib/node_modules/.homebridge-config-ui-x-" $TMPFOLDER/errorLog.$$ &>/dev/null
 			FOUND_ENOTEMPTY=$?
 			if [[ $FOUND_ENOTEMPTY -eq 0 ]]; then
-				if [ "$LANG_DEP" = "fr" ];then
+				if [ "$LANG_DEP" = "fr" ]; then
 					echo "== TROUVÉ 'ENOTEMPTY' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
 				else
 					echo "== FOUND 'ENOTEMPTY' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
@@ -246,7 +246,7 @@ post() {
 			grep "npm ERR! dest /usr/lib/node_modules/.homebridge-config-ui-x-" $TMPFOLDER/errorLog.$$ &>/dev/null
 			FOUND_ENOTEMPTY=$?
 			if [[ $FOUND_ENOTEMPTY -eq 0 ]]; then
-				if [ "$LANG_DEP" = "fr" ];then
+				if [ "$LANG_DEP" = "fr" ]; then
 					echo "== TROUVÉ 'ENOTEMPTY' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
 				else
 					echo "== FOUND 'ENOTEMPTY' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
@@ -254,9 +254,20 @@ post() {
 				sudo rm -fR /usr/lib/node_modules/.homebridge-config-ui-x-*
 				HAS_FIX=1
 			fi
+			npm -v | grep "8.11.0" &>/dev/null
+			NPM_8110=$?
+			if [[ $NPM_8110 -eq 0 ]]; then
+				if [ "$LANG_DEP" = "fr" ]; then
+					echo "== TROUVÉ 'NPM 8.11.0', je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
+				else
+					echo "== FOUND 'NPM 8.11.0', launching countermeasures, wait 45sec and relaunch dependencies to retry"
+				fi
+				sudo npm install -g npm@8.12.2
+				HAS_FIX=1
+			fi
 			if [[ $HAS_FIX -eq 0 ]]; then
 				#show the error
-				if [ "$LANG_DEP" = "fr" ];then
+				if [ "$LANG_DEP" = "fr" ]; then
 					echo "== AUCUNE ERREUR CONNUE DÉTECTÉE"
 				else
 					echo "== NO KNOWN ERROR DETECTED"
@@ -267,7 +278,7 @@ post() {
 		}
 	else
 		echo "$HR"
-		if [ "$LANG_DEP" = "fr" ];then
+		if [ "$LANG_DEP" = "fr" ]; then
 			echo -n "== OK == Installation Réussie "
 			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
 			echo
