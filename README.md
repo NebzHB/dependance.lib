@@ -126,17 +126,25 @@ E: Unable to locate package fdsfqfqfsqdf
 ======================================================================
 ```
 
-#NEW
+# NEW
+
 Implement your own error handler add your handler anywhere after the *include header* and before the `post` :
-`add_fix_handler "string to grep in errors" "message to show if the string is found" "command to fix the error"`
+
+```
+add_fix_handler "string to grep in errors" "message to show if the string is found" "command to fix the error"
+```
+
 or
+
 ```
 myFixFunc() {
   echo "this is my fix"
 }
 add_fix_handler "string to grep in errors" "message to show if the string is found" myFixFunc
 ```
+
 or
+
 ```
 myTestFunct() {
   echo "this is my test"
@@ -144,11 +152,21 @@ myTestFunct() {
 }
 add_fix_handler myTestFunct "message to show if the string is found" "command to fix the error"
 ```
+
 or
-`add_fix_handler "string to grep in errors" "*short message to show in default message" "command to fix the error"`
+
+```
+add_fix_handler "string to grep in errors" "*short message to show in default message" "command to fix the error"
+```
+
 or
-`add_fix_handler "string to grep in errors" "" "command to fix the error" #empty message uses the default message with "string to grep in errors"`
-real life examples :
+
+```
+add_fix_handler "string to grep in errors" "" "command to fix the error" #empty message uses the default message with "string to grep in errors"
+```
+
+Real life examples :
+
 ```
 test_npm_ver() {
 	npm -v | grep "8.11.0" &>/dev/null
@@ -159,7 +177,9 @@ fix_npm_ver() {
 }
 add_fix_handler test_npm_ver "*NPM 8.11.0" fix_npm_ver
 ```
+
 or
+
 ```
 add_fix_handler "EINTEGRITY" "" "sudo npm cache clean --force"
 ```
