@@ -126,6 +126,44 @@ E: Unable to locate package fdsfqfqfsqdf
 ======================================================================
 ```
 
+#NEW
+Implement your own error handler add your handler anywhere after the *include header* and before the `post` :
+`add_fix_handler "string to grep in errors" "message to show if the string is found" "command to fix the error"`
+or
+```
+myFixFunc() {
+  echo "this is my fix"
+}
+add_fix_handler "string to grep in errors" "message to show if the string is found" myFixFunc
+```
+or
+```
+myTestFunct() {
+  echo "this is my test"
+  return 0; # 0 will trigger the fix, other return don't trigger the fix
+}
+add_fix_handler myTestFunct "message to show if the string is found" "command to fix the error"
+```
+or
+`add_fix_handler "string to grep in errors" "*short message to show in default message" "command to fix the error"`
+or
+`add_fix_handler "string to grep in errors" "" "command to fix the error" #empty message uses the default message with "string to grep in errors"`
+real life examples :
+```
+test_npm_ver() {
+	npm -v | grep "8.11.0" &>/dev/null
+	return $?
+}
+fix_npm_ver() {
+	sudo npm install -g npm@8.12.2
+}
+add_fix_handler test_npm_ver "*NPM 8.11.0" fix_npm_ver
+```
+or
+```
+add_fix_handler "EINTEGRITY" "" "sudo npm cache clean --force"
+```
+
 Auto fix for this common errors :
 
  `apt --fix-broken install`
