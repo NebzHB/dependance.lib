@@ -254,17 +254,7 @@ post() {
 				sudo rm -fR /usr/lib/node_modules/.homebridge-config-ui-x-*
 				HAS_FIX=1
 			fi
-			npm -v | grep "8.11.0" &>/dev/null
-			NPM_8110=$?
-			if [[ $NPM_8110 -eq 0 ]]; then
-				if [ "$LANG_DEP" = "fr" ]; then
-					echo "== TROUVÉ 'NPM 8.11.0', je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
-				else
-					echo "== FOUND 'NPM 8.11.0', launching countermeasures, wait 45sec and relaunch dependencies to retry"
-				fi
-				sudo npm install -g npm@8.12.2
-				HAS_FIX=1
-			fi
+
 			if [[ $HAS_FIX -eq 0 ]]; then
 				#show the error
 				if [ "$LANG_DEP" = "fr" ]; then
