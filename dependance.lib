@@ -271,13 +271,3 @@ add_fix_handler "changed its 'Suite' value from" "*changed its Suite value from"
 # check for ENOTEMPTY error in both /usr and /usr/local
 add_fix_handler "npm ERR! dest /usr/local/lib/node_modules/.homebridge-config-ui-x-" "*ENOTEMPTY" "sudo rm -fR /usr/local/lib/node_modules/.homebridge-config-ui-x-*"
 add_fix_handler "npm ERR! dest /usr/lib/node_modules/.homebridge-config-ui-x-" "*ENOTEMPTY" "sudo rm -fR /usr/lib/node_modules/.homebridge-config-ui-x-*"
-
-# check if npm is v8.11.0, if it is upgrade to 8.12.2 (bug in 8.11.0)
-test_npm_ver() {
-	npm -v | grep "8.11.0" &>/dev/null
-	return $?
-}
-fix_npm_ver() {
-	sudo npm install -g npm@8.12.2
-}
-add_fix_handler test_npm_ver "*NPM 8.11.0" fix_npm_ver
