@@ -194,8 +194,4 @@ Auto fix alreday included for this common errors :
  
  dkpg `sudo dpkg --configure -a`
  
- npm `EINTEGRITY`
- 
- npm `npm ERR! fatal: could not create leading directories of '/root/.npm/_cacache/tmp/'`
- 
  apt `changed its 'Suite' value from 'testing' to 'oldstable'`
