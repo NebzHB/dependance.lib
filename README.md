@@ -128,7 +128,7 @@ E: Unable to locate package fdsfqfqfsqdf
 
 # NEW
 
-Implement your own error handler add your handler anywhere after the *include header* and before the `post` :
+Implement your own error handler : add your handler anywhere after the *include header* and before the `post` cmd :
 
 ```
 add_fix_handler "string to grep in errors" "message to show if the string is found" "command to fix the error"
@@ -148,7 +148,7 @@ or
 ```
 myTestFunct() {
   echo "this is my test"
-  return 0; # 0 will trigger the fix, other return don't trigger the fix
+  return 0; # 0 will trigger the fix, other return value don't trigger the fix
 }
 add_fix_handler myTestFunct "message to show if the string is found" "command to fix the error"
 ```
@@ -184,14 +184,14 @@ or
 add_fix_handler "EINTEGRITY" "" "sudo npm cache clean --force"
 ```
 
-Auto fix for this common errors :
+Auto fix alreday included for this common errors :
 
- `apt --fix-broken install`
+ apt `apt --fix-broken install`
  
- `sudo dpkg --configure -a`
+ dkpg `sudo dpkg --configure -a`
  
- `EINTEGRITY`
+ npm `EINTEGRITY`
  
- `npm ERR! fatal: could not create leading directories of '/root/.npm/_cacache/tmp/'`
+ npm `npm ERR! fatal: could not create leading directories of '/root/.npm/_cacache/tmp/'`
  
- `changed its 'Suite' value from 'testing' to 'oldstable'`
+ apt `changed its 'Suite' value from 'testing' to 'oldstable'`
