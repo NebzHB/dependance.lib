@@ -128,6 +128,10 @@ E: Unable to locate package fdsfqfqfsqdf
 
 # NEW
 
+Now the library remove repo.jeedom.com repository (accepted by Alex from Jeedom) and disable temporary deb-multimedia repository (often problem source)
+
+
+
 Implement your own error handler : add your handler anywhere after the *include header* and before the `post` cmd :
 
 ```
