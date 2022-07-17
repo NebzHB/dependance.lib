@@ -78,6 +78,22 @@ pre() {
 	echo 0 > $TMPFOLDER/hasError.$$
 	touch $PROGRESS_FILE
 	STEP_IN_PROG=0
+	
+	# disable temporary deb-multimedia
+	if ls /etc/apt/sources.list.d/deb-multimedia.list* &>/dev/null; then
+	  if [ ! -f "/etc/apt/sources.list.d/deb-multimedia.list.disabledBy${PLUGIN}" ]; then
+	    if [ -f "/etc/apt/sources.list.d/deb-multimedia.list" ]; then
+	      sudo mv /etc/apt/sources.list.d/deb-multimedia.list /etc/apt/sources.list.d/deb-multimedia.list.disabledBy${PLUGIN} &>/dev/null
+	    fi
+	  fi
+	fi
+	# remove repo.jeedom.com (validated by Alex)
+	if [ -f "/media/boot/multiboot/meson64_odroidc2.dtb.linux" ]; then
+	    hasRepo=$(grep "repo.jeedom.com" /etc/apt/sources.list | wc -l)
+	    if [ "$hasRepo" -ne "0" ]; then
+	      sudo apt-add-repository -r "deb http://repo.jeedom.com/odroid/ stable main" &>/dev/null
+	    fi
+	fi
 }
 
 step() {
@@ -191,6 +207,10 @@ fix () {
 }
 
 post() {
+	# enable deb-multimedia
+	if [ -f /etc/apt/sources.list.d/deb-multimedia.list.disabledBy${PLUGIN} ]; then
+		sudo mv /etc/apt/sources.list.d/deb-multimedia.list.disabledBy${PLUGIN} /etc/apt/sources.list.d/deb-multimedia.list &>/dev/null
+	fi
 	if [[ $STEP_IN_PROG -eq 1 ]]; then
 		STEP=99
 		next
