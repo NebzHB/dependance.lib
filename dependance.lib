@@ -2,7 +2,7 @@
 
 TMPFOLDER=/tmp/jeedom/${PLUGIN}
 if [ -z $PROGRESS_FILENAME ]; then
-    PROGRESS_FILENAME=dependance
+	PROGRESS_FILENAME=dependance
 fi
 PROGRESS_FILE=${TMPFOLDER}/${PROGRESS_FILENAME}
 HR=$(printf '=%.0s' {1..70})
@@ -11,7 +11,7 @@ declare -A fix_handlers
 h=0 # no fix_handlers
 
 if [ -z $LANG_DEP ]; then
-    LANG_DEP=fr
+	LANG_DEP=fr
 fi
 
 add_fix_handler() {
@@ -170,40 +170,40 @@ next() {
 }
 
 fix () {
-    for (( f=0;f<h;f++ )); do # for each fix handler
-	if [ "$(type -t ${fix_handlers[$f,grepOrFunct]})" = "function" ]; then
-		${fix_handlers[$f,grepOrFunct]}
-		SEARCH_RESULT=$?
-	else
-		grep "${fix_handlers[$f,grepOrFunct]}" $TMPFOLDER/errorLog.$$ &>/dev/null
-		SEARCH_RESULT=$?
-	fi
-        if [ "$SEARCH_RESULT" -eq 0 ];then
-		if [ "${fix_handlers[$f,msgIfFound]}" = "" ]; then
-			if [ "$LANG_DEP" = "fr" ]; then
-				echo "== TROUVÉ '${fix_handlers[$f,grepOrFunct]}' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
-			else
-				echo "== FOUND '${fix_handlers[$f,grepOrFunct]}' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
-			fi
+	for (( f=0;f<h;f++ )); do # for each fix handler
+		if [ "$(type -t ${fix_handlers[$f,grepOrFunct]})" = "function" ]; then
+			${fix_handlers[$f,grepOrFunct]}
+			SEARCH_RESULT=$?
 		else
-			if [ "${fix_handlers[$f,msgIfFound]:0:1}" = "*" ]; then
+			grep "${fix_handlers[$f,grepOrFunct]}" $TMPFOLDER/errorLog.$$ &>/dev/null
+			SEARCH_RESULT=$?
+		fi
+		if [ "$SEARCH_RESULT" -eq 0 ];then
+			if [ "${fix_handlers[$f,msgIfFound]}" = "" ]; then
 				if [ "$LANG_DEP" = "fr" ]; then
-					echo "== TROUVÉ '${fix_handlers[$f,msgIfFound]:1}' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
+					echo "== TROUVÉ '${fix_handlers[$f,grepOrFunct]}' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
 				else
-					echo "== FOUND '${fix_handlers[$f,msgIfFound]:1}' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
+					echo "== FOUND '${fix_handlers[$f,grepOrFunct]}' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
 				fi
 			else
-				echo ${fix_handlers[$f,msgIfFound]}
+				if [ "${fix_handlers[$f,msgIfFound]:0:1}" = "*" ]; then
+					if [ "$LANG_DEP" = "fr" ]; then
+						echo "== TROUVÉ '${fix_handlers[$f,msgIfFound]:1}' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
+					else
+						echo "== FOUND '${fix_handlers[$f,msgIfFound]:1}' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
+					fi
+				else
+					echo ${fix_handlers[$f,msgIfFound]}
+				fi
 			fi
+			if [ "$(type -t ${fix_handlers[$f,fixStringOrFunct]})" = "function" ]; then
+				${fix_handlers[$f,fixStringOrFunct]}
+			else
+				eval ${fix_handlers[$f,fixStringOrFunct]}
+			fi
+			HAS_FIX=1
 		fi
-		if [ "$(type -t ${fix_handlers[$f,fixStringOrFunct]})" = "function" ]; then
-			${fix_handlers[$f,fixStringOrFunct]}
-		else
-			eval ${fix_handlers[$f,fixStringOrFunct]}
-		fi
-		HAS_FIX=1
-        fi
-    done
+	done
 }
 
 post() {
