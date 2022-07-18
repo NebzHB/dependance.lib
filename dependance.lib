@@ -15,10 +15,10 @@ if [ -z $LANG_DEP ]; then
 fi
 
 add_fix_handler() {
-    fix_handlers[$h,grepOrFunct]=$1
-    fix_handlers[$h,msgIfFound]=$2
-    fix_handlers[$h,fixStringOrFunct]=$3
-    ((h++))
+	fix_handlers[$h,grepOrFunct]=$1
+	fix_handlers[$h,msgIfFound]=$2
+	fix_handlers[$h,fixStringOrFunct]=$3
+	((h++))
 }
 
 echo_success() {
@@ -36,32 +36,32 @@ echo_failure() {
 }
 
 show_time() {
-    num=$1
-    min=0
-    if((num>59)); then
-        ((sec=num%60))
-        ((min=num/60))
-    else
-        ((sec=num))
-    fi
-    ret="["
-    [[ $min -gt 0 ]] && ret+="$min:"
-    [[ $min -gt 0 ]] && ret+=$(printf "%02d" $sec)
-    [[ $min -lt 1 ]] && ret+="$sec"
-    [[ $min -lt 1 ]] && ret+="sec"
-    ret+="]"
-    [ "$2" != "noEndPoints" ] && ret+=" : "
-    echo -n "$ret"
+	num=$1
+	min=0
+	if((num>59)); then
+		((sec=num%60))
+		((min=num/60))
+	else
+		((sec=num))
+	fi
+	ret="["
+	[[ $min -gt 0 ]] && ret+="$min:"
+	[[ $min -gt 0 ]] && ret+=$(printf "%02d" $sec)
+	[[ $min -lt 1 ]] && ret+="$sec"
+	[[ $min -lt 1 ]] && ret+="sec"
+	ret+="]"
+	[ "$2" != "noEndPoints" ] && ret+=" : "
+	echo -n "$ret"
 }
 
 info() {
-  $TAB
-  if [ "$1" != "echo" ]; then
-    echo "$@"
-  else
-    $@
-  fi;
-  return $?
+	$TAB
+	if [ "$1" != "echo" ]; then
+		echo "$@"
+	else
+		$@
+	fi;
+	return $?
 }
 
 pre() {
@@ -81,18 +81,18 @@ pre() {
 	
 	# disable temporary deb-multimedia
 	if ls /etc/apt/sources.list.d/deb-multimedia.list* &>/dev/null; then
-	  if [ ! -f "/etc/apt/sources.list.d/deb-multimedia.list.disabledBy${PLUGIN}" ]; then
-	    if [ -f "/etc/apt/sources.list.d/deb-multimedia.list" ]; then
-	      sudo mv /etc/apt/sources.list.d/deb-multimedia.list /etc/apt/sources.list.d/deb-multimedia.list.disabledBy${PLUGIN} &>/dev/null
-	    fi
-	  fi
+		if [ ! -f "/etc/apt/sources.list.d/deb-multimedia.list.disabledBy${PLUGIN}" ]; then
+			if [ -f "/etc/apt/sources.list.d/deb-multimedia.list" ]; then
+				sudo mv /etc/apt/sources.list.d/deb-multimedia.list /etc/apt/sources.list.d/deb-multimedia.list.disabledBy${PLUGIN} &>/dev/null
+			fi
+		fi
 	fi
 	# remove repo.jeedom.com (validated by Alex)
 	if [ -f "/media/boot/multiboot/meson64_odroidc2.dtb.linux" ]; then
-	    hasRepo=$(grep "repo.jeedom.com" /etc/apt/sources.list | wc -l)
-	    if [ "$hasRepo" -ne "0" ]; then
-	      sudo apt-add-repository -r "deb http://repo.jeedom.com/odroid/ stable main" &>/dev/null
-	    fi
+		hasRepo=$(grep "repo.jeedom.com" /etc/apt/sources.list | wc -l)
+		if [ "$hasRepo" -ne "0" ]; then
+			sudo apt-add-repository -r "deb http://repo.jeedom.com/odroid/ stable main" &>/dev/null
+		fi
 	fi
 }
 
@@ -171,37 +171,37 @@ next() {
 
 fix () {
     for (( f=0;f<h;f++ )); do # for each fix handler
-		if [ "$(type -t ${fix_handlers[$f,grepOrFunct]})" = "function" ]; then
-			${fix_handlers[$f,grepOrFunct]}
-			SEARCH_RESULT=$?
-		else
-			grep "${fix_handlers[$f,grepOrFunct]}" $TMPFOLDER/errorLog.$$ &>/dev/null
-			SEARCH_RESULT=$?
-		fi
+	if [ "$(type -t ${fix_handlers[$f,grepOrFunct]})" = "function" ]; then
+		${fix_handlers[$f,grepOrFunct]}
+		SEARCH_RESULT=$?
+	else
+		grep "${fix_handlers[$f,grepOrFunct]}" $TMPFOLDER/errorLog.$$ &>/dev/null
+		SEARCH_RESULT=$?
+	fi
         if [ "$SEARCH_RESULT" -eq 0 ];then
-			if [ "${fix_handlers[$f,msgIfFound]}" = "" ]; then
+		if [ "${fix_handlers[$f,msgIfFound]}" = "" ]; then
+			if [ "$LANG_DEP" = "fr" ]; then
+				echo "== TROUVÉ '${fix_handlers[$f,grepOrFunct]}' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
+			else
+				echo "== FOUND '${fix_handlers[$f,grepOrFunct]}' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
+			fi
+		else
+			if [ "${fix_handlers[$f,msgIfFound]:0:1}" = "*" ]; then
 				if [ "$LANG_DEP" = "fr" ]; then
-					echo "== TROUVÉ '${fix_handlers[$f,grepOrFunct]}' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
+					echo "== TROUVÉ '${fix_handlers[$f,msgIfFound]:1}' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
 				else
-					echo "== FOUND '${fix_handlers[$f,grepOrFunct]}' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
+					echo "== FOUND '${fix_handlers[$f,msgIfFound]:1}' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
 				fi
 			else
-				if [ "${fix_handlers[$f,msgIfFound]:0:1}" = "*" ]; then
-					if [ "$LANG_DEP" = "fr" ]; then
-						echo "== TROUVÉ '${fix_handlers[$f,msgIfFound]:1}' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
-					else
-						echo "== FOUND '${fix_handlers[$f,msgIfFound]:1}' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
-					fi
-				else
-					echo ${fix_handlers[$f,msgIfFound]}
-				fi
+				echo ${fix_handlers[$f,msgIfFound]}
 			fi
-			if [ "$(type -t ${fix_handlers[$f,fixStringOrFunct]})" = "function" ]; then
-				${fix_handlers[$f,fixStringOrFunct]}
-			else
-				eval ${fix_handlers[$f,fixStringOrFunct]}
-			fi
-			HAS_FIX=1
+		fi
+		if [ "$(type -t ${fix_handlers[$f,fixStringOrFunct]})" = "function" ]; then
+			${fix_handlers[$f,fixStringOrFunct]}
+		else
+			eval ${fix_handlers[$f,fixStringOrFunct]}
+		fi
+		HAS_FIX=1
         fi
     done
 }
