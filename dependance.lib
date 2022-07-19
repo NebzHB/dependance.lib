@@ -147,7 +147,7 @@ try() {
 	return $EXIT_CODE
 }
 
-tryAndStop() {
+tryOrStop() {
 	try $@
 	local EXIT_CODE=$?
 	if [[ $EXIT_CODE -ne 0 ]]; then
