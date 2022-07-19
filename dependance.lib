@@ -54,14 +54,17 @@ show_time() {
 	echo -n "$ret"
 }
 
+# need to find a use for it...
 info() {
 	$TAB
+	local EXIT_CODE=0
 	if [ "$1" != "echo" ]; then
 		echo "$@"
 	else
 		$@
-	fi;
-	return $?
+		local EXIT_CODE=$?
+	fi
+	return $EXIT_CODE
 }
 
 pre() {
@@ -140,6 +143,16 @@ try() {
 		fi
 		echo -e "$cmdout\n" >> $TMPFOLDER/errorLog.$$
 		echo -e "$HR" >> $TMPFOLDER/errorLog.$$
+	fi
+	return $EXIT_CODE
+}
+
+tryAndStop() {
+	try $@
+	local EXIT_CODE=$?
+	if [[ $EXIT_CODE -ne 0 ]]; then
+		post
+		exit $EXIT_CODE
 	fi
 	return $EXIT_CODE
 }
