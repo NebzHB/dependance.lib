@@ -27,6 +27,8 @@ post
 
 try : will try the commands of the line and catch errors (and display them at the end)
 
+tryOrStop : will try the commands of the line and catch errors (and stop the script by displaying the errors)
+
 silent : no matter if the commands fails, it'll be silent
 
 
@@ -128,11 +130,13 @@ E: Unable to locate package fdsfqfqfsqdf
 
 # NEW
 
-Now the library remove repo.jeedom.com repository (accepted by Alex from Jeedom) and disable temporary deb-multimedia repository (often problem source)
+- tryOrStop : will try the commands of the line and catch errors (and stop the script by displaying the errors)
 
 
+- Now the library remove repo.jeedom.com repository (accepted by Alex from Jeedom) and disable temporary deb-multimedia repository (often problem source)
 
-Implement your own error handler : add your handler anywhere after the *include header* and before the `post` cmd :
+
+- Implement your own error handler : add your handler anywhere after the *include header* and before the `post` cmd :
 
 ```
 add_fix_handler "string to grep in errors" "message to show if the string is found" "command to fix the error"
