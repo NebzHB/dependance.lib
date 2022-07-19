@@ -36,7 +36,7 @@ silent : no matter if the commands fails, it'll be silent
 post : fix the errors found in error_handlers + display the Footer
 
 
-- add LANG_DEP=en before the `. ${BASEDIR}/dependance.lib` line if you want messages in english instead of french.
+## add LANG_DEP=en before the `. ${BASEDIR}/dependance.lib` line if you want messages in english instead of french.
 
 **example** :
 ```
@@ -52,7 +52,7 @@ pre
 ```
 
 
-- add TIMED=1 before the `. ${BASEDIR}/dependance.lib` line to time each step.
+## add TIMED=1 before the `. ${BASEDIR}/dependance.lib` line to time each step.
 
 **example** :
 ```
