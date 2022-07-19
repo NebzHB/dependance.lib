@@ -23,7 +23,9 @@ try wget ...
 echo "not silent"
 post
 ```
-**IMPORTANT** : dont use try or silent if the command have >> | or > or < (output/input redirections), or in the last part of a piped command
+**IMPORTANT** : dont use try or tryOrStop or silent if the command have >> | or > or < (output/input redirections), or in the last part of a piped command
+
+pre : display the header + prepare some stuff
 
 try : will try the commands of the line and catch errors (and display them at the end)
 
@@ -31,8 +33,10 @@ tryOrStop : will try the commands of the line and catch errors (and stop the scr
 
 silent : no matter if the commands fails, it'll be silent
 
+post : fix the errors found in error_handlers + display the Footer
 
-add LANG_DEP=en before the `. ${BASEDIR}/dependance.lib` line if you want messages in english instead of french.
+
+- add LANG_DEP=en before the `. ${BASEDIR}/dependance.lib` line if you want messages in english instead of french.
 
 **example** :
 ```
@@ -48,7 +52,7 @@ pre
 ```
 
 
-add TIMED=1 before the `. ${BASEDIR}/dependance.lib` line to time each step.
+- add TIMED=1 before the `. ${BASEDIR}/dependance.lib` line to time each step.
 
 **example** :
 ```
@@ -173,7 +177,7 @@ or
 add_fix_handler "string to grep in errors" "" "command to fix the error" #empty message uses the default message with "string to grep in errors"
 ```
 
-Real life examples :
+- Real life examples :
 
 ```
 test_npm_ver() {
@@ -192,7 +196,7 @@ or
 add_fix_handler "EINTEGRITY" "" "sudo npm cache clean --force"
 ```
 
-Auto fix alreday included for this common errors :
+- Auto fix alreday included for this common errors :
 
  apt `apt --fix-broken install`
  
