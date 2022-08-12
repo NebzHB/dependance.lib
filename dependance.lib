@@ -294,3 +294,7 @@ add_fix_handler "sudo dpkg --configure -a" "*dpkg --configure -a" "sudo dpkg --c
 
 # if debian have changed the Suite value, allow releaseinfo change in apt-get
 add_fix_handler "changed its 'Suite' value from" "*changed its Suite value from" "sudo apt-get --allow-releaseinfo-change update"
+
+# debian signatures are missing
+add_fix_handler "NO_PUBKEY 648ACFD622F3D138" "" "sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138"
+add_fix_handler "NO_PUBKEY 0E98404D386FA1D9" "" "sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9"
