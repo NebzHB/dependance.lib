@@ -97,6 +97,14 @@ pre() {
 			sudo apt-add-repository -r "deb http://repo.jeedom.com/odroid/ stable main" &>/dev/null
 		fi
 	fi
+	# remove repo.distrib.works
+	DISTRIB_WORKS=`grep "repo.distrib.works" /etc/apt/sources.list`
+	if [[ $? -eq 0 ]]; then
+		reAddDistribWorks=1
+		sudo apt-add-repository -r "$DISTRIB_WORKS" &>/dev/null
+	else
+		reAddDistribWorks=0
+	fi
 }
 
 step() {
@@ -223,6 +231,9 @@ post() {
 	# enable deb-multimedia
 	if [ -f /etc/apt/sources.list.d/deb-multimedia.list.disabledBy${PLUGIN} ]; then
 		sudo mv /etc/apt/sources.list.d/deb-multimedia.list.disabledBy${PLUGIN} /etc/apt/sources.list.d/deb-multimedia.list &>/dev/null
+	fi
+	if [[ $reAddDistribWorks -eq 1 ]]; then
+		echo "$DISTRIB_WORKS" >> /etc/apt/sources.list
 	fi
 	if [[ $STEP_IN_PROG -eq 1 ]]; then
 		STEP=99
