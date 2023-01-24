@@ -185,7 +185,7 @@ aptUpdate_BETA() {
 				if [ "$NUM_UPDATE" -eq "$MAX_UPDATE" ]; then
 					echo -e "Trop d'essais ($NUM_UPDATE/$MAX_UPDATE), on sort avec erreur"
 					post
-					#exit $EXIT_CODE
+					exit $EXIT_CODE
 				else
 					rm -f $TMPFOLDER/errorLog.$$
 					echo 0 > $TMPFOLDER/hasError.$$
@@ -196,7 +196,7 @@ aptUpdate_BETA() {
 			echo "END"
 		else
 			post
-			#exit $EXIT_CODE
+			exit $EXIT_CODE
 		fi
 	fi
 	return $EXIT_CODE
