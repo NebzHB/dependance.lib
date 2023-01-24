@@ -81,6 +81,7 @@ pre() {
 	echo 0 > $TMPFOLDER/hasError.$$
 	touch $PROGRESS_FILE
 	STEP_IN_PROG=0
+	NUM_UPDATE=0
 	
 	# disable temporary deb-multimedia
 	if ls /etc/apt/sources.list.d/deb-multimedia.list* &>/dev/null; then
@@ -165,6 +166,42 @@ tryOrStop() {
 	return $EXIT_CODE
 }
 
+aptUpdate_BETA() {
+	MAX_UPDATE=3
+	NUM_UPDATE=$((NUM_UPDATE + 1))
+	try sudo apt-get update
+	local EXIT_CODE=$?
+	if [[ $EXIT_CODE -ne 0 ]]; then
+		APT_ERROR=`grep -P "Err(.)?:" $TMPFOLDER/errorLog.$$`
+		if [ ! -z "$APT_ERROR" ]; then
+			echo "Erreur détectée dans $TMPFOLDER/errorLog.$$ sur la ligne : $APT_ERROR"
+			APT_SRC_ERROR=`echo $APT_ERROR | sed 's/.*http/http/g' | sed 's/ Release//g'`
+			
+			echo "Recherche de la source $APT_SRC_ERROR dans /etc/apt/sources.list"
+			APT_LINE_ERROR=`grep "$APT_SRC_ERROR" /etc/apt/sources.list`
+			if [ ! -z "$APT_LINE_ERROR" ] && [ $? -eq 0 ]; then
+				echo "Trouvée, on la retire temporairement de sources.list"
+				sudo sed -i '\|'"${APT_SRC_ERROR}"'|d' /etc/apt/sources.list
+				if [ "$NUM_UPDATE" -eq "$MAX_UPDATE" ]; then
+					echo -e "Trop d'essais ($NUM_UPDATE/$MAX_UPDATE), on sort avec erreur"
+					post
+					#exit $EXIT_CODE
+				else
+					rm -f $TMPFOLDER/errorLog.$$
+					echo 0 > $TMPFOLDER/hasError.$$
+					echo -e "Relance de apt-get update...\n"
+					aptUpdate
+				fi
+			fi
+			echo "END"
+		else
+			post
+			#exit $EXIT_CODE
+		fi
+	fi
+	return $EXIT_CODE
+}
+
 silent() {
 	"$@" &>/dev/null
 	return $?
@@ -234,6 +271,9 @@ post() {
 	fi
 	if [[ $reAddDistribWorks -eq 1 ]]; then
 		sudo echo "$DISTRIB_WORKS" >> /etc/apt/sources.list
+	fi
+	if [[ ! -z $APT_LINE_ERROR ]]; then
+		sudo echo "$APT_LINE_ERROR" >> /etc/apt/sources.list
 	fi
 	if [[ $STEP_IN_PROG -eq 1 ]]; then
 		STEP=99
