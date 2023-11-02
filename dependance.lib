@@ -227,6 +227,20 @@ next() {
 	return $STEP_OK
 }
 
+fixNO_PUBKEY() {
+	missing_keys=$(grep 'NO_PUBKEY' $TMPFOLDER/errorLog.$$ | sed -n 's/.*NO_PUBKEY \([^ ]*\).*/\1/p')
+
+	for key in $missing_keys; do
+		if [ "$LANG_DEP" = "fr" ]; then
+			echo "== TROUVÉ 'NO_PUBKEY $key' dans l'erreur, je lance une commande pour corriger (ignorez le warning), attendez 45sec et relancez les dépendances pour réessayer"
+		else
+			echo "== FOUND 'NO_PUBKEY $key' in error, launching countermeasures (ignore warning), wait 45sec and relaunch dependencies to retry"
+		fi
+		sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "$key"
+		HAS_FIX=1
+	done
+}
+
 fix () {
 	for (( f=0;f<h;f++ )); do # for each fix handler
 		if [ "$(type -t ${fix_handlers[$f,grepOrFunct]})" = "function" ]; then
@@ -262,6 +276,8 @@ fix () {
 			HAS_FIX=1
 		fi
 	done
+
+	fixNO_PUBKEY
 }
 
 post() {
@@ -345,9 +361,3 @@ add_fix_handler "sudo dpkg --configure -a" "*dpkg --configure -a" "sudo dpkg --c
 
 # if debian have changed the Suite value, allow releaseinfo change in apt-get
 add_fix_handler "changed its 'Suite' value from" "*changed its Suite value from" "sudo apt-get --allow-releaseinfo-change update"
-
-# debian signatures are missing
-add_fix_handler "NO_PUBKEY 648ACFD622F3D138" "" "sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138"
-add_fix_handler "NO_PUBKEY 0E98404D386FA1D9" "" "sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9"
-add_fix_handler "NO_PUBKEY 2F59B5F99B1BE0B4" "" "sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 2F59B5F99B1BE0B4"
-add_fix_handler "NO_PUBKEY 1655A0AB68576280" "" "sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1655A0AB68576280"
