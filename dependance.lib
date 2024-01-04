@@ -22,30 +22,22 @@ add_fix_handler() {
 }
 
 echo_success() {
-	if [ "$COLOR" = "true" ]; then
-		echo -n "<span class='label label-xs label-success'>"
-	fi
+	[ "$COLOR" = "true" ] && echo -n "<span class='label label-xs label-success'>"
 	echo -n "[  OK  ]"
-	if [ "$COLOR" = "true" ]; then
-		echo -n "</span>"
-	fi
-	echo -en "\r"
+	[ "$COLOR" = "true" ] && echo -n "</span>"
+	echo
 	return 0
 }
 
 echo_failure() {
-	if [ "$COLOR" = "true" ]; then
-		echo -n "<span class='label label-xs label-danger'>"
-	fi
+	[ "$COLOR" = "true" ] && echo -n "<span class='label label-xs label-danger'>"
 	if [ "$LANG_DEP" = "fr" ]; then
 		echo -n "[Erreur]"
 	else
 		echo -n "[ERROR]"
 	fi
-	if [ "$COLOR" = "true" ]; then
-		echo -n "</span>"
-	fi
-	echo -en "\r"
+	[ "$COLOR" = "true" ] && echo -n "</span>"
+	echo
 	return 1
 }
 
@@ -319,15 +311,16 @@ post() {
 	echo
 	if [[ $hasError -eq 1 ]]; then
 		echo "$HR"
+		[ "$COLOR" = "true" ] && echo -n "<span class='label label-xs label-danger'>"
 		if [ "$LANG_DEP" = "fr" ]; then
 			echo -n "== KO == Erreur d'Installation "
 			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
-			echo
 		else
 			echo -n "== KO == Installation Error "
 			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
-			echo
 		fi
+		[ "$COLOR" = "true" ] && echo -n "</span>"
+		echo
 		echo "$HR"
 		[[ -f $TMPFOLDER/errorLog.$$ ]] && {
 			HAS_FIX=0
@@ -353,15 +346,16 @@ post() {
 		}
 	else
 		echo "$HR"
+		[ "$COLOR" = "true" ] && echo -n "<span class='label label-xs label-success'>"
 		if [ "$LANG_DEP" = "fr" ]; then
 			echo -n "== OK == Installation Réussie "
 			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
-			echo
 		else
 			echo -n "== OK == Installation Successful "
 			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
-			echo
 		fi
+		[ "$COLOR" = "true" ] && echo -n "</span>"
+		echo
 		echo "$HR"
 	fi
 	rm -f ${PROGRESS_FILE}
