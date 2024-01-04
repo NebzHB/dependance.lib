@@ -37,6 +37,20 @@ post : fix the errors found in error_handlers + display the Footer
 
 ### add COLOR=true before the `. ${BASEDIR}/dependance.lib` line if you want green OK and red KO
 
+**example** :
+```
+######################### INCLUSION LIB ##########################
+BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib -O $BASEDIR/dependance.lib &>/dev/null
+PLUGIN=$(basename "$(realpath $BASEDIR/..)")
+COLOR=true
+. ${BASEDIR}/dependance.lib
+##################################################################
+
+pre
+```
+
+
 ### add LANG_DEP=en before the `. ${BASEDIR}/dependance.lib` line if you want messages in english instead of french.
 
 **example** :
