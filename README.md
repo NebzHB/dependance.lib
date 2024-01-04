@@ -35,7 +35,7 @@ silent : no matter if the commands fails, it'll be silent
 
 post : fix the errors found in error_handlers + display the Footer
 
-### add COLOR=true before the `. ${BASEDIR}/dependance.lib` line if you want green OK and red KO
+### add COLOR=1 before the `. ${BASEDIR}/dependance.lib` line if you want green OK and red KO
 
 **example** :
 ```
@@ -43,7 +43,7 @@ post : fix the errors found in error_handlers + display the Footer
 BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib -O $BASEDIR/dependance.lib &>/dev/null
 PLUGIN=$(basename "$(realpath $BASEDIR/..)")
-COLOR=true
+COLOR=1
 . ${BASEDIR}/dependance.lib
 ##################################################################
 
@@ -149,7 +149,7 @@ E: Unable to locate package fdsfqfqfsqdf
 
 # NEW
 
-- COLOR=true : will display OK in green and KO in red, more self explainatory
+- COLOR=1 : will display OK in green and KO in red, more self explainatory
 
 - tryOrStop : will try the commands of the line and catch errors (and stop the script by displaying the errors)
 
