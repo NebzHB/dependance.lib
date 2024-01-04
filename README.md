@@ -35,6 +35,7 @@ silent : no matter if the commands fails, it'll be silent
 
 post : fix the errors found in error_handlers + display the Footer
 
+### add COLOR=true before the `. ${BASEDIR}/dependance.lib` line if you want green OK and red KO
 
 ### add LANG_DEP=en before the `. ${BASEDIR}/dependance.lib` line if you want messages in english instead of french.
 
