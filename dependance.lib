@@ -22,21 +22,21 @@ add_fix_handler() {
 }
 
 echo_success() {
-	[ "$COLOR" = "true" ] && echo -n "<span class='label label-xs label-success'>"
+	[[ $COLOR -eq 1 ]] && echo -n "<span class='label label-xs label-success'>"
 	echo -n "[  OK  ]"
-	[ "$COLOR" = "true" ] && echo -n "</span>"
+	[[ $COLOR -eq 1 ]] && echo -n "</span>"
 	echo
 	return 0
 }
 
 echo_failure() {
-	[ "$COLOR" = "true" ] && echo -n "<span class='label label-xs label-danger'>"
+	[[ $COLOR -eq 1 ]] && echo -n "<span class='label label-xs label-danger'>"
 	if [ "$LANG_DEP" = "fr" ]; then
 		echo -n "[Erreur]"
 	else
 		echo -n "[ERROR]"
 	fi
-	[ "$COLOR" = "true" ] && echo -n "</span>"
+	[[ $COLOR -eq 1 ]] && echo -n "</span>"
 	echo
 	return 1
 }
@@ -311,7 +311,7 @@ post() {
 	echo
 	if [[ $hasError -eq 1 ]]; then
 		echo "$HR"
-		[ "$COLOR" = "true" ] && echo -n "<span class='label label-xs label-danger'>"
+		[[ $COLOR -eq 1 ]] && echo -n "<span class='label label-xs label-danger'>"
 		if [ "$LANG_DEP" = "fr" ]; then
 			echo -n "== KO == Erreur d'Installation "
 			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
@@ -319,7 +319,7 @@ post() {
 			echo -n "== KO == Installation Error "
 			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
 		fi
-		[ "$COLOR" = "true" ] && echo -n "</span>"
+		[[ $COLOR -eq 1 ]] && echo -n "</span>"
 		echo
 		echo "$HR"
 		[[ -f $TMPFOLDER/errorLog.$$ ]] && {
@@ -346,7 +346,7 @@ post() {
 		}
 	else
 		echo "$HR"
-		[ "$COLOR" = "true" ] && echo -n "<span class='label label-xs label-success'>"
+		[[ $COLOR -eq 1 ]] && echo -n "<span class='label label-xs label-success'>"
 		if [ "$LANG_DEP" = "fr" ]; then
 			echo -n "== OK == Installation Réussie "
 			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
@@ -354,7 +354,7 @@ post() {
 			echo -n "== OK == Installation Successful "
 			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
 		fi
-		[ "$COLOR" = "true" ] && echo -n "</span>"
+		[[ $COLOR -eq 1 ]] && echo -n "</span>"
 		echo
 		echo "$HR"
 	fi
