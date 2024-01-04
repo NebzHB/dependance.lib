@@ -228,7 +228,7 @@ next() {
 	else
 		echo_failure
 	fi
-	echo
+
 	STEP_IN_PROG=0
 	return $STEP_OK
 }
