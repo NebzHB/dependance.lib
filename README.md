@@ -149,6 +149,8 @@ E: Unable to locate package fdsfqfqfsqdf
 
 # NEW
 
+- COLOR=true : will display OK in green and KO in red, more self explainatory
+
 - tryOrStop : will try the commands of the line and catch errors (and stop the script by displaying the errors)
 
 
