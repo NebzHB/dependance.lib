@@ -28,11 +28,7 @@ echo_success() {
 }
 
 echo_failure() {
-	if [ "$LANG_DEP" = "fr" ]; then
-		echo -n "[Erreur]"
-	else
-		echo -n "[ERROR]"
-	fi
+	echo -n "[ERROR]"
 	echo
 	return 1
 }
