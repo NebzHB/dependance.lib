@@ -23,13 +23,13 @@ add_fix_handler() {
 
 echo_success() {
 	echo -n "[  OK  ]"
-	echo
+	[[ $1 != -*n* ]] && echo
 	return 0
 }
 
 echo_failure() {
 	echo -n "[ERROR]"
-	echo
+	[[ $1 != -*n* ]] && echo
 	return 1
 }
 
