@@ -167,7 +167,7 @@ tryOrStop() {
 aptUpdate_BETA() {
 	MAX_UPDATE=3
 	NUM_UPDATE=$((NUM_UPDATE + 1))
-	try sudo apt-get update
+	try sudo apt-get -o Acquire::ForceIPv4=true update
 	local EXIT_CODE=$?
 	if [[ $EXIT_CODE -ne 0 ]]; then
 		APT_ERROR=`grep -P "Err(.)?:" $TMPFOLDER/errorLog.$$`
@@ -356,4 +356,4 @@ add_fix_handler "apt --fix-broken install" "" "yes | sudo apt --fix-broken insta
 add_fix_handler "sudo dpkg --configure -a" "*dpkg --configure -a" "sudo dpkg --configure -a --force-confdef"
 
 # if debian have changed the Suite value, allow releaseinfo change in apt-get
-add_fix_handler "changed its 'Suite' value from" "*changed its Suite value from" "sudo apt-get --allow-releaseinfo-change update"
+add_fix_handler "changed its 'Suite' value from" "*changed its Suite value from" "sudo apt-get -o Acquire::ForceIPv4=true --allow-releaseinfo-change update"
