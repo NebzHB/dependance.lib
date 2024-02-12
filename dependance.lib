@@ -357,3 +357,11 @@ add_fix_handler "sudo dpkg --configure -a" "*dpkg --configure -a" "sudo dpkg --c
 
 # if debian have changed the Suite value, allow releaseinfo change in apt-get
 add_fix_handler "changed its 'Suite' value from" "*changed its Suite value from" "sudo apt-get -o Acquire::ForceIPv4=true --allow-releaseinfo-change update"
+
+# fix certificate chain issue oph.mdrjr.net
+fix_certif_chain_issue_mdrjr() {
+	sudo cp /etc/ca-certificates.conf /etc/ca-certificates.conf.orig
+	sudo sed -i s%mozilla/DST_Root_CA_X3.crt%!mozilla/DST_Root_CA_X3.crt%g /etc/ca-certificates.conf
+	sudo update-ca-certificates
+}
+add_fix_handler "Certificate verification failed: The certificate is NOT trusted. The certificate chain uses expired certificate.  Could not handshake: Error in the certificate verification. [IP: 216.155.132.189 443]" "*Error in the certificate verification on oph.mdrjr.net" fix_certif_chain_issue_mdrjr
