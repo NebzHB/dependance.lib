@@ -242,7 +242,7 @@ fixNO_PUBKEY() {
 fix () {
 	for (( f=0;f<h;f++ )); do # for each fix handler
 		if [ "$(type -t ${fix_handlers[$f,grepOrFunct]})" = "function" ]; then
-			${fix_handlers[$f,grepOrFunct]}
+			${fix_handlers[$f,grepOrFunct]} "$TMPFOLDER/errorLog.$$"
 			SEARCH_RESULT=$?
 		else
 			grep "${fix_handlers[$f,grepOrFunct]}" $TMPFOLDER/errorLog.$$ &>/dev/null
@@ -266,10 +266,12 @@ fix () {
 					echo ${fix_handlers[$f,msgIfFound]}
 				fi
 			fi
-			if [ "$(type -t ${fix_handlers[$f,fixStringOrFunct]})" = "function" ]; then
-				${fix_handlers[$f,fixStringOrFunct]}
-			else
-				eval ${fix_handlers[$f,fixStringOrFunct]}
+			if [ -n "${fix_handlers[$f,fixStringOrFunct]}" ]; then
+				if [ "$(type -t ${fix_handlers[$f,fixStringOrFunct]})" = "function" ]; then
+					${fix_handlers[$f,fixStringOrFunct]}
+				else
+					eval ${fix_handlers[$f,fixStringOrFunct]}
+				fi
 			fi
 			HAS_FIX=1
 		fi
@@ -365,3 +367,20 @@ fix_certif_chain_issue_mdrjr() {
 	sudo update-ca-certificates
 }
 add_fix_handler "Certificate verification failed: The certificate is NOT trusted. The certificate chain uses expired certificate.  Could not handshake: Error in the certificate verification. [IP: 216.155.132.189 443]" "*Error in the certificate verification on oph.mdrjr.net" fix_certif_chain_issue_mdrjr
+
+# just display a messag eto create a ticket on core if some sources are found :
+grepInvalidArmbianSourceOnSmartAtlas() {
+	grep "The repository 'http://apt.armbian.com buster Release' no longer has a Release file." $1
+	if [ "$?" -eq 0 ];then
+		#is it a Smart
+		if [ -f "/media/boot/multiboot/meson64_odroidc2.dtb.linux" ]; then
+			return 0
+		fi
+		#is it an Atlas
+		if [ -f "/etc/update-motd.d/10-armbian-header-jeedomatlas" ]; then
+			return 0
+		fi
+	fi
+	return 1
+}
+add_fix_handler grepInvalidArmbianSourceOnSmartAtlas "Cette source a l'air indisponible, créez un ticket de support à Jeedom sur la catégorie Générale en l'indiquant. (Pas sur le plugin car cette source n'est pas liée à celui-ci !)" ""
