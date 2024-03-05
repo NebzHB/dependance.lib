@@ -164,6 +164,16 @@ myTestFunct() {
 add_fix_handler myTestFunct "message to show if the string is found" "command to fix the error"
 ```
 
+or (NEW !)
+
+```
+myTestFunct() {
+  grep "my error" $1 #$1 contains the path to the error log, so you can search by yourself !
+  return $?; # 0 will trigger the fix, other return value don't trigger the fix
+}
+add_fix_handler myTestFunct "message to show if the string is found" "command to fix the error"
+```
+
 or
 
 ```
@@ -202,3 +212,7 @@ add_fix_handler "EINTEGRITY" "" "sudo npm cache clean --force"
  dkpg `sudo dpkg --configure -a`
  
  apt `changed its 'Suite' value from 'testing' to 'oldstable'`
+
+ NEW : fix issue with mdjr.net certificate
+
+ NEW : display a message to create a ticket if "The repository 'http://apt.armbian.com buster Release' no longer has a Release file." is found on smart or atlas. (no fix !)
