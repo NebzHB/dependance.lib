@@ -215,4 +215,4 @@ add_fix_handler "EINTEGRITY" "" "sudo npm cache clean --force"
 
  NEW : fix issue with mdjr.net certificate
 
- NEW : display a message to create a ticket if "The repository 'http://apt.armbian.com buster Release' no longer has a Release file." is found on smart or atlas. (no fix !)
+ NEW : fix "The repository 'http://apt.armbian.com buster Release' no longer has a Release file." with commenting the source in source file (same fix than the official Atlas Plugin does)
