@@ -1,0 +1,154 @@
+#!/bin/bash
+
+PYENV_DIR=/opt/pyenv
+
+CURRENT_PYTHON_VERSION=$(python3 --version | awk -F'[ ]' '{print $2}')
+[[ -z "$CURRENT_PYTHON_VERSION" ]] && CURRENT_PYTHON_VERSION="0.0.0"
+
+TARGET_PYTHON_VERSION=$CURRENT_PYTHON_VERSION
+
+vercomp () {
+    if [[ $1 == $2 ]]
+    then
+        return 0
+    fi
+    local IFS=.
+    local i ver1=($1) ver2=($2)
+    # fill empty fields in ver1 with zeros
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+    do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++))
+    do
+        if [[ -z ${ver2[i]} ]]
+        then
+            # fill empty fields in ver2 with zeros
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]}))
+        then
+            return 1
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]}))
+        then
+            return 2
+        fi
+    done
+    return 0
+}
+
+testPython3Version() {
+    vercomp ${CURRENT_PYTHON_VERSION} "0.0.0"
+    local EXIT_CODE=$?
+    if [[ $EXIT_CODE -eq 0 ]]; then
+        echo "Impossible to detect python3 version, is python3 installed?"
+        exit 1
+    fi
+}
+
+initPython3() {
+    apt-get install -y python3 python3-pip python3-dev python3-venv
+    testPython3Version
+}
+
+installPyEnv() {
+    echo "** Install PyEnv **"
+    curl https://pyenv.run | PYENV_ROOT="${PYENV_DIR}" bash
+}
+
+updatePyEnv() {
+    echo "** Update PyEnv **"
+    PYENV_ROOT="${PYENV_DIR}" ${PYENV_DIR}/bin/pyenv update
+}
+
+isPyEnvNeeded() {
+    testPython3Version
+    vercomp $CURRENT_PYTHON_VERSION $TARGET_PYTHON_VERSION
+    local EXIT_CODE=$?
+    if [[ $EXIT_CODE -lt 2 ]]; then
+        echo "** PyEnv not required: $CURRENT_PYTHON_VERSION >= $TARGET_PYTHON_VERSION **"
+        return 0
+    else
+        echo "** PyEnv required: $CURRENT_PYTHON_VERSION < $TARGET_PYTHON_VERSION **"
+        return 1
+    fi
+}
+
+installOrUpdatePyEnv() {
+    # FIXME fine-tune package to install here
+    # apt-get install -y git build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev curl libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+    apt-get install -y git curl
+    if [ -v PYENV_ROOT ]; then
+        echo "** PYENV_ROOT (already set) :: ${PYENV_ROOT} **"
+    else
+        echo "** PYENV_ROOT (not set) :: OK **"
+    fi
+    if [ -d ${PYENV_DIR} ]; then
+        updatePyEnv
+    else
+        installPyEnv
+    fi
+
+    if [ ! -d ${PYENV_DIR} ]; then
+        echo "Problem to install PyEnv"
+        exit 1
+    fi
+}
+
+installPython3WithPyEnv() {
+    PYENV_ROOT="${PYENV_DIR}" ${PYENV_DIR}/bin/pyenv install -s ${TARGET_PYTHON_VERSION}
+
+    pythonPath=$(getPython3Path)
+    installedVersion=$($pythonPath --version | awk -F'[ ]' '{print $2}')
+    [[ -z "$installedVersion" ]] && installedVersion="0.0.0"
+    vercomp $installedVersion $TARGET_PYTHON_VERSION
+    local EXIT_CODE=$?
+    if [[ $EXIT_CODE -eq 2 ]]; then
+        echo "Problem to install requested python version"
+        exit 1
+    fi
+}
+
+getPython3Path() {
+    testPython3Version
+    vercomp $CURRENT_PYTHON_VERSION $TARGET_PYTHON_VERSION
+    local EXIT_CODE=$?
+    if [[ $EXIT_CODE -lt 2 ]]; then
+        echo "python3"
+    else
+        actualVersion=$(PYENV_ROOT="${PYENV_DIR}" ${PYENV_DIR}/bin/pyenv latest ${TARGET_PYTHON_VERSION})
+        echo "${PYENV_DIR}/versions/$actualVersion/bin/python3"
+    fi
+}
+
+createVenv() {
+    if [ -z ${VENV_DIR} ]; then
+        echo "Please declare variable VENV_DIR in your script. e.g. ´VENV_DIR=${BASE_DIR}/venv´"
+        exit 1
+    fi
+    pythonPath=$(getPython3Path)
+    echo "** use ${pythonPath} to setup ${VENV_DIR} **"
+    $pythonPath -m venv --clear --upgrade-deps ${VENV_DIR}
+    $VENV_DIR/bin/python3 -m pip install --upgrade pip wheel
+}
+
+AutoSetupVenv() {
+    step 15 "Init python3 & prerequisites"
+    tryOrStop initPython3
+
+    step 20 "Init pyEnv"
+    isPyEnvNeeded
+    local EXIT_CODE=$?
+    if [[ $EXIT_CODE -eq 1 ]]; then
+        step 25 "install or update PyEnv"
+        tryOrStop installOrUpdatePyEnv
+
+        step 40 Install Python $TARGET_PYTHON_VERSION with PyEnv
+        tryOrStop installPython3WithPyEnv
+    fi
+    echo "** python3 path: $(getPython3Path) **"
+
+    step 70 "Setting up virtual environment"
+    tryOrStop createVenv
+}
