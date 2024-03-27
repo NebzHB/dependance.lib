@@ -97,7 +97,17 @@ installOrUpdatePyEnv() {
 }
 
 installPython3WithPyEnv() {
-    PYENV_ROOT="${PYENV_DIR}" ${PYENV_DIR}/bin/pyenv install -s ${TARGET_PYTHON_VERSION}
+    availableVersion=$(PYENV_ROOT="${PYENV_DIR}" ${PYENV_DIR}/bin/pyenv latest ${TARGET_PYTHON_VERSION} 2> /dev/null)
+    [[ -z "$availableVersion" ]] && availableVersion="0.0.0"
+
+    vercomp $availableVersion $TARGET_PYTHON_VERSION
+    local EXIT_CODE=$?
+    if [[ $EXIT_CODE -gt 1 ]]; then
+        echo "Actually need to install a new version because $availableVersion<$TARGET_PYTHON_VERSION ..."
+        PYENV_ROOT="${PYENV_DIR}" ${PYENV_DIR}/bin/pyenv install -s ${TARGET_PYTHON_VERSION}
+    else
+        echo "current version is ok $availableVersion"
+    fi
 
     pythonPath=$(getPython3Path)
     installedVersion=$($pythonPath --version | awk -F'[ ]' '{print $2}')
@@ -117,7 +127,7 @@ getPython3Path() {
     if [[ $EXIT_CODE -lt 2 ]]; then
         echo "python3"
     else
-        actualVersion=$(PYENV_ROOT="${PYENV_DIR}" ${PYENV_DIR}/bin/pyenv latest ${TARGET_PYTHON_VERSION})
+        actualVersion=$(PYENV_ROOT="${PYENV_DIR}" ${PYENV_DIR}/bin/pyenv latest ${TARGET_PYTHON_VERSION} 2> /dev/null)
         echo "${PYENV_DIR}/versions/$actualVersion/bin/python3"
     fi
 }
@@ -129,8 +139,23 @@ createVenv() {
     fi
     pythonPath=$(getPython3Path)
     echo "** use ${pythonPath} to setup ${VENV_DIR} **"
-    $pythonPath -m venv --clear --upgrade-deps ${VENV_DIR}
-    $VENV_DIR/bin/python3 -m pip install --upgrade pip wheel
+
+    installedVersion=$($pythonPath --version | awk -F'[ ]' '{print $2}')
+    if [[ -z "$installedVersion" ]]; then
+        echo "Could not get a python version matching $TARGET_PYTHON_VERSION"
+        exit 1
+    fi
+
+    pythonVersionInVenv=$(${VENV_DIR}/bin/python3 --version 2>/dev/null | awk -F'[ ]' '{print $2}')
+    [[ -z "$pythonVersionInVenv" ]] && pythonVersionInVenv="0.0.0"
+    if [[ $pythonVersionInVenv == $installedVersion ]]; then
+        echo "Python version in Venv is ok: $pythonVersionInVenv==$installedVersion"
+        $pythonPath -m venv --upgrade-deps ${VENV_DIR}
+    else
+        echo "Python version in Venv needs update: $pythonVersionInVenv!=$installedVersion"
+        $pythonPath -m venv --clear --upgrade-deps ${VENV_DIR}
+    fi
+    ${VENV_DIR}/bin/python3 -m pip install --upgrade pip wheel
 }
 
 AutoSetupVenv() {
@@ -151,4 +176,5 @@ AutoSetupVenv() {
 
     step 70 "Setting up virtual environment"
     tryOrStop createVenv
+    echo "** Version of python in VENV:" $(${VENV_DIR}/bin/python3 --version)
 }
