@@ -76,9 +76,15 @@ isPyEnvNeeded() {
 }
 
 installOrUpdatePyEnv() {
-    # FIXME fine-tune package to install here
-    # apt-get install -y git build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev curl libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
-    apt-get install -y git curl
+    # not include from original list: xz-utils libxml2-dev libxmlsec1-dev
+
+    # this is the list given by python.org
+    # https://devguide.python.org/getting-started/setup-building/#install-dependencies
+    apt-get install pkg-config build-essential gdb lcov pkg-config \
+        libbz2-dev libffi-dev libgdbm-dev libgdbm-compat-dev liblzma-dev \
+        libncurses5-dev libreadline6-dev libsqlite3-dev libssl-dev \
+        lzma lzma-dev tk-dev uuid-dev zlib1g-dev
+
     if [ -v PYENV_ROOT ]; then
         echo "** PYENV_ROOT (already set) :: ${PYENV_ROOT} **"
     else
