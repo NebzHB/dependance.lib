@@ -1,6 +1,7 @@
 #!/bin/bash
 
 PYENV_DIR=/opt/pyenv
+VENV_DIR=${BASE_DIR}/venv
 
 CURRENT_PYTHON_VERSION=$(python3 --version | awk -F'[ ]' '{print $2}')
 [[ -z "$CURRENT_PYTHON_VERSION" ]] && CURRENT_PYTHON_VERSION="0.0.0"
@@ -164,7 +165,7 @@ createVenv() {
     ${VENV_DIR}/bin/python3 -m pip install --upgrade pip wheel
 }
 
-AutoSetupVenv() {
+autoSetupVenv() {
     step 15 "Init python3 & prerequisites"
     tryOrStop initPython3
 
@@ -183,4 +184,22 @@ AutoSetupVenv() {
     step 70 "Setting up virtual environment"
     tryOrStop createVenv
     echo "** Version of python in VENV:" $(${VENV_DIR}/bin/python3 --version)
+}
+
+launchInstall() {
+    pre
+    step 5 "Clean apt"
+    try apt-get clean
+    step 10 "Update apt"
+    try apt-get update
+
+    autoSetupVenv
+
+    step 80 "Install the required python packages"
+    try ${VENV_DIR}/bin/python3 -m pip install -r ${BASE_DIR}/requirements.txt
+
+    step 90 "Summary of installed packages"
+    ${VENV_DIR}/bin/python3 -m pip freeze
+
+    post
 }
