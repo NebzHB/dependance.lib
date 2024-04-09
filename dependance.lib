@@ -126,6 +126,29 @@ step() {
 	echo $STEP_OK > $TMPFOLDER/step.$$
 }
 
+subStep() {
+	#still in dev, not usable yet
+	[ -n "${startSubStep}" ] || startSubStep=10
+	[ -n "${stopSubStep}" ] || stopSubStep=50
+	[ -n "${numSubStep}" ] || numSubStep=10
+	if [ -z "${pcIncrement}" ]; then
+		pcIncrement=$(((stopSubStep - startSubStep) / numSubStep))
+	fi
+	if [ -z "${pcInProg}" ]; then
+		pcInProg=$startSubStep
+	else
+		pcInProg=$((pcInProg + pcIncrement))
+	fi
+	step $pcInProg $1
+	if [ "$pcInProg" -ge "$stopSubStep" ]; then
+	    	unset startSubStep
+		unset stopSubStep
+		unset numSubStep
+		unset pcIncrement
+		unset pcInProg
+	fi
+}
+
 try() {
 	cmdout="$("$@" 2>&1)"
 	local EXIT_CODE=$?
