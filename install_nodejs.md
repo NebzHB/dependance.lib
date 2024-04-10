@@ -14,7 +14,7 @@ wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.l
 PLUGIN=$(basename "$(realpath $BASEDIR/..)")
 . ${BASEDIR}/dependance.lib
 ##################################################################
-wget https://raw.githubusercontent.com/NebzHB/nodejs_install/main/install_nodejs.sh -O $BASEDIR/install_nodejs.sh &>/dev/null
+wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/install_nodejs.sh -O $BASEDIR/install_nodejs.sh &>/dev/null
 
 installVer='16' 	#NodeJS major version to be installed
 
