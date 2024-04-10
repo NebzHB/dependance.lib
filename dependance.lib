@@ -130,11 +130,11 @@ subStep() {
 	# Default values if not defined
 	[ -n "${startSubStep}" ] || startSubStep=10
 	[ -n "${stopSubStep}" ] || stopSubStep=50
-	[ -n "${numSubStep}" ] || numSubStep=9
+	[ -n "${numSubStepMax}" ] || numSubStepMax=9
 	
 	# Compute pcIncrement only one time if necessary
 	if [ -z "${pcIncrement}" ]; then
-		pcIncrement=$(( (stopSubStep - startSubStep) / (numSubStep - 1) ))
+		pcIncrement=$(( (stopSubStep - startSubStep) / (numSubStepMax - 1) ))
 		if (( pcIncrement < 2 )); then
 			if [ "$LANG_DEP" = "fr" ]; then
 				echo "Avertissement Développeur: L'incrément de pourcentage par étape (${pcIncrement}%) est inférieur à 2%. Augmentez le range ou diminuez le nombre d'étapes."
@@ -152,12 +152,12 @@ subStep() {
 		((subStepCount++))
 	fi
 
-	# Check if we don't call subStep more than numSubStep
-	if [ "$subStepCount" -gt "$numSubStep" ]; then
+	# Check if we don't call subStep more than numSubStepMax
+	if [ "$subStepCount" -gt "$numSubStepMax" ]; then
 		if [ "$LANG_DEP" = "fr" ]; then
-			echo "Avertissement Développeur: subStep appelée $subStepCount fois, mais numSubStep est défini à $numSubStep. Adaptez la valeur de numSubStep"
+			echo "Avertissement Développeur: subStep appelée $subStepCount fois, mais numSubStepMax est défini à $numSubStepMax. Adaptez la valeur de numSubStepMax"
 		else
-			echo "Developer Warning: subStep has been called $subStepCount times, but you've defined numSubStep to $numSubStep. Please adapt numSubStep"
+			echo "Developer Warning: subStep has been called $subStepCount times, but you've defined numSubStepMax to $numSubStepMax. Please adapt numSubStepMax"
 		fi
 		return
 	fi
