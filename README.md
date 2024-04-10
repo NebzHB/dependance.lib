@@ -1,6 +1,6 @@
 # dependance.lib
 
-(install_nodejs script Doc){https://github.com/NebzHB/dependance.lib/blob/master/install_nodejs.md}
+[install_nodejs script Doc](https://github.com/NebzHB/dependance.lib/blob/master/install_nodejs.md)
 
 Bash HomeMade Dependance Library for Jeedom
 
