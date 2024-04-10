@@ -134,7 +134,7 @@ subStep() {
 	
 	# Compute pcIncrement only one time if necessary
 	if [ -z "${pcIncrement}" ]; then
-		pcIncrement=$(((stopSubStep - startSubStep) / numSubStep))
+		pcIncrement=$(( (stopSubStep - startSubStep) / (numSubStep - 1) ))
 		if (( pcIncrement < 2 )); then
 			if [ "$LANG_DEP" = "fr" ]; then
 				echo "Avertissement Développeur: L'incrément de pourcentage par étape (${pcIncrement}%) est inférieur à 2%. Augmentez le range ou diminuez le nombre d'étapes."
