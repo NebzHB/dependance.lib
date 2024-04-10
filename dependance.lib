@@ -182,6 +182,7 @@ subStep() {
 		unset pcIncrement
 		unset startSubStep
 		unset stopSubStep
+		unset numSubStepMax
 		unset subStepCount
 	fi
 }
