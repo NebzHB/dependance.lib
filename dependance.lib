@@ -130,7 +130,7 @@ subStep() {
 	# Default values if not defined
 	[ -n "${startSubStep}" ] || startSubStep=10
 	[ -n "${stopSubStep}" ] || stopSubStep=50
-	[ -n "${numSubStep}" ] || numSubStep=12
+	[ -n "${numSubStep}" ] || numSubStep=9
 	
 	# Compute pcIncrement only one time if necessary
 	if [ -z "${pcIncrement}" ]; then
