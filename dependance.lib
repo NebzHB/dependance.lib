@@ -128,13 +128,13 @@ step() {
 
 subStep() {
 	# Default values if not defined
-	[ -n "${startSubStep}" ] || startSubStep=10
-	[ -n "${stopSubStep}" ] || stopSubStep=50
+	[ -n "${firstSubStep}" ] || firstSubStep=10
+	[ -n "${lastSubStep}" ] || lastSubStep=50
 	[ -n "${numSubStepMax}" ] || numSubStepMax=9
 	
 	# Compute pcIncrement only one time if necessary
 	if [ -z "${pcIncrement}" ]; then
-		pcIncrement=$(( (stopSubStep - startSubStep) / (numSubStepMax - 1) ))
+		pcIncrement=$(( (lastSubStep - firstSubStep) / (numSubStepMax - 1) ))
 		if (( pcIncrement < 2 )); then
 			if [ "$LANG_DEP" = "fr" ]; then
 				echo "Avertissement Développeur: L'incrément de pourcentage par étape (${pcIncrement}%) est inférieur à 2%. Augmentez le range ou diminuez le nombre d'étapes."
@@ -164,12 +164,12 @@ subStep() {
 	
 	# Init pcInprog, then increment on each call
 	if [ -z "${pcInProg}" ]; then
-		pcInProg=$startSubStep
+		pcInProg=$firstSubStep
 	else
 		pcInProg=$((pcInProg + pcIncrement))
-		# don't go above stopSubStep
-		if [ "$pcInProg" -gt "$stopSubStep" ]; then
-			pcInProg=$stopSubStep
+		# don't go above lastSubStep
+		if [ "$pcInProg" -gt "$lastSubStep" ]; then
+			pcInProg=$lastSubStep
 		fi
 	fi
 	
@@ -177,11 +177,11 @@ subStep() {
 	step "$pcInProg" "$@"
 	
 	# If the end of the steps is reached, reinit the variables
-	if [ "$pcInProg" -ge "$stopSubStep" ]; then
+	if [ "$pcInProg" -ge "$lastSubStep" ]; then
 		unset pcInProg
 		unset pcIncrement
-		unset startSubStep
-		unset stopSubStep
+		unset firstSubStep
+		unset lastSubStep
 		unset numSubStepMax
 		unset subStepCount
 	fi
