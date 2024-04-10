@@ -210,7 +210,9 @@ add_fix_handler "EINTEGRITY" "" "sudo npm cache clean --force"
 Adding subStep for sub script that would want to have their own steps, please define those variables in your subscript (or by passing it as argument if you want a generic subscript for multiple plugins)
 
 startSubStep= lower range of pourcentage your subscript will begin with (default 10)
+
 stopSubStep= higher range of pourcentage your subscript will finish with (default 50)
+
 numSubStepMax= max number of call to subStep you'll make in your subscript (to compute the percentage increment of each of your step) (default 9 -> 5% for each steps)
 
 Example calling the subscript install-nodejs.sh here :
