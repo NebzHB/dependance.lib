@@ -3,11 +3,14 @@
 installVer=$1 	#NodeJS major version to be installed
 minVer=$1	#min NodeJS major version to be accepted
 NODE_MAJOR=$( [[ $installVer == *.* ]] && echo $installVer | cut -d'.' -f1 || echo $installVer )
+firstSubStep=$2
+lastSubStep=$3
+numSubStepMax=9
 
 if [ "$LANG_DEP" = "fr" ]; then
-	step 10 "Prérequis"
+	subStep "Prérequis"
 else
-	step 10 "Prerequisites"
+	subStep "Prerequisites"
 fi
 
 #ipv4 first for dns (like before nodejs 18)
@@ -21,17 +24,17 @@ Pin-Priority: 600
 EOL
 
 if [ "$LANG_DEP" = "fr" ]; then
-	step 15 "Installation des packages nécessaires"
+	subStep "Installation des packages nécessaires"
 else
-	step 15 "Mandatory packages installation"
+	subStep "Mandatory packages installation"
 fi
 # apt-get update should have been done in the calling file
 try sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::ForceIPv4=true install -y lsb-release build-essential apt-utils git gnupg
 
 if [ "$LANG_DEP" = "fr" ]; then
-	step 20 "Vérification du système"
+	subStep "Vérification du système"
 else
-	step 20 "System Check"
+	subStep "System Check"
 fi
 arch=`arch`;
 
@@ -99,9 +102,9 @@ if { [ "$arch" = "i386" ] || [ "$arch" = "i686" ]; } && [ "$bits" -eq "32" ]; th
 fi
 
 if [ "$LANG_DEP" = "fr" ]; then
-	step 25 "Vérification de la version de NodeJS installée"
+	subStep "Vérification de la version de NodeJS installée"
 else
-	step 25 "Installed NodeJS version check"
+	subStep "Installed NodeJS version check"
 fi
 silent type node
 if [ $? -eq 0 ]; then actual=`node -v`; else actual='Aucune'; fi
@@ -117,10 +120,10 @@ if [[ $testVer == "1" ]]; then
 else
   if [ "$LANG_DEP" = "fr" ]; then
   	echo "Correction..."
-  	step 30 "Installation de NodeJS $NODE_MAJOR"
+  	subStep "Installation de NodeJS $NODE_MAJOR"
   else
   	echo "Fixing..."
-  	step 30 "Installing NodeJS $NODE_MAJOR"
+  	subStep "Installing NodeJS $NODE_MAJOR"
   fi
   
   #if npm exists
@@ -208,9 +211,9 @@ fi
 silent type npm
 if [ $? -ne 0 ]; then
   if [ "$LANG_DEP" = "fr" ]; then
-  	step 35 "Installation de npm car non présent"
+  	subStep "Installation de npm car non présent"
   else
-  	step 35 "Installing npm because not present"
+  	subStep "Installing npm because not present"
   fi
   try sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::ForceIPv4=true install -y npm  
   forceUpdateNPM=1
@@ -236,9 +239,9 @@ fi
 
 if [[ $forceUpdateNPM == "1" ]]; then
 	if [ "$LANG_DEP" = "fr" ]; then
-		step 37 "Mise à jour de npm"
+		subStep "Mise à jour de npm"
 	else
-		step 37 "Updating npm"
+		subStep "Updating npm"
 	fi
 	try sudo -E npm install -g npm
 fi
@@ -257,33 +260,33 @@ if [ $? -eq 0 ]; then
     echo_failure
     if [[ "$npmPrefixwwwData" == "/usr" ]] || [[ "$npmPrefixwwwData" == "/usr/local" ]]; then
       if [ "$LANG_DEP" = "fr" ]; then
-      		step 40 "Réinitialisation prefixe ($npmPrefixwwwData) pour npm `sudo whoami`"
+      		subStep "Réinitialisation prefixe ($npmPrefixwwwData) pour npm `sudo whoami`"
       else
-        	step 40 "Prefix reset ($npmPrefixwwwData) for npm `sudo whoami`"
+        	subStep "Prefix reset ($npmPrefixwwwData) for npm `sudo whoami`"
       fi
       sudo npm config set prefix $npmPrefixwwwData
     else
       if [[ "$npmPrefix" == "/usr" ]] || [[ "$npmPrefix" == "/usr/local" ]]; then
         if [ "$LANG_DEP" = "fr" ]; then
-        	step 40 "Réinitialisation prefixe ($npmPrefix) pour npm `sudo whoami`"
+        	subStep "Réinitialisation prefixe ($npmPrefix) pour npm `sudo whoami`"
 	else
-		step 40 "Prefix reset ($npmPrefix) for npm `sudo whoami`"
+		subStep "Prefix reset ($npmPrefix) for npm `sudo whoami`"
 	fi
         sudo npm config set prefix $npmPrefix
       else
         [ -f /usr/bin/raspi-config ] && { rpi="1"; } || { rpi="0"; }
         if [[ "$rpi" == "1" ]]; then
 	  if [ "$LANG_DEP" = "fr" ]; then
-	  	step 40 "Réinitialisation prefixe (/usr) pour npm `sudo whoami`"
+	  	subStep "Réinitialisation prefixe (/usr) pour npm `sudo whoami`"
 	  else
-	  	step 40 "Prefix reset (/usr) for npm `sudo whoami`"
+	  	subStep "Prefix reset (/usr) for npm `sudo whoami`"
 	  fi
           sudo npm config set prefix /usr
 	else
 	  if [ "$LANG_DEP" = "fr" ]; then
-	  	step 40 "Réinitialisation prefixe (/usr/local) pour npm `sudo whoami`"
+	  	subStep "Réinitialisation prefixe (/usr/local) pour npm `sudo whoami`"
 	  else
-          	step 40 "Prefix reset (/usr/local) for npm `sudo whoami`"
+          	subStep "Prefix reset (/usr/local) for npm `sudo whoami`"
 	  fi
           sudo npm config set prefix /usr/local
 	fi
@@ -296,9 +299,9 @@ if [ $? -eq 0 ]; then
       else
         echo_failure
 	if [ "$LANG_DEP" = "fr" ]; then
-        	step 40 "Réinitialisation prefixe ($npmPrefixwwwData) pour npm `sudo whoami`"
+        	subStep "Réinitialisation prefixe ($npmPrefixwwwData) pour npm `sudo whoami`"
 	else
-		step 40 "Prefix reset ($npmPrefixwwwData) for npm `sudo whoami`"
+		subStep "Prefix reset ($npmPrefixwwwData) for npm `sudo whoami`"
 	fi
         sudo npm config set prefix $npmPrefixwwwData
       fi
@@ -306,25 +309,25 @@ if [ $? -eq 0 ]; then
       echo_failure
       if [[ "$npmPrefix" == "/usr" ]] || [[ "$npmPrefix" == "/usr/local" ]]; then
         if [ "$LANG_DEP" = "fr" ]; then
-        	step 40 "Réinitialisation prefixe ($npmPrefix) pour npm `sudo whoami`"
+        	subStep "Réinitialisation prefixe ($npmPrefix) pour npm `sudo whoami`"
 	else
-		step 40 "Prefix reset ($npmPrefix) for npm `sudo whoami`"
+		subStep "Prefix reset ($npmPrefix) for npm `sudo whoami`"
 	fi
         sudo npm config set prefix $npmPrefix
       else
         [ -f /usr/bin/raspi-config ] && { rpi="1"; } || { rpi="0"; }
         if [[ "$rpi" == "1" ]]; then
 	  if [ "$LANG_DEP" = "fr" ]; then
-	  	step 40 "Réinitialisation prefixe (/usr) pour npm `sudo whoami`"
+	  	subStep "Réinitialisation prefixe (/usr) pour npm `sudo whoami`"
 	  else
-	  	step 40 "Prefix reset (/usr) for npm `sudo whoami`"
+	  	subStep "Prefix reset (/usr) for npm `sudo whoami`"
 	  fi
           sudo npm config set prefix /usr
 	else
 	  if [ "$LANG_DEP" = "fr" ]; then
-          	step 40 "Réinitialisation prefixe (/usr/local) pour npm `sudo whoami`"
+          	subStep "Réinitialisation prefixe (/usr/local) pour npm `sudo whoami`"
 	  else
-		step 40 "Prefix reset (/usr/local) for npm `sudo whoami`"
+		subStep "Prefix reset (/usr/local) for npm `sudo whoami`"
 	  fi
           sudo npm config set prefix /usr/local
 	fi
@@ -334,9 +337,9 @@ if [ $? -eq 0 ]; then
 fi
 
 if [ "$LANG_DEP" = "fr" ]; then
-	step 50 "Nettoyage"
+	subStep "Nettoyage"
 else
-	step 50 "Cleaning"
+	subStep "Cleaning"
 fi
 # on nettoie la priorité nodesource
 silent sudo rm -f /etc/apt/preferences.d/nodesource
