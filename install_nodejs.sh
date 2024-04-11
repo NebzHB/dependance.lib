@@ -117,7 +117,7 @@ else
 fi
 
 if [ -z "$forceNodeVersion" ]; then
-	requiredNodeVersion=$(jq -r ".engines.node" ./package.json)
+	requiredNodeVersion=$(jq -r ".engines.node" ${BASEDIR}/package.json)
 	requiredNodeOperator=$(echo "$requiredNodeVersion" | grep -o "^[<>=]*")
 	requiredNodeVersion=$(echo "$requiredNodeVersion" | grep -o "[0-9.]*$")
 else
@@ -249,7 +249,7 @@ else
 			echo "[ Update requested ]"
 		fi
 	else
- 		requiredNPMVersion=$(jq -r ".engines.npm" ./package.json)
+ 		requiredNPMVersion=$(jq -r ".engines.npm" ${BASEDIR}/package.json)
 		requiredNPMOperator=$(echo "$requiredNPMVersion" | grep -o "^[<>=]*")
 		requiredNPMVersion=$(echo "$requiredNPMVersion" | grep -o "[0-9.]*$")
 
