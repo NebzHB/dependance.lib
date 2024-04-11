@@ -3,9 +3,9 @@
 installVer=$1 	#NodeJS major version to be installed
 minVer=$1	#min NodeJS major version to be accepted
 NODE_MAJOR=$( [[ $installVer == *.* ]] && echo $installVer | cut -d'.' -f1 || echo $installVer )
-firstSubStep=$2
-lastSubStep=$3
-numSubStepMax=9
+firstSubStep=$2 #second argument, the first substep this script will manage
+lastSubStep=$3 #third, the last substep this script will manage
+numSubStepMax=9 #the maximum number of different step this script will run (could be less with conditionnals)
 
 if [ "$LANG_DEP" = "fr" ]; then
 	subStep "Prérequis"
