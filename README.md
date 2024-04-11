@@ -230,7 +230,7 @@ PLUGIN=$(basename "$(realpath $BASEDIR/..)")
 
 pre
 step 0 "Vérification des droits"
-chmod +x ./install-nodejs.sh
+chmod +x ./install-something.sh
 
 step 20 "Installation des paquets"
 try sudo apt-get install this that
@@ -239,7 +239,7 @@ wget http://aScript.com/script.sh | try sudo -E bash -
 silent sudo rm -f /anotherFolderNotSure
 
 # Launching subscript !
-./install-nodejs.sh 30 50
+./install-something.sh 30 50
 
 step 60 "Configuration du plugin"
 try wget ...
@@ -247,7 +247,7 @@ echo "not silent"
 post
 ```
 
-in install-nodejs.sh
+in install-something.sh
 ```
 #!/bin/bash
 
