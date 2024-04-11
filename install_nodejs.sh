@@ -1,11 +1,20 @@
 #!/bin/bash
 
-installVer=$1 	#NodeJS major version to be installed
-minVer=$1	#min NodeJS major version to be accepted
-NODE_MAJOR=$( [[ $installVer == *.* ]] && echo $installVer | cut -d'.' -f1 || echo $installVer )
-firstSubStep=$2 #second argument, the first substep this script will manage
-lastSubStep=$3 #third, the last substep this script will manage
 numSubStepMax=9 #the maximum number of different step this script will run (could be less with conditionnals)
+
+#init arguments
+forceUpdateNPM=0 #force to update NPM to the latest version
+
+while [[ "$#" -gt 0 ]]; do
+	case $1 in
+ 		--forceNodeVersion) forceNodeVersion="$2"; shift ;;
+		--firstSubStep) firstSubStep=$2; shift ;;
+		--lastSubStep) lastSubStep=$2; shift ;;
+		--forceUpdateNPM) forceUpdateNPM=1 ;;
+		*) echo "Unknown Option: $1"; tryOrStop false ;;
+	esac
+	shift
+done
 
 if [ "$LANG_DEP" = "fr" ]; then
 	subStep "Prérequis"
@@ -29,7 +38,7 @@ else
 	subStep "Mandatory packages installation"
 fi
 # apt-get update should have been done in the calling file
-try sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::ForceIPv4=true install -y lsb-release build-essential apt-utils git gnupg
+try sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::ForceIPv4=true install -y lsb-release build-essential apt-utils git gnupg jq
 
 if [ "$LANG_DEP" = "fr" ]; then
 	subStep "Vérification du système"
@@ -106,9 +115,20 @@ if [ "$LANG_DEP" = "fr" ]; then
 else
 	subStep "Installed NodeJS version check"
 fi
+
+if [ -z "$forceNodeVersion" ]; then
+	requiredNodeVersion=$(jq -r ".engines.node" ./package.json)
+	requiredNodeOperator=$(echo "$requiredNodeVersion" | grep -o "^[<>=]*")
+	requiredNodeVersion=$(echo "$requiredNodeVersion" | grep -o "[0-9.]*$")
+else
+	requiredNodeVersion=$forceNodeVersion
+ 	requiredNodeOperator="=="
+fi
+NODE_MAJOR=$( [[ $requiredNodeVersion == *.* ]] && echo $requiredNodeVersion | cut -d'.' -f1 || echo $requiredNodeVersion )
+
 silent type node
 if [ $? -eq 0 ]; then actual=`node -v`; else actual='Aucune'; fi
-testVer=$(php -r "echo version_compare('${actual}','v${minVer}','>=');")
+testVer=$(php -r "echo version_compare('${actual}','v${requiredNodeVersion}','${requiredNodeOperator}');")
 if [ "$LANG_DEP" = "fr" ]; then
 	echo -n "[Check Version NodeJS actuelle : ${actual} : "
 else
@@ -147,9 +167,9 @@ else
     elif [[ $NODE_MAJOR == "16" ]]; then
       armVer="16.20.2"
     elif [[ $NODE_MAJOR == "18" ]]; then
-      armVer="18.19.0"
+      armVer="18.20.2"
     elif [[ $NODE_MAJOR == "20" ]]; then
-      armVer="20.11.0"
+      armVer="20.12.2"
     fi
     if [ "$LANG_DEP" = "fr" ]; then
     	echo "Jeedom Mini ou Raspberry 1, 2 ou zéro détecté, non supporté mais on essaye l'utilisation du paquet non-officiel v${armVer} pour armv6l"
@@ -173,10 +193,6 @@ else
     	echo "Using official repository"
     fi
     
-    #old method
-    #curl -fsSL https://deb.nodesource.com/setup_${installVer}.x | try sudo -E bash -
-    #try sudo DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs
-    
     #new method
     sudo mkdir -p /etc/apt/keyrings
     silent sudo rm /etc/apt/keyrings/nodesource.gpg
@@ -195,7 +211,7 @@ else
   else
   	echo -n "[Check NodeJS Version after install : ${new} : "
   fi
-  testVerAfter=$(php -r "echo version_compare('${new}','v${minVer}','>=');")
+  testVerAfter=$(php -r "echo version_compare('${new}','v${requiredNodeVersion}','${requiredNodeOperator}');")
   if [[ $testVerAfter != "1" ]]; then
     echo_failure -n
     if [ "$LANG_DEP" = "fr" ]; then
@@ -233,7 +249,25 @@ else
 			echo "[ Update requested ]"
 		fi
 	else
- 		echo_success
+ 		requiredNPMVersion=$(jq -r ".engines.npm" ./package.json)
+		requiredNPMOperator=$(echo "$requiredNPMVersion" | grep -o "^[<>=]*")
+		requiredNPMVersion=$(echo "$requiredNPMVersion" | grep -o "[0-9.]*$")
+
+		if [[ $requiredNPMVersion =~ ^[0-9]+(\.[0-9]+)+$ ]]; then
+			testNPMVer=$(php -r "echo version_compare('${npmver}','v${requiredNPMVersion}','${requiredNPMOperator}');")
+			if [[ $testNPMVer == "1" ]]; then
+	   			echo_success
+	      		else
+				if [ "$LANG_DEP" = "fr" ]; then
+					echo "[ MàJ demandée ]"
+				else
+					echo "[ Update requested ]"
+				fi
+	   			forceUpdateNPM=1
+	 		fi
+    		else
+			echo_success
+      		fi
 	fi
 fi
 
