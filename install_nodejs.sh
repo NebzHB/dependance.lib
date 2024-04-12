@@ -254,7 +254,7 @@ else
 		requiredNPMVersion=$(echo "$requiredNPMVersion" | grep -o "[0-9.]*$")
 
 		if [[ $requiredNPMVersion =~ ^[0-9]+(\.[0-9]+)+$ ]]; then
-			testNPMVer=$(php -r "echo version_compare('${npmver}','v${requiredNPMVersion}','${requiredNPMOperator}');")
+			testNPMVer=$(php -r "echo version_compare('${npmver}','${requiredNPMVersion}','${requiredNPMOperator}');")
 			if [[ $testNPMVer == "1" ]]; then
 	   			echo_success
 	      		else
