@@ -126,6 +126,68 @@ step() {
 	echo $STEP_OK > $TMPFOLDER/step.$$
 }
 
+subStep() {
+	# Default values if not defined
+	[ -n "${firstSubStep}" ] || firstSubStep=10
+	[ -n "${lastSubStep}" ] || lastSubStep=50
+	[ -n "${numSubStepMax}" ] || numSubStepMax=9
+	
+	# Compute pcIncrement only one time if necessary
+	if [ -z "${pcIncrement}" ]; then
+		pcIncrement=$(( (lastSubStep - firstSubStep) / (numSubStepMax - 1) ))
+		if (( pcIncrement < 2 )); then
+			if [ "$LANG_DEP" = "fr" ]; then
+				echo "Avertissement Développeur: L'incrément de pourcentage par étape (${pcIncrement}%) est inférieur à 2%. Augmentez le range ou diminuez le nombre d'étapes."
+			else
+				echo "Developer Warning: The percentage increment per step (${pcIncrement}%) is less than 2%. Increase the range or reduce the number of steps"
+			fi
+			return
+		fi
+	fi
+	
+	# Count how many time is called subStep in that sub script
+	if [ -z "${subStepCount}" ]; then
+		subStepCount=1
+	else
+		((subStepCount++))
+	fi
+
+	# Check if we don't call subStep more than numSubStepMax
+	if [ "$subStepCount" -gt "$numSubStepMax" ]; then
+		if [ "$LANG_DEP" = "fr" ]; then
+			echo "Avertissement Développeur: subStep appelée $subStepCount fois, mais numSubStepMax est défini à $numSubStepMax. Adaptez la valeur de numSubStepMax"
+		else
+			echo "Developer Warning: subStep has been called $subStepCount times, but you've defined numSubStepMax to $numSubStepMax. Please adapt numSubStepMax"
+		fi
+		return
+	fi
+	
+	# Init pcInprog, then increment on each call
+	if [ -z "${pcInProg}" ]; then
+		pcInProg=$firstSubStep
+	else
+		pcInProg=$((pcInProg + pcIncrement))
+		# don't go above lastSubStep
+		if [ "$pcInProg" -gt "$lastSubStep" ]; then
+			pcInProg=$lastSubStep
+		fi
+	fi
+	
+	# Call step with pcInprog and any other arguments sent to subStep
+	step "$pcInProg" "$@"
+	
+	# If the end of the steps is reached, reinit the variables
+	if [ "$pcInProg" -ge "$lastSubStep" ]; then
+		unset pcInProg
+		unset pcIncrement
+		unset firstSubStep
+		unset lastSubStep
+		unset numSubStepMax
+		unset subStepCount
+	fi
+}
+
+
 try() {
 	cmdout="$("$@" 2>&1)"
 	local EXIT_CODE=$?
@@ -370,3 +432,6 @@ add_fix_handler "Certificate verification failed: The certificate is NOT trusted
 
 # fix armbian.com not available for buster anymore (same fix than the Atlas plugin does) :
 add_fix_handler "The repository 'http://apt.armbian.com buster Release' no longer has a Release file." "" "sudo sed -i 's|^deb http://apt.armbian.com|#deb http://apt.armbian.com|g' /etc/apt/sources.list.d/armbian.list"
+
+# fix buster-backports not available anymore :
+add_fix_handler "The repository 'http://deb.debian.org/debian buster-backports Release' no longer has a Release file." "" "sudo sed -i 's|^deb http://deb.debian.org/debian buster-backports|#deb http://deb.debian.org/debian buster-backports|g' /etc/apt/sources.list"

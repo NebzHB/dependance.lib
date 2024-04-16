@@ -1,5 +1,7 @@
 # dependance.lib
 
+NB : for nodejs install, see [install_nodejs script Doc](https://github.com/NebzHB/dependance.lib/blob/master/install_nodejs.md)
+
 Bash HomeMade Dependance Library for Jeedom
 
 **usage** :
@@ -205,7 +207,95 @@ or
 add_fix_handler "EINTEGRITY" "" "sudo npm cache clean --force"
 ```
 
-### Auto fix alreday included for this common errors :
+# NEW : subStep
+
+Adding subStep for sub script that would want to have their own steps, please define those variables in your subscript (or by passing it as argument if you want a generic subscript for multiple plugins)
+
+firstSubStep= lower range of pourcentage your subscript will begin with (default 10)
+
+lastSubStep= higher range of pourcentage your subscript will finish with (default 50)
+
+numSubStepMax= max number of call to subStep you'll make in your subscript (to compute the percentage increment of each of your step) (default 9 -> 5% for each steps)
+
+Example calling the subscript install-nodejs.sh here :
+
+```
+#!/bin/bash
+######################### INCLUSION LIB ##########################
+BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib -O $BASEDIR/dependance.lib &>/dev/null
+PLUGIN=$(basename "$(realpath $BASEDIR/..)")
+. ${BASEDIR}/dependance.lib
+##################################################################
+
+pre
+step 0 "Vérification des droits"
+chmod +x ./install-something.sh
+
+step 20 "Installation des paquets"
+try sudo apt-get install this that
+try sudo rm -f /oldFolder
+wget http://aScript.com/script.sh | try sudo -E bash -
+silent sudo rm -f /anotherFolderNotSure
+
+# Launching subscript !
+./install-something.sh 30 50
+
+step 60 "Configuration du plugin"
+try wget ...
+echo "not silent"
+post
+```
+
+in install-something.sh
+```
+#!/bin/bash
+
+firstSubStep=$1
+lastSubStep=$2
+numSubStepMax=5
+
+subStep "My first step"
+npm -i ...
+substep "My second step"
+apt install nodejs
+substep "My third step"
+apt remove blabla
+substep "My fourth step"
+rm -f /var/lib/thing
+substep "My fifth step"
+rm -f /var/lib/anotherThing
+```
+
+will display :
+```
+======================================================================
+== 01/01/2020 01:01:01 == Installation des dépendances de PLUGIN
+======================================================================
+[  0% ] : Vérification des droits...
+[ 19% ] : Vérification des droits : [  OK  ]
+[ 20% ] : Installation des paquets...
+[ 29% ] : Installation des paquets : [  OK  ]
+[ 30% ] : My first step...
+[ 34% ] : My first step : [  OK  ]
+[ 35% ] : My second step...
+[ 39% ] : My second step : [  OK  ]
+[ 40% ] : My third step...
+[ 44% ] : My third step : [  OK  ]
+[ 45% ] : My fourth step...
+[ 49% ] : My fourth step : [  OK  ]
+[ 50% ] : My fifth step...
+[ 59% ] : My fifth step : [  OK  ]
+[ 60% ] : Configuration du plugin...
+[ 99% ] : Configuration du plugin : [  OK  ]
+[100% ] : Terminé !
+======================================================================
+== OK == Installation Réussie
+======================================================================
+```
+
+
+# Auto fix alreday included for this common errors :
 
  apt `apt --fix-broken install`
  
@@ -216,3 +306,5 @@ add_fix_handler "EINTEGRITY" "" "sudo npm cache clean --force"
  NEW : fix issue with mdjr.net certificate
 
  NEW : fix "The repository 'http://apt.armbian.com buster Release' no longer has a Release file." with commenting the source in source file (same fix than the official Atlas Plugin does)
+
+ NEW : fix "The repository 'http://deb.debian.org/debian buster-backports Release' no longer has a Release file." with commenting the source in sources.list file.
