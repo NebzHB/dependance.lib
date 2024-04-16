@@ -434,4 +434,14 @@ add_fix_handler "Certificate verification failed: The certificate is NOT trusted
 add_fix_handler "The repository 'http://apt.armbian.com buster Release' no longer has a Release file." "" "sudo sed -i 's|^deb http://apt.armbian.com|#deb http://apt.armbian.com|g' /etc/apt/sources.list.d/armbian.list"
 
 # fix buster-backports not available anymore :
-add_fix_handler "The repository 'http://deb.debian.org/debian buster-backports Release' no longer has a Release file." "" "sudo sed -i 's|^deb http://deb.debian.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list"
+fix_buster_backport_not_available() {
+	if [ -f /etc/apt/sources.list.d/buster-backports.list ]; then
+		sudo sed -i 's|^deb-src http://deb.debian.org/debian buster-backports|deb-src http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
+		sudo sed -i 's|^deb http://deb.debian.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
+	else
+		sudo sed -i 's|^deb-src http://deb.debian.org/debian buster-backports|deb-src http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
+		sudo sed -i 's|^deb http://deb.debian.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
+	fi
+	sudo sed -i 's|^#deb http://deb.debian.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
+}
+add_fix_handler "The repository 'http://deb.debian.org/debian buster-backports Release' no longer has a Release file." "" fix_buster_backport_not_available
