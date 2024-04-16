@@ -306,3 +306,5 @@ will display :
  NEW : fix issue with mdjr.net certificate
 
  NEW : fix "The repository 'http://apt.armbian.com buster Release' no longer has a Release file." with commenting the source in source file (same fix than the official Atlas Plugin does)
+
+ NEW : fix "The repository 'http://deb.debian.org/debian buster-backports Release' no longer has a Release file." with commenting the source in sources.list file.
