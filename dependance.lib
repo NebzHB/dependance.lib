@@ -241,11 +241,11 @@ aptUpdate() {
 	MAX_UPDATE=3
 	[ -n "${NUM_UPDATE}" ] || NUM_UPDATE=0
 	NUM_UPDATE=$((NUM_UPDATE + 1))
-	try sudo apt-get -o Acquire::ForceIPv4=true update
+	aptOut=$(sudo apt-get -o Acquire::ForceIPv4=true update 2>&1)
 	local EXIT_CODE=$?
 
 	if [[ $EXIT_CODE -ne 0 ]]; then
-		APT_ERROR=$(grep -P "Err(.)?:" $TMPFOLDER/errorLog.$$)
+		APT_ERROR=$(echo "$aptOut" | grep -P "Err(.)?:")
 		if [ ! -z "$APT_ERROR" ]; then
 			APT_SRC_ERROR=$(echo $APT_ERROR | sed 's/.*http/http/g' | sed 's/ Release//g')
 			echo "Erreur détectée sur la source : $APT_SRC_ERROR"
@@ -286,10 +286,6 @@ aptUpdate() {
 			echo "Décommentage de $line dans $file"
 			sudo sed -i "s|#\($line\)|\1|" "$file"
 	        done
-		# Error Reset, but will loose the previous steps errors...
-		rm -f $TMPFOLDER/errorLog.$$
-		touch $TMPFOLDER/errorLog.$$
-		echo 0 > $TMPFOLDER/hasError.$$
 	        commented_sources=()
 		unset NUM_UPDATE
 		return 0
