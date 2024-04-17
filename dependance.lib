@@ -267,9 +267,6 @@ aptUpdate() {
 				post
 				exit $EXIT_CODE
 			else
-				rm -f $TMPFOLDER/errorLog.$$
-				touch $TMPFOLDER/errorLog.$$
-				echo 0 > $TMPFOLDER/hasError.$$
 				echo "Relance de apt-get update..."
 				aptUpdate
 				return $?
@@ -280,7 +277,7 @@ aptUpdate() {
 		fi
 	else
 		if [ "$NUM_UPDATE" -ge "2" ]; then
-			echo "apt-get upgrade a bien fonctionné !"
+			echo "apt-get update a bien fonctionné après $NUM_UPDATE essais !"
 		fi
 		# Restore commented lines if no error anymore
 	        for entry in "${commented_sources[@]}"; do
@@ -289,6 +286,10 @@ aptUpdate() {
 			echo "Décommentage de $line dans $file"
 			sudo sed -i "s|#\($line\)|\1|" "$file"
 	        done
+		# Error Reset, but will loose the previous steps errors...
+		rm -f $TMPFOLDER/errorLog.$$
+		touch $TMPFOLDER/errorLog.$$
+		echo 0 > $TMPFOLDER/hasError.$$
 	        commented_sources=()
 		unset NUM_UPDATE
 		return 0
