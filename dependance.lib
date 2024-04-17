@@ -286,6 +286,7 @@ aptUpdate() {
 			sudo sed -i "s|#\($line\)|\1|" "$file"
 	        done
 	        commented_sources=()
+		unset NUM_UPDATE
 	fi
 	return $EXIT_CODE
 }
