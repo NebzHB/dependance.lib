@@ -268,6 +268,7 @@ aptUpdate() {
 				exit $EXIT_CODE
 			else
 				rm -f $TMPFOLDER/errorLog.$$
+				touch $TMPFOLDER/errorLog.$$
 				echo 0 > $TMPFOLDER/hasError.$$
 				echo "Relance de apt-get update..."
 				aptUpdate
