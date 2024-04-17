@@ -233,12 +233,14 @@ comment_source() {
 	grep "$src_error" "$file" | while read -r line; do
 		commented_sources+=("$file:$line")
 		echo "Source trouvée à $line dans $file"
+		echo "$commented_sources"
 		sudo sed -i 's|.*'"$src_error"'.*|#&|' "$file"
 	done
 }
 
 aptUpdate() {
 	MAX_UPDATE=3
+	[ -n "${NUM_UPDATE}" ] || NUM_UPDATE=0
 	NUM_UPDATE=$((NUM_UPDATE + 1))
 	try sudo apt-get -o Acquire::ForceIPv4=true update
 	local EXIT_CODE=$?
@@ -249,22 +251,22 @@ aptUpdate() {
 			echo "Erreur détectée dans $TMPFOLDER/errorLog.$$ sur la ligne : $APT_ERROR"
 			APT_SRC_ERROR=$(echo $APT_ERROR | sed 's/.*http/http/g' | sed 's/ Release//g')
 
-			echo "Recherche de la source $APT_SRC_ERROR dans /etc/apt/sources.list"
+			echo "Recherche de la source $APT_SRC_ERROR dans /etc/apt/sources.list..."
 			comment_source "/etc/apt/sources.list" "$APT_SRC_ERROR"
 			
 			for file in /etc/apt/sources.list.d/*.list; do
-				echo "Recherche de la source $APT_SRC_ERROR dans $file"
+				echo "Recherche de la source $APT_SRC_ERROR dans $file..."
 				comment_source "$file" "$APT_SRC_ERROR"
 			done
 
-			if [ "$NUM_UPDATE" -eq "$MAX_UPDATE" ]; then
-				echo -e "Trop d'essais ($NUM_UPDATE/$MAX_UPDATE), on sort avec erreur"
+			if [ "$NUM_UPDATE" -ge "$MAX_UPDATE" ]; then
+				echo "Trop d'essais ($NUM_UPDATE/$MAX_UPDATE), on sort avec erreur"
 				post
 				exit $EXIT_CODE
 			else
 				rm -f $TMPFOLDER/errorLog.$$
 				echo 0 > $TMPFOLDER/hasError.$$
-				echo -e "Relance de apt-get update...\n"
+				echo "Relance de apt-get update..."
 				aptUpdate
 			fi
 			echo "END"
@@ -273,6 +275,7 @@ aptUpdate() {
 			exit $EXIT_CODE
 		fi
 	else
+		echo "apt-get upgrade a bien fonctionné !"
 		# Restore commented lines if no error anymore
 	        for entry in "${commented_sources[@]}"; do
 			local file="${entry%%:*}"
