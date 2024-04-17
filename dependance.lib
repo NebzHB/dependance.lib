@@ -272,8 +272,8 @@ aptUpdate() {
 				echo 0 > $TMPFOLDER/hasError.$$
 				echo "Relance de apt-get update..."
 				aptUpdate
+				return $?
 			fi
-			echo "END"
 		else
 			post
 			exit $EXIT_CODE
@@ -283,9 +283,6 @@ aptUpdate() {
 			echo "apt-get upgrade a bien fonctionné !"
 		fi
 		# Restore commented lines if no error anymore
-		echo "Voici les sources à décommenter :"
-		echo $commented_sources
-		echo "FIN des sources à décommenter"
 	        for entry in "${commented_sources[@]}"; do
 			local file="${entry%%:*}"
 			local line="${entry#*:}"
@@ -294,6 +291,7 @@ aptUpdate() {
 	        done
 	        commented_sources=()
 		unset NUM_UPDATE
+		return 0
 	fi
 	return $EXIT_CODE
 }
