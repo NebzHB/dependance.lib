@@ -246,7 +246,7 @@ aptUpdate() {
 	local EXIT_CODE=$?
 
 	if [[ $EXIT_CODE -ne 0 ]]; then
-		APT_ERROR=$(echo "$aptOut" | grep -P "Err(.)?:")
+		APT_ERROR=$(echo "$aptOut" | grep -P "Err:")
 		if [ ! -z "$APT_ERROR" ]; then
 			APT_SRC_ERROR=$(echo $APT_ERROR | sed 's/.*http/http/g' | sed 's/ Release//g')
 			if ! echo "$APT_SRC_ERROR" | grep -Eq "($release main|$release-updates main)"; then
