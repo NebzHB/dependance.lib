@@ -232,7 +232,7 @@ comment_source() {
 	local src_error=$2
 	grep "$src_error" "$file" | while read -r line; do
 		commented_sources+=("$file:$line")
-		echo "Source trouvée à $line dans $file, on la commente"
+		echo "Source trouvée à $commented_sources, on la commente"
 		sudo sed -i 's|.*'"$src_error"'.*|#&|' "$file"
 	done
 }
@@ -282,7 +282,9 @@ aptUpdate() {
 			echo "apt-get upgrade a bien fonctionné !"
 		fi
 		# Restore commented lines if no error anymore
-		echo "$commented_sources"
+		echo "Voici les sources à décommenter :"
+		echo $commented_sources
+		echo "FIN des sources à décommenter"
 	        for entry in "${commented_sources[@]}"; do
 			local file="${entry%%:*}"
 			local line="${entry#*:}"
