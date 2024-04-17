@@ -230,11 +230,11 @@ declare -a commented_sources
 comment_source() {
 	local file=$1
 	local src_error=$2
-	grep "$src_error" "$file" | while read -r line; do
+	while IFS= read -r line; do
 		commented_sources+=("$file:$line")
-		echo "Source trouvée à $commented_sources, on la commente"
+		echo "Source trouvée à $line, on la commente"
 		sudo sed -i 's|.*'"$src_error"'.*|#&|' "$file"
-	done
+	done < <(grep "$src_error" "$file")
 }
 
 aptUpdate() {
