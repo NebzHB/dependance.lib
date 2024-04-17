@@ -247,17 +247,21 @@ aptUpdate() {
 	if [[ $EXIT_CODE -ne 0 ]]; then
 		APT_ERROR=$(grep -P "Err(.)?:" $TMPFOLDER/errorLog.$$)
 		if [ ! -z "$APT_ERROR" ]; then
-			echo "Erreur détectée dans $TMPFOLDER/errorLog.$$ sur la ligne : $APT_ERROR"
 			APT_SRC_ERROR=$(echo $APT_ERROR | sed 's/.*http/http/g' | sed 's/ Release//g')
+			echo "Erreur détectée sur la source : $APT_SRC_ERROR"
 
-			echo "Recherche de la source $APT_SRC_ERROR dans /etc/apt/sources.list..."
-			comment_source "/etc/apt/sources.list" "$APT_SRC_ERROR"
+			if grep -q "$APT_SRC_ERROR" "/etc/apt/sources.list"; then
+				echo "Recherche de la source dans /etc/apt/sources.list..."
+				comment_source "/etc/apt/sources.list" "$APT_SRC_ERROR"
+			else
+				for file in /etc/apt/sources.list.d/*.list; do
+					if grep -q "$APT_SRC_ERROR" "$file"; then
+						echo "Recherche de la source dans $file..."
+						comment_source "$file" "$APT_SRC_ERROR"
+					fi
+				done
+			fi
 			
-			for file in /etc/apt/sources.list.d/*.list; do
-				echo "Recherche de la source $APT_SRC_ERROR dans $file..."
-				comment_source "$file" "$APT_SRC_ERROR"
-			done
-
 			if [ "$NUM_UPDATE" -ge "$MAX_UPDATE" ]; then
 				echo "Trop d'essais ($NUM_UPDATE/$MAX_UPDATE), on sort avec erreur"
 				post
