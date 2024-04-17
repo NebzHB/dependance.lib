@@ -275,7 +275,9 @@ aptUpdate() {
 			exit $EXIT_CODE
 		fi
 	else
-		echo "apt-get upgrade a bien fonctionné !"
+		if [ "$NUM_UPDATE" -ge "2" ]; then
+			echo "apt-get upgrade a bien fonctionné !"
+		fi
 		# Restore commented lines if no error anymore
 	        for entry in "${commented_sources[@]}"; do
 			local file="${entry%%:*}"
