@@ -232,7 +232,7 @@ comment_source() {
 	local src_error=$2
 	while IFS= read -r line; do
 		commented_sources+=("$file:$line")
-		echo "Source trouvée à $line, on la commente"
+		echo "║ Source trouvée dans $file, on la retire temporairement"
 		sudo sed -i 's|.*'"$src_error"'.*|#&|' "$file"
 	done < <(grep "$src_error" "$file")
 }
@@ -248,26 +248,24 @@ aptUpdate() {
 		APT_ERROR=$(echo "$aptOut" | grep -P "Err(.)?:")
 		if [ ! -z "$APT_ERROR" ]; then
 			APT_SRC_ERROR=$(echo $APT_ERROR | sed 's/.*http/http/g' | sed 's/ Release//g')
-			echo "Erreur détectée sur la source : $APT_SRC_ERROR"
+			echo "╔ Problème détecté sur la source : $APT_SRC_ERROR, correction en cours..."
 
 			if grep -q "$APT_SRC_ERROR" "/etc/apt/sources.list"; then
-				echo "Recherche de la source dans /etc/apt/sources.list..."
 				comment_source "/etc/apt/sources.list" "$APT_SRC_ERROR"
 			else
 				for file in /etc/apt/sources.list.d/*.list; do
 					if grep -q "$APT_SRC_ERROR" "$file"; then
-						echo "Recherche de la source dans $file..."
 						comment_source "$file" "$APT_SRC_ERROR"
 					fi
 				done
 			fi
 			
 			if [ "$NUM_UPDATE" -ge "$MAX_UPDATE" ]; then
-				echo "Trop d'essais ($NUM_UPDATE/$MAX_UPDATE), on sort avec erreur"
+				echo "╚!!!!!  : Trop d'essais ($NUM_UPDATE/$MAX_UPDATE), on sort avec erreur"
 				post
 				exit $EXIT_CODE
 			else
-				echo "Relance de apt-get update..."
+				echo "║ Relance de apt-get update..."
 				aptUpdate
 				return $?
 			fi
@@ -276,16 +274,19 @@ aptUpdate() {
 			exit $EXIT_CODE
 		fi
 	else
-		if [ "$NUM_UPDATE" -ge "2" ]; then
-			echo "apt-get update a bien fonctionné après $NUM_UPDATE essais !"
-		fi
 		# Restore commented lines if no error anymore
 	        for entry in "${commented_sources[@]}"; do
 			local file="${entry%%:*}"
 			local line="${entry#*:}"
-			echo "Décommentage de $line dans $file"
+			echo "║ On réactive la source $line"
 			sudo sed -i "s|#\($line\)|\1|" "$file"
 	        done
+
+		if [ "$NUM_UPDATE" -ge "2" ]; then
+			echo "║ Ouf ! apt-get update a bien fonctionné après $NUM_UPDATE essais !"
+			echo "╚ Cette étape s'est bien déroulée ici, mais attention, d'autres plugins peuvent avoir le problème avec cette source !"
+		fi
+		
 	        commented_sources=()
 		unset NUM_UPDATE
 		return 0
