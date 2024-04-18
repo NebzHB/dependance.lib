@@ -233,7 +233,11 @@ comment_source() {
 	local src_error=$2
 	while IFS= read -r line; do
 		commented_sources+=("$file:$line")
-		echo "║ Source trouvée dans $file, on la retire temporairement"
+		if [ "$LANG_DEP" = "fr" ]; then
+			echo "║ Source trouvée dans $file, on la retire temporairement"
+		else
+			echo "║ Source found in $file, temporary disabling it"
+		fi
 		sudo sed -i 's|.*'"$src_error"'.*|#&|' "$file"
 	done < <(grep "$src_error" "$file")
 }
@@ -250,7 +254,11 @@ aptUpdate() {
 		if [ ! -z "$APT_ERROR" ]; then
 			APT_SRC_ERROR=$(echo $APT_ERROR | sed 's/.*http/http/g' | sed 's/ Release//g')
 			if ! echo "$APT_SRC_ERROR" | grep -Eq "($release main|$release-updates main)"; then
-				echo "╔ Problème détecté sur la source : $APT_SRC_ERROR, correction en cours..."
+				if [ "$LANG_DEP" = "fr" ]; then
+					echo "╔ Problème détecté sur la source : $APT_SRC_ERROR, correction en cours..."
+				else
+					echo "╔ Issue detected on the source : $APT_SRC_ERROR, fixing in progress..."
+				fi
 	
 				if grep -q "$APT_SRC_ERROR" "/etc/apt/sources.list"; then
 					comment_source "/etc/apt/sources.list" "$APT_SRC_ERROR"
@@ -263,16 +271,28 @@ aptUpdate() {
 				fi
 				
 				if [ "$NUM_UPDATE" -ge "$MAX_UPDATE" ]; then
-					echo "╚!!!!!  : Trop d'essais ($NUM_UPDATE/$MAX_UPDATE), on sort avec erreur"
+					if [ "$LANG_DEP" = "fr" ]; then
+						echo "╚!!!!!  : Trop d'essais ($NUM_UPDATE/$MAX_UPDATE), on sort avec erreur"
+					else
+						echo "╚!!!!!  : Too many tries ($NUM_UPDATE/$MAX_UPDATE), exiting with error"
+					fi
 					post
 					exit $EXIT_CODE
 				else
-					echo "║ Relance de apt-get update..."
+					if [ "$LANG_DEP" = "fr" ]; then
+						echo "║ Relance de apt-get update..."
+					else
+						echo "║ Restarting apt-get update..."
+					fi
 					aptUpdate
 					return $?
 				fi
 			else
-				echo "╚!!!!!  : Erreur sur une source principale de la distribution, impossible à corriger"
+				if [ "$LANG_DEP" = "fr" ]; then
+					echo "╚!!!!!  : Erreur sur une source principale de la distribution, impossible à corriger"
+				else
+					echo "╚!!!!!  : Error on a main source of the distribution, cannot fix"
+				fi
 				post
 				exit $EXIT_CODE
 			fi
@@ -285,15 +305,24 @@ aptUpdate() {
 	        for entry in "${commented_sources[@]}"; do
 			local file="${entry%%:*}"
 			local line="${entry#*:}"
-			echo "║ On réactive la source $line"
+			if [ "$LANG_DEP" = "fr" ]; then
+				echo "║ On réactive la source $line"
+			else
+				echo "║ Re-enabling the source $line"
+			fi
 			sudo sed -i "s|#\($line\)|\1|" "$file"
 	        done
 
 		if [ "$NUM_UPDATE" -ge "2" ]; then
-			echo "║ Ouf ! apt-get update a bien fonctionné après $NUM_UPDATE essais !"
-			echo "╚ Cette étape s'est bien déroulée ici, mais attention, d'autres plugins peuvent avoir le problème avec cette source !"
+			if [ "$LANG_DEP" = "fr" ]; then
+				echo "║ Ouf ! apt-get update a bien fonctionné après $NUM_UPDATE essais !"
+				echo "╚ Cette étape s'est bien déroulée ici, mais attention, d'autres plugins peuvent avoir le problème avec cette source !"
+			else
+				echo "║ Phew ! apt-get update did worked fine after $NUM_UPDATE tries !"
+				echo "╚ This step went fine in the end, but be aware that other plugins may have the same issue with that source !"
+			fi
+			
 		fi
-		
 	        commented_sources=()
 		unset NUM_UPDATE
 		return 0
