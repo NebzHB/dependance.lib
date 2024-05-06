@@ -9,6 +9,7 @@ HR=$(printf '=%.0s' {1..70})
 TAB="echo -n "________""
 declare -A fix_handlers
 h=0 # no fix_handlers
+release=$(lsb_release -sc)
 
 if [ -z $LANG_DEP ]; then
 	LANG_DEP=fr
@@ -226,38 +227,105 @@ tryOrStop() {
 	return $EXIT_CODE
 }
 
-aptUpdate_BETA() {
+declare -a commented_sources
+comment_source() {
+	local file=$1
+	local src_error=$2
+	while IFS= read -r line; do
+		commented_sources+=("$file:$line")
+		if [ "$LANG_DEP" = "fr" ]; then
+			echo "║ Source trouvée dans $file, on la retire temporairement"
+		else
+			echo "║ Source found in $file, temporary disabling it"
+		fi
+		sudo sed -i 's|.*'"$src_error"'.*|#&|' "$file"
+	done < <(grep "$src_error" "$file")
+}
+
+aptUpdate() {
 	MAX_UPDATE=3
+	[ -n "${NUM_UPDATE}" ] || NUM_UPDATE=0
 	NUM_UPDATE=$((NUM_UPDATE + 1))
-	try sudo apt-get -o Acquire::ForceIPv4=true update
+	aptOut=$(sudo apt-get -o Acquire::ForceIPv4=true update 2>&1)
 	local EXIT_CODE=$?
+
 	if [[ $EXIT_CODE -ne 0 ]]; then
-		APT_ERROR=`grep -P "Err(.)?:" $TMPFOLDER/errorLog.$$`
+		APT_ERROR=$(echo "$aptOut" | grep -P "Err:")
 		if [ ! -z "$APT_ERROR" ]; then
-			echo "Erreur détectée dans $TMPFOLDER/errorLog.$$ sur la ligne : $APT_ERROR"
-			APT_SRC_ERROR=`echo $APT_ERROR | sed 's/.*http/http/g' | sed 's/ Release//g'`
-			
-			echo "Recherche de la source $APT_SRC_ERROR dans /etc/apt/sources.list"
-			APT_LINE_ERROR=`grep "$APT_SRC_ERROR" /etc/apt/sources.list`
-			if [ ! -z "$APT_LINE_ERROR" ] && [ $? -eq 0 ]; then
-				echo "Trouvée, on la retire temporairement de sources.list"
-				sudo sed -i '\|'"${APT_SRC_ERROR}"'|d' /etc/apt/sources.list
-				if [ "$NUM_UPDATE" -eq "$MAX_UPDATE" ]; then
-					echo -e "Trop d'essais ($NUM_UPDATE/$MAX_UPDATE), on sort avec erreur"
+			APT_SRC_ERROR=$(echo $APT_ERROR | sed 's/.*http/http/g' | sed 's/ Release//g')
+			if ! echo "$APT_SRC_ERROR" | grep -Eq "($release main|$release-updates main)"; then
+				if [ "$LANG_DEP" = "fr" ]; then
+					echo "╔ Problème détecté sur la source : $APT_SRC_ERROR, correction en cours..."
+				else
+					echo "╔ Issue detected on the source : $APT_SRC_ERROR, fixing in progress..."
+				fi
+	
+				if grep -q "$APT_SRC_ERROR" "/etc/apt/sources.list"; then
+					comment_source "/etc/apt/sources.list" "$APT_SRC_ERROR"
+				else
+					for file in /etc/apt/sources.list.d/*.list; do
+						if grep -q "$APT_SRC_ERROR" "$file"; then
+							comment_source "$file" "$APT_SRC_ERROR"
+						fi
+					done
+				fi
+				
+				if [ "$NUM_UPDATE" -ge "$MAX_UPDATE" ]; then
+					if [ "$LANG_DEP" = "fr" ]; then
+						echo "╚!!!!!  : Trop d'essais ($NUM_UPDATE/$MAX_UPDATE), on sort avec erreur"
+					else
+						echo "╚!!!!!  : Too many tries ($NUM_UPDATE/$MAX_UPDATE), exiting with error"
+					fi
 					post
 					exit $EXIT_CODE
 				else
-					rm -f $TMPFOLDER/errorLog.$$
-					echo 0 > $TMPFOLDER/hasError.$$
-					echo -e "Relance de apt-get update...\n"
+					if [ "$LANG_DEP" = "fr" ]; then
+						echo "║ Relance de apt-get update..."
+					else
+						echo "║ Restarting apt-get update..."
+					fi
 					aptUpdate
+					return $?
 				fi
+			else
+				if [ "$LANG_DEP" = "fr" ]; then
+					echo "╚!!!!!  : Erreur sur une source principale de la distribution, impossible à corriger"
+				else
+					echo "╚!!!!!  : Error on a main source of the distribution, cannot fix"
+				fi
+				post
+				exit $EXIT_CODE
 			fi
-			echo "END"
 		else
 			post
 			exit $EXIT_CODE
 		fi
+	else
+		# Restore commented lines if no error anymore
+	        for entry in "${commented_sources[@]}"; do
+			local file="${entry%%:*}"
+			local line="${entry#*:}"
+			if [ "$LANG_DEP" = "fr" ]; then
+				echo "║ On réactive la source $line"
+			else
+				echo "║ Re-enabling the source $line"
+			fi
+			sudo sed -i "s|#\($line\)|\1|" "$file"
+	        done
+
+		if [ "$NUM_UPDATE" -ge "2" ]; then
+			if [ "$LANG_DEP" = "fr" ]; then
+				echo "║ Ouf ! apt-get update a bien fonctionné après $NUM_UPDATE essais !"
+				echo "╚ Cette étape s'est bien déroulée ici, mais attention, d'autres plugins peuvent avoir le problème avec cette source !"
+			else
+				echo "║ Phew ! apt-get update did worked fine after $NUM_UPDATE tries !"
+				echo "╚ This step went fine in the end, but be aware that other plugins may have the same issue with that source !"
+			fi
+			
+		fi
+	        commented_sources=()
+		unset NUM_UPDATE
+		return 0
 	fi
 	return $EXIT_CODE
 }
@@ -434,4 +502,13 @@ add_fix_handler "Certificate verification failed: The certificate is NOT trusted
 add_fix_handler "The repository 'http://apt.armbian.com buster Release' no longer has a Release file." "" "sudo sed -i 's|^deb http://apt.armbian.com|#deb http://apt.armbian.com|g' /etc/apt/sources.list.d/armbian.list"
 
 # fix buster-backports not available anymore :
-add_fix_handler "The repository 'http://deb.debian.org/debian buster-backports Release' no longer has a Release file." "" "sudo sed -i 's|^deb http://deb.debian.org/debian buster-backports|#deb http://deb.debian.org/debian buster-backports|g' /etc/apt/sources.list"
+fix_buster_backport_not_available() {
+	if [ -f /etc/apt/sources.list.d/buster-backports.list ]; then
+		sudo sed -i 's|^deb-src http://deb.debian.org/debian buster-backports|deb-src http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
+		sudo sed -i 's|^deb http://deb.debian.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
+	else
+		sudo sed -i 's|^deb-src http://deb.debian.org/debian buster-backports|deb-src http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
+		sudo sed -i 's|^deb http://deb.debian.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
+	fi
+}
+add_fix_handler "The repository 'http://deb.debian.org/debian buster-backports Release' no longer has a Release file." "" fix_buster_backport_not_available
