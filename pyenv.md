@@ -3,7 +3,7 @@
 This is an extension of the dependance lib to manage python dependencies in a venv.
 This lib manages also the installation of pyenv to get a dedicated version of python if required.
 
-This has been done by @Mips2648 & #TiTidom-RC base on the great work of @NebzHB
+This has been done by @Mips2648 & @TiTidom-RC base on the great work of @NebzHB
 
 ## pre-requisites
 
