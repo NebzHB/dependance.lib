@@ -166,22 +166,27 @@ createVenv() {
 }
 
 autoSetupVenv() {
-    step 15 "Init python3 & prerequisites"
+	# Default values if not defined
+	[ -n "${firstSubStep}" ] || firstSubStep=20
+	[ -n "${lastSubStep}" ] || lastSubStep=70
+	numSubStepMax=5
+
+    subStep "Init python3 & prerequisites"
     tryOrStop initPython3
 
-    step 20 "Init pyEnv"
+    subStep "Init pyEnv"
     isPyEnvNeeded
     local EXIT_CODE=$?
     if [[ $EXIT_CODE -eq 1 ]]; then
-        step 25 "install or update PyEnv"
+        subStep "install or update PyEnv"
         tryOrStop installOrUpdatePyEnv
 
-        step 40 Install Python $TARGET_PYTHON_VERSION with PyEnv
+        subStep Install Python $TARGET_PYTHON_VERSION with PyEnv
         tryOrStop installPython3WithPyEnv
     fi
     echo "** python3 path: $(getPython3Path) **"
 
-    step 70 "Setting up virtual environment"
+    subStep "Setting up virtual environment"
     tryOrStop createVenv
     echo "** Version of python in VENV:" $(${VENV_DIR}/bin/python3 --version)
 }
@@ -192,6 +197,11 @@ launchInstall() {
     try apt-get clean
     step 10 "Update apt"
     try apt-get update
+
+    if [[ ! -z "${APT_PACKAGES}" ]]; then
+        step 15 "Install apt packages"
+        tryOrStop apt-get install -y ${APT_PACKAGES}
+    fi
 
     autoSetupVenv
 
