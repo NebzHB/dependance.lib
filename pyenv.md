@@ -42,7 +42,7 @@ launchInstall
 
 And that's all, nothing else is needed !
 
-### A few explanation
+### Explanations
 
 The two first sections are the inclusion of both libs:
 
