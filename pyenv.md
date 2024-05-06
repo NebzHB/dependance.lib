@@ -5,7 +5,7 @@ This lib manages also the installation of pyenv to get a dedicated version of py
 
 This has been done by @Mips2648 & @TiTidom-RC base on the great work of @NebzHB
 
-## pre-requisites
+## Prerequisites
 
 You will need to create two files in your plugin:
 
