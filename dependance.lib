@@ -489,6 +489,8 @@ add_fix_handler "sudo dpkg --configure -a" "*dpkg --configure -a" "sudo dpkg --c
 
 # if debian have changed the Suite value, allow releaseinfo change in apt-get
 add_fix_handler "changed its 'Suite' value from" "*changed its Suite value from" "sudo apt-get -o Acquire::ForceIPv4=true --allow-releaseinfo-change update"
+add_fix_handler "a modifié sa valeur « Suite » de" "*a modifié sa valeur suite de" "sudo apt-get -o Acquire::ForceIPv4=true --allow-releaseinfo-change update"
+
 
 # fix certificate chain issue oph.mdrjr.net
 fix_certif_chain_issue_mdrjr() {
