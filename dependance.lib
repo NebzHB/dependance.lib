@@ -512,3 +512,4 @@ fix_buster_backport_not_available() {
 	fi
 }
 add_fix_handler "The repository 'http://deb.debian.org/debian buster-backports Release' no longer has a Release file." "" fix_buster_backport_not_available
+add_fix_handler "Le dépôt http://deb.debian.org/debian buster-backports Release ne contient plus de fichier Release." "" fix_buster_backport_not_available
