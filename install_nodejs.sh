@@ -394,3 +394,7 @@ add_fix_handler "npm ERR! dest /usr/lib/node_modules/.homebridge-alexa-" "*ENOTE
 
 add_fix_handler "npm ERR! dest /usr/local/lib/node_modules/.homebridge-gsh-" "*ENOTEMPTY local gsh" "sudo rm -fR /usr/local/lib/node_modules/.homebridge-gsh-*"
 add_fix_handler "npm ERR! dest /usr/lib/node_modules/.homebridge-gsh-" "*ENOTEMPTY gsh" "sudo rm -fR /usr/lib/node_modules/.homebridge-gsh-*"
+
+# fix when sometimes node source is not correct
+#add_fix_handler "deb.nodesource.com/node_.x" "" "sudo sed -i 's|node_.x|node_${$NODE_MAJOR}.x|' /etc/apt/sources.list.d/nodesource.list"
+#add_fix_handler "deb.nodesource.com/node_.x" "" "sudo sed -i 's|node_.x|node_18.x|' /etc/apt/sources.list.d/nodesource.list"
