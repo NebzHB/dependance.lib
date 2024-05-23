@@ -126,6 +126,17 @@ else
 fi
 NODE_MAJOR=$( [[ $requiredNodeVersion == *.* ]] && echo $requiredNodeVersion | cut -d'.' -f1 || echo $requiredNodeVersion )
 
+if [ -z "$NODE_MAJOR" ]; then
+	echo "Erreur: NODE_MAJOR est vide"
+	echo "Contenu de ${BASEDIR}/package.json:"
+	cat "${BASEDIR}/package.json"
+	echo "Version de node trouvée requiredNodeVersion: $requiredNodeVersion"
+	if ! command -v jq &> /dev/null; then
+	    echo "jq n'est pas installé."
+	fi
+    	exit 1
+fi
+
 silent type node
 if [ $? -eq 0 ]; then actual=`node -v`; else actual='Aucune'; fi
 testVer=$(php -r "echo version_compare('${actual}','v${requiredNodeVersion}','${requiredNodeOperator}');")
