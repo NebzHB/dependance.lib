@@ -91,6 +91,28 @@ if [ $? -eq 0 ]; then
 	fi
 fi
 
+#end of support buster
+lsb_release -c | grep buster
+if [ $? -eq 0 ]; then
+	today=$(date +%Y%m%d)
+	if [[ "$today" > "20240630" ]]; then
+		if [ "$LANG_DEP" = "fr" ]; then
+			echo "$HR"
+			echo -n "== KO == Erreur d'Installation"
+			echo
+			echo "$HR"
+			echo "== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre distribution !!!"
+		else
+			echo "$HR"
+			echo -n "== KO == Installation Error"
+			echo
+			echo "$HR"
+			echo "== WARNING Debian 10 Buster is not supported anymore since the 30rd of june 2024, thank you to update your distribution !!!"
+		fi
+		exit 1
+	fi
+fi
+
 #x86 32 bits not supported by nodesource anymore
 bits=$(getconf LONG_BIT)
 if { [ "$arch" = "i386" ] || [ "$arch" = "i686" ]; } && [ "$bits" -eq "32" ]; then
