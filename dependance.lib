@@ -507,12 +507,12 @@ add_fix_handler "Le dépôt http://apt.armbian.com buster Release ne contient pl
 # fix buster-backports not available anymore :
 fix_buster_backport_not_available() {
 	if [ -f /etc/apt/sources.list.d/buster-backports.list ]; then
-		sudo sed -i 's|^deb-src http://deb.debian.org/debian buster-backports|deb-src http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
-		sudo sed -i 's|^deb http://deb.debian.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
+		sudo sed -i 's|^deb-src http://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb-src http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
+		sudo sed -i 's|^deb http://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
 	else
-		sudo sed -i 's|^deb-src http://deb.debian.org/debian buster-backports|deb-src http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
-		sudo sed -i 's|^deb http://deb.debian.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
+		sudo sed -i 's|^deb-src http://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb-src http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
+		sudo sed -i 's|^deb http://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
 	fi
 }
-add_fix_handler "The repository 'http://deb.debian.org/debian buster-backports Release' no longer has a Release file." "" fix_buster_backport_not_available
-add_fix_handler "Le dépôt http://deb.debian.org/debian buster-backports Release ne contient plus de fichier Release." "" fix_buster_backport_not_available
+add_fix_handler "The repository 'http://[[:alnum:].-]\+\.debian\.org/debian buster-backports Release' no longer has a Release file." "" fix_buster_backport_not_available
+add_fix_handler "Le dépôt http://[[:alnum:].-]\+\.debian\.org/debian buster-backports Release ne contient plus de fichier Release." "" fix_buster_backport_not_available
