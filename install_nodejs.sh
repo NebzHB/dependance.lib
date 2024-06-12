@@ -102,14 +102,28 @@ if [ $? -eq 0 ]; then
 			echo
 			echo "$HR"
 			echo "== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre distribution !!!"
+   			echo "== Les dépendances sont bloquées afin d'éviter tout problème, soit $PLUGIN fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre distribution."
 		else
 			echo "$HR"
 			echo -n "== KO == Installation Error"
 			echo
 			echo "$HR"
 			echo "== WARNING Debian 10 Buster is not supported anymore since the 30rd of june 2024, thank you to update your distribution !!!"
+   			echo "== Dependancies are blocked to avoid any issues. Either $PLUGIN works and so we don't touch the dependancies as it works, either it doesn't work anymore and you have to update your distribution."
 		fi
-		exit 1
+  		exit 1
+  	else
+   		if [[ "$today" > "20240601" ]]; then
+			if [ "$LANG_DEP" = "fr" ]; then
+				echo "$HR"
+				echo "== ATTENTION Debian 10 Buster ne sera officiellement plus supportée à partir du 01 juilet 2024, merci de mettre à jour votre distribution au plus vite !!!"
+    				echo "$HR"
+			else
+				echo "$HR"
+				echo "== WARNING Debian 10 Buster will not be supported anymore from the 1st of july 2024, thank you to quickly update your distribution !!!"
+    				echo "$HR"
+			fi
+   		fi
 	fi
 fi
 
