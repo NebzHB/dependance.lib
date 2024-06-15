@@ -489,6 +489,8 @@ add_fix_handler "sudo dpkg --configure -a" "*dpkg --configure -a" "sudo dpkg --c
 
 # if debian have changed the Suite value, allow releaseinfo change in apt-get
 add_fix_handler "changed its 'Suite' value from" "*changed its Suite value from" "sudo apt-get -o Acquire::ForceIPv4=true --allow-releaseinfo-change update"
+add_fix_handler "a modifié sa valeur « Suite » de" "*a modifié sa valeur suite de" "sudo apt-get -o Acquire::ForceIPv4=true --allow-releaseinfo-change update"
+
 
 # fix certificate chain issue oph.mdrjr.net
 fix_certif_chain_issue_mdrjr() {
@@ -500,15 +502,17 @@ add_fix_handler "Certificate verification failed: The certificate is NOT trusted
 
 # fix armbian.com not available for buster anymore (same fix than the Atlas plugin does) :
 add_fix_handler "The repository 'http://apt.armbian.com buster Release' no longer has a Release file." "" "sudo sed -i 's|^deb http://apt.armbian.com|#deb http://apt.armbian.com|g' /etc/apt/sources.list.d/armbian.list"
+add_fix_handler "Le dépôt http://apt.armbian.com buster Release ne contient plus de fichier Release." "" "sudo sed -i 's|^deb http://apt.armbian.com|#deb http://apt.armbian.com|g' /etc/apt/sources.list.d/armbian.list"
 
 # fix buster-backports not available anymore :
 fix_buster_backport_not_available() {
 	if [ -f /etc/apt/sources.list.d/buster-backports.list ]; then
-		sudo sed -i 's|^deb-src http://deb.debian.org/debian buster-backports|deb-src http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
-		sudo sed -i 's|^deb http://deb.debian.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
+		sudo sed -i 's|^deb-src http://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb-src http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
+		sudo sed -i 's|^deb http://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
 	else
-		sudo sed -i 's|^deb-src http://deb.debian.org/debian buster-backports|deb-src http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
-		sudo sed -i 's|^deb http://deb.debian.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
+		sudo sed -i 's|^deb-src http://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb-src http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
+		sudo sed -i 's|^deb http://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
 	fi
 }
-add_fix_handler "The repository 'http://deb.debian.org/debian buster-backports Release' no longer has a Release file." "" fix_buster_backport_not_available
+add_fix_handler "The repository 'http://[[:alnum:].-]\+\.debian\.org/debian buster-backports Release' no longer has a Release file." "" fix_buster_backport_not_available
+add_fix_handler "Le dépôt http://[[:alnum:].-]\+\.debian\.org/debian buster-backports Release ne contient plus de fichier Release." "" fix_buster_backport_not_available
