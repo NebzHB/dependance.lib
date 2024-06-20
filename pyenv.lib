@@ -6,7 +6,7 @@ VENV_DIR=${BASE_DIR}/venv
 CURRENT_PYTHON_VERSION=$(python3 --version | awk -F'[ ]' '{print $2}')
 [[ -z "$CURRENT_PYTHON_VERSION" ]] && CURRENT_PYTHON_VERSION="0.0.0"
 
-TARGET_PYTHON_VERSION=$CURRENT_PYTHON_VERSION
+TARGET_PYTHON_VERSION="3.9" #min version needed for this script, python 3.7 is not supported
 
 vercomp () {
     if [[ $1 == $2 ]]
