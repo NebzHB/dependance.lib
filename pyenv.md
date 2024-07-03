@@ -58,9 +58,11 @@ If you have followed pre-requisites, it will install dependencies defined in `re
 
 #### TARGET_PYTHON_VERSION
 
-`TARGET_PYTHON_VERSION` allow you to specify the minimal requested python version. If not specified, it will be the version coming by default with current Debian version.
+`TARGET_PYTHON_VERSION` allow you to specify the minimal requested python version. If not specified, it will be at least python 3.9 (no support of 3.7) or the version coming by default with current Debian version if > 3.9.
 
 The lib try to optimize installation time: if several plugins are using this lib and require the same or compatible python version, installation will be done only once for all (but each one will get is own "copy" to avoid side impacts between plugins)
+
+It might be that you end up with a higher python version than the target, you can see it as the minimum needed version.
 
 Take into account than installing a specific python version can take an hour or more on slow hardware so to avoid impacting too much end-user with very long installation time, it is recommended to only specify *minor* version (e.g. "3.11") and not *patch* (e.g. "3.11.8") so the lib can optimize the usage of python version cross plugins.
 
@@ -122,7 +124,7 @@ In this script you see the usual usage of `pre`, `try`, `tryOrStop`, `post` ... 
 
 The interesting part is `autoSetupVenv` which do the following:
 
-- Install needed apt packages for venv creation
+- install needed apt packages for venv creation
 - init pyenv and check if a new version of python must be installed or updated (based on `TARGET_PYTHON_VERSION` as before)
 - setup the venv (in `VENV_DIR` as before) with pyenv if required
 
@@ -139,3 +141,96 @@ In this case, you have the responsibility to call these functions in the correct
 - `createVenv` - will actually create or update the venv to match the `TARGET_PYTHON_VERSION` (2 preceding steps are required before)
 
 Do not hesitate to take a look at functions `launchInstall` & `autoSetupVenv` to understand how to use them but I discourage usage of this "low level" functions. Usage of `launchInstall` or `autoSetupVenv` should be sufficient and if not, let discuss first ;-)
+
+## Additional adaptations of in your plugin
+
+### Usage of python bin (mandatory)
+
+You must use the python bin of the venv of your plugin and not the one of the system.
+The path will be `__DIR__ . '/../../resources/venv/bin/python3'` (if default folder used) instead of `python3` or `/usr/bin/python3`.
+
+### Exclude venv dir from backup (mandatory)
+
+The drawback of having a virtual environment is the fact that dependencies will take a little more space on storage (because each plugin has its own version of the libs). This is not really a big deal versus the benefit but let's not include these files in the backup of Jeedom.
+
+On top, in case of restore, if venv dir is include, this will failed at next daemon start because the symbolic links will be broken.
+
+To do this, you need to add such function in your eqLogic class and the core will take care of the exclusion (you need to adapt path if you decide to change the default folder):
+
+```PHP
+    public static function backupExclude() {
+        return [
+            'resources/venv'
+        ];
+    }
+```
+
+### Adapt plugin info.json (recommended)
+
+As said before, installing specific python version might take a very long time on small configuration, so don't forget to adapt `info.json` file to increase `maxDependancyInstallTime` parameter to at least 60 min if you request a specific python version:
+
+```JSON
+    "hasDependency": true,
+    "hasOwnDeamon": true,
+    "maxDependancyInstallTime": 60,
+```
+
+### Dependencies check (recommended)
+
+Because we use a `requirements.txt` to manage dependencies version, it would be beneficial to use it as well for the dependencies check to avoid copy/pasting list of librairies in the PHP code.
+
+So here is an example of `dependancy_info()` function compatible with this lib:
+
+```PHP
+public static function dependancy_info() {
+    $return = array();
+    $return['log'] = log::getPathToLog(__CLASS__ . '_update');
+    $return['progress_file'] = jeedom::getTmpFolder(__CLASS__) . '/dependance';
+    $return['state'] = 'ok';
+    if (file_exists(jeedom::getTmpFolder(__CLASS__) . '/dependance')) {
+        $return['state'] = 'in_progress';
+    } elseif (!self::pythonRequirementsInstalled(self::PYTHON_PATH, __DIR__ . '/../../resources/requirements.txt')) {
+        $return['state'] = 'nok';
+    }
+    return $return;
+}
+```
+
+and the `pythonRequirementsInstalled()` function (also available in <https://github.com/Mips2648/jeedom-tools>):
+
+```PHP
+private static function pythonRequirementsInstalled(string $pythonPath, string $requirementsPath) {
+    if (!file_exists($pythonPath) || !file_exists($requirementsPath)) {
+        return false;
+    }
+    exec("{$pythonPath} -m pip freeze", $packages_installed);
+    $packages = join("||", $packages_installed);
+    exec("cat {$requirementsPath}", $packages_needed);
+    foreach ($packages_needed as $line) {
+        if (preg_match('/([^\s]+)[\s]*([>=~]=)[\s]*([\d+\.?]+)$/', $line, $need) === 1) {
+            if (preg_match('/' . $need[1] . '==([\d+\.?]+)/', $packages, $install) === 1) {
+                if ($need[2] == '==' && $need[3] != $install[1]) {
+                    return false;
+                } elseif (version_compare($need[3], $install[1], '>')) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+```
+
+Attention, it supports only following syntax: `==`, `~=`, `>=`.
+
+Examples:
+
+```txt
+jeedomdaemon~=0.10.1
+jeedomdaemon>=0.10.1
+jeedomdaemon==0.10.1
+```
+
+Feel free to reuse them as you which.
