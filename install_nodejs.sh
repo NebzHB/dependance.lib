@@ -436,6 +436,8 @@ add_fix_handler "npm ERR! fatal: could not create leading directories of '/root/
 add_fix_handler "npm ERR! dest /usr/local/lib/node_modules/.homebridge-config-ui-x-" "*ENOTEMPTY local config-ui-x" "sudo rm -fR /usr/local/lib/node_modules/.homebridge-config-ui-x-*"
 add_fix_handler "npm ERR! dest /usr/lib/node_modules/.homebridge-config-ui-x-" "*ENOTEMPTY config-ui-x" "sudo rm -fR /usr/lib/node_modules/.homebridge-config-ui-x-*"
 
+add_fix_handler "npm error dest /usr/local/lib/node_modules/.homebridge-config-ui-x-" "*ENOTEMPTY local config-ui-x" "sudo rm -fR /usr/local/lib/node_modules/.homebridge-config-ui-x-*"
+
 add_fix_handler "npm ERR! dest /usr/local/lib/node_modules/.homebridge-alexa-" "*ENOTEMPTY local alexa" "sudo rm -fR /usr/local/lib/node_modules/.homebridge-alexa-*"
 add_fix_handler "npm ERR! dest /usr/lib/node_modules/.homebridge-alexa-" "*ENOTEMPTY alexa" "sudo rm -fR /usr/lib/node_modules/.homebridge-alexa-*"
 
