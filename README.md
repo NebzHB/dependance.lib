@@ -1,6 +1,7 @@
 # dependance.lib
 
 NB : for nodejs install, see [install_nodejs script Doc](https://github.com/NebzHB/dependance.lib/blob/master/install_nodejs.md)
+NB : for python install, see [pyenv script Doc](https://github.com/NebzHB/dependance.lib/blob/master/pyenv.md)
 
 Bash HomeMade Dependance Library for Jeedom
 
