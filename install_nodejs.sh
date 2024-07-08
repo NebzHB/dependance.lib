@@ -112,18 +112,6 @@ if [ $? -eq 0 ]; then
    			echo "== Dependancies are blocked to avoid any issues. Either $PLUGIN works and so we don't touch the dependancies as it works, either it doesn't work anymore and you have to update your distribution."
 		fi
   		exit 1
-  	else
-   		if [[ "$today" > "20240601" ]]; then
-			if [ "$LANG_DEP" = "fr" ]; then
-				echo "$HR"
-				echo "== ATTENTION Debian 10 Buster ne sera officiellement plus supportée à partir du 01 juilet 2024, merci de mettre à jour votre distribution au plus vite !!!"
-    				echo "$HR"
-			else
-				echo "$HR"
-				echo "== WARNING Debian 10 Buster will not be supported anymore from the 1st of july 2024, thank you to quickly update your distribution !!!"
-    				echo "$HR"
-			fi
-   		fi
 	fi
 fi
 
@@ -135,13 +123,13 @@ if { [ "$arch" = "i386" ] || [ "$arch" = "i686" ]; } && [ "$bits" -eq "32" ]; th
 		echo -n "== KO == Erreur d'Installation"
 		echo
 		echo "$HR"
-		echo "== ATTENTION Votre système est x86 en 32bits et NodeJS 12 n'y est pas supporté, merci de passer en 64bits !!!"
+		echo "== ATTENTION Votre système est x86 en 32bits et NodeJS n'y est pas supporté, merci de passer en 64bits !!!"
 	else
 		echo "$HR"
 		echo -n "== KO == Installation Error"
 		echo
 		echo "$HR"
-		echo "== WARNING Your system is x86 in 32bits and NodeJS 12 doesn not support it anymore, thank you to reinstall in 64bits !!!"
+		echo "== WARNING Your system is x86 in 32bits and NodeJS does not support it anymore, thank you to reinstall in 64bits !!!"
 	fi
 	exit 1 
 fi
