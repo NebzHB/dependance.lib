@@ -120,7 +120,7 @@ if [ $? -eq 0 ]; then
 			echo -n "== WARNING == A VERIFIER AU PLUS VITE"
 			echo
 			echo "$HR"
-			echo "== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est toujours en cours de finalisation par Jeedom."
+			echo "== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est en cours de finalisation par Jeedom."
 			echo "== Les dépendances vont quand même se lancer (mais aucun support ne sera fait si celles-ci ne fonctionnent pas !), surveillez les nouvelles de Jeedom afin de mettre à jour en Debian 11 au plus vite quand ils auront sorti leur nouvelle image."
 		else
 			echo "$HR"
