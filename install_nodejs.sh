@@ -153,13 +153,15 @@ fi
 NODE_MAJOR=$( [[ $requiredNodeVersion == *.* ]] && echo $requiredNodeVersion | cut -d'.' -f1 || echo $requiredNodeVersion )
 
 if [ -z "$NODE_MAJOR" ]; then
-	echo "Erreur: NODE_MAJOR est vide"
-	echo "Contenu de ${BASEDIR}/package.json:"
-	cat "${BASEDIR}/package.json"
-	echo "Version de node trouvée requiredNodeVersion: $requiredNodeVersion"
+	echo 1 > $TMPFOLDER/hasError.$$
+	echo "Erreur: NODE_MAJOR est vide" >> $TMPFOLDER/errorLog.$$ 
+	echo "Contenu de ${BASEDIR}/package.json:" >> $TMPFOLDER/errorLog.$$ 
+	cat "${BASEDIR}/package.json" >> $TMPFOLDER/errorLog.$$ 
+	echo "Version de node trouvée requiredNodeVersion: $requiredNodeVersion" >> $TMPFOLDER/errorLog.$$ 
 	if ! command -v jq &> /dev/null; then
-		echo "jq n'est pas installé."
+		echo "jq n'est pas installé." >> $TMPFOLDER/errorLog.$$ 
 	fi
+ 	post
     	exit 1
 fi
 
