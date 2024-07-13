@@ -99,20 +99,19 @@ if [ $? -eq 0 ]; then
 	if [ ! -f /media/boot/multiboot/meson64_odroidc2.dtb.linux ]; then
 		today=$(date +%Y%m%d)
 		if [[ "$today" > "20240630" ]]; then
+  			echo 1 > $TMPFOLDER/hasError.$$
 			if [ "$LANG_DEP" = "fr" ]; then
-				echo "$HR"
-				echo -n "== KO == Erreur d'Installation"
-				echo
-				echo "$HR"
-				echo "== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre distribution !!!"
-	   			echo "== Les dépendances sont bloquées afin d'éviter tout problème, soit $PLUGIN fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre distribution."
+				echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
+				echo -e "== KO == Erreur d'Installation" >> $TMPFOLDER/errorLog.$$ 
+				echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
+				echo -e "== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre distribution !!!" >> $TMPFOLDER/errorLog.$$ 
+	   			echo -e "== Les dépendances sont bloquées afin d'éviter tout problème, soit $PLUGIN fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre distribution." >> $TMPFOLDER/errorLog.$$ 
 			else
-				echo "$HR"
-				echo -n "== KO == Installation Error"
-				echo
-				echo "$HR"
-				echo "== WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Please update your distribution!!!"
-	   			echo "== Dependencies are blocked to avoid any issues. Either $PLUGIN works and so we don't touch the dependencies as long as it works, or it doesn't work anymore and you have to update your distribution."
+				echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
+				echo -e "== KO == Installation Error" >> $TMPFOLDER/errorLog.$$ 
+				echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
+				echo -e "== WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Please update your distribution!!!" >> $TMPFOLDER/errorLog.$$ 
+	   			echo -e "== Dependencies are blocked to avoid any issues. Either $PLUGIN works and so we don't touch the dependencies as long as it works, or it doesn't work anymore and you have to update your distribution." >> $TMPFOLDER/errorLog.$$ 
 			fi
    			post
 	  		exit 1
