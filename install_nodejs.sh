@@ -91,34 +91,34 @@ if [ $? -eq 0 ]; then
 		if [[ "$today" > "20240630" ]]; then
   			echo 1 > $TMPFOLDER/hasError.$$
 			if [ "$LANG_DEP" = "fr" ]; then
-   				echo -e ":bg-danger:$HR:/bg:" >> $TMPFOLDER/errorLog.$$ 
-				echo -e ":bg-danger:== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre distribution !!!:/bg:" >> $TMPFOLDER/errorLog.$$ 
-	   			echo -e ":bg-danger:== Les dépendances sont bloquées afin d'éviter tout problème, soit $PLUGIN fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre distribution.:/bg:" >> $TMPFOLDER/errorLog.$$ 
-       				echo -e ":bg-danger:$HR:/bg:" >> $TMPFOLDER/errorLog.$$ 
+   				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
+				echo -e ":fg-danger:== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre distribution !!!:/fg:" >> $TMPFOLDER/errorLog.$$ 
+	   			echo -e ":fg-danger:== Les dépendances sont bloquées afin d'éviter tout problème, soit $PLUGIN fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre distribution.:/fg:" >> $TMPFOLDER/errorLog.$$ 
+       				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
 			else
-   				echo -e ":bg-danger:$HR:/bg:" >> $TMPFOLDER/errorLog.$$ 
-				echo -e ":bg-danger:== WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Please update your distribution!!!:/bg:" >> $TMPFOLDER/errorLog.$$ 
-	   			echo -e ":bg-danger:== Dependencies are blocked to avoid any issues. Either $PLUGIN works and so we don't touch the dependencies as long as it works, or it doesn't work anymore and you have to update your distribution.:/bg:" >> $TMPFOLDER/errorLog.$$ 
-       				echo -e ":bg-danger:$HR:/bg:" >> $TMPFOLDER/errorLog.$$ 
+   				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
+				echo -e ":fg-danger:== WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Please update your distribution!!!:/fg:" >> $TMPFOLDER/errorLog.$$ 
+	   			echo -e ":fg-danger:== Dependencies are blocked to avoid any issues. Either $PLUGIN works and so we don't touch the dependencies as long as it works, or it doesn't work anymore and you have to update your distribution.:/fg:" >> $TMPFOLDER/errorLog.$$ 
+       				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
 			fi
    			post
 	  		exit 1
 		fi
 	else
 		if [ "$LANG_DEP" = "fr" ]; then
-			echo ":bg-warning:$HR:/bg:"
-			echo ":bg-warning:== WARNING == A VERIFIER AU PLUS VITE:/bg:"
+			echo ":fg-warning:$HR:/fg:"
+			echo ":fg-warning:== WARNING == A VERIFIER AU PLUS VITE:/fg:"
 			echo
-			echo ":bg-warning:$HR:/bg:"
-			echo ":bg-warning:== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est en cours de finalisation par Jeedom.:/bg:"
-			echo ":bg-warning:== Les dépendances vont quand même se lancer (mais aucun support ne sera fait si celles-ci ne fonctionnent pas !), surveillez les nouvelles de Jeedom afin de mettre à jour en Debian 11 au plus vite quand ils auront sorti leur nouvelle image.:/bg:"
+			echo ":fg-warning:$HR:/fg:"
+			echo ":fg-warning:== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est en cours de finalisation par Jeedom.:/fg:"
+			echo ":fg-warning:== Les dépendances vont quand même se lancer (mais aucun support ne sera fait si celles-ci ne fonctionnent pas !), surveillez les nouvelles de Jeedom afin de mettre à jour en Debian 11 au plus vite quand ils auront sorti leur nouvelle image.:/fg:"
 		else
-			echo ":bg-warning:$HR:/bg:"
-			echo ":bg-warning:== WARNING == TO CHECK SOON:/bg:"
+			echo ":fg-warning:$HR:/fg:"
+			echo ":fg-warning:== WARNING == TO CHECK SOON:/fg:"
 			echo
-			echo ":bg-warning:$HR:/bg:"
-			echo ":bg-warning:== WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Nevertheless, the Debian 11 image for the Smart box is still under development by Jeedom.:/bg:"
-			echo ":bg-warning:== Dependancies will continue (but no support will be done if it fails). Watch for Jeedom news to update to Debian 11 as soon as they release the new image.:/bg:"
+			echo ":fg-warning:$HR:/fg:"
+			echo ":fg-warning:== WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Nevertheless, the Debian 11 image for the Smart box is still under development by Jeedom.:/fg:"
+			echo ":fg-warning:== Dependancies will continue (but no support will be done if it fails). Watch for Jeedom news to update to Debian 11 as soon as they release the new image.:/fg:"
 		fi
  	fi
 fi
