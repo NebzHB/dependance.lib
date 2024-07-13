@@ -65,6 +65,7 @@ if [ $? -eq 0 ]; then
 			echo "$HR"
 			echo "== WARNING Debian 8 Jessie is not supported anymore since the 30rd of june 2020, thank you to update your distribution !!!"
 		fi
+  		post
 		exit 1
 	fi
 fi
@@ -87,6 +88,7 @@ if [ $? -eq 0 ]; then
 			echo "$HR"
 			echo "== WARNING Debian 9 Stretch is not supported anymore since the 30rd of june 2022, thank you to update your distribution !!!"
 		fi
+  		post
 		exit 1
 	fi
 fi
@@ -112,6 +114,7 @@ if [ $? -eq 0 ]; then
 				echo "== WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Please update your distribution!!!"
 	   			echo "== Dependencies are blocked to avoid any issues. Either $PLUGIN works and so we don't touch the dependencies as long as it works, or it doesn't work anymore and you have to update your distribution."
 			fi
+   			post
 	  		exit 1
 		fi
 	else
@@ -149,6 +152,7 @@ if { [ "$arch" = "i386" ] || [ "$arch" = "i686" ]; } && [ "$bits" -eq "32" ]; th
 		echo "$HR"
 		echo "== WARNING Your system is x86 in 32bits and NodeJS does not support it anymore, thank you to reinstall in 64bits !!!"
 	fi
+ 	post
 	exit 1 
 fi
 
