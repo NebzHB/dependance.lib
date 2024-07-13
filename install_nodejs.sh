@@ -106,19 +106,19 @@ if [ $? -eq 0 ]; then
 		fi
 	else
 		if [ "$LANG_DEP" = "fr" ]; then
-			echo "$HR"
-			echo -n "== WARNING == A VERIFIER AU PLUS VITE"
+			echo ":bg-warning:$HR:/bg:"
+			echo ":bg-warning:== WARNING == A VERIFIER AU PLUS VITE:/bg:"
 			echo
-			echo "$HR"
-			echo "== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est en cours de finalisation par Jeedom."
-			echo "== Les dépendances vont quand même se lancer (mais aucun support ne sera fait si celles-ci ne fonctionnent pas !), surveillez les nouvelles de Jeedom afin de mettre à jour en Debian 11 au plus vite quand ils auront sorti leur nouvelle image."
+			echo ":bg-warning:$HR:/bg:"
+			echo ":bg-warning:== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est en cours de finalisation par Jeedom.:/bg:"
+			echo ":bg-warning:== Les dépendances vont quand même se lancer (mais aucun support ne sera fait si celles-ci ne fonctionnent pas !), surveillez les nouvelles de Jeedom afin de mettre à jour en Debian 11 au plus vite quand ils auront sorti leur nouvelle image.:/bg:"
 		else
-			echo "$HR"
-			echo -n "== WARNING == TO CHECK SOON"
+			echo ":bg-warning:$HR:/bg:"
+			echo ":bg-warning:== WARNING == TO CHECK SOON:/bg:"
 			echo
-			echo "$HR"
-			echo "== WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Nevertheless, the Debian 11 image for the Smart box is still under development by Jeedom."
-			echo "== Dependancies will continue (but no support will be done if it fails). Watch for Jeedom news to update to Debian 11 as soon as they release the new image."
+			echo ":bg-warning:$HR:/bg:"
+			echo ":bg-warning:== WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Nevertheless, the Debian 11 image for the Smart box is still under development by Jeedom.:/bg:"
+			echo ":bg-warning:== Dependancies will continue (but no support will be done if it fails). Watch for Jeedom news to update to Debian 11 as soon as they release the new image.:/bg:"
 		fi
  	fi
 fi
