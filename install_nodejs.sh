@@ -52,18 +52,11 @@ lsb_release -c | grep -q jessie
 if [ $? -eq 0 ]; then
 	today=$(date +%Y%m%d)
 	if [[ "$today" > "20200630" ]]; then
+ 		echo 1 > $TMPFOLDER/hasError.$$
 		if [ "$LANG_DEP" = "fr" ]; then
-			echo "$HR"
-			echo -n "== KO == Erreur d'Installation"
-			echo
-			echo "$HR"
-			echo "== ATTENTION Debian 8 Jessie n'est officiellement plus supportée depuis le 30 juin 2020, merci de mettre à jour votre distribution !!!"
+			echo "== ATTENTION Debian 8 Jessie n'est officiellement plus supportée depuis le 30 juin 2020, merci de mettre à jour votre distribution !!!" >> $TMPFOLDER/errorLog.$$ 
 		else
-			echo "$HR"
-			echo -n "== KO == Installation Error"
-			echo
-			echo "$HR"
-			echo "== WARNING Debian 8 Jessie is not supported anymore since the 30rd of june 2020, thank you to update your distribution !!!"
+			echo "== WARNING Debian 8 Jessie is not supported anymore since the 30rd of june 2020, thank you to update your distribution !!!" >> $TMPFOLDER/errorLog.$$ 
 		fi
   		post
 		exit 1
@@ -75,18 +68,11 @@ lsb_release -c | grep -q stretch
 if [ $? -eq 0 ]; then
 	today=$(date +%Y%m%d)
 	if [[ "$today" > "20220630" ]]; then
+ 		echo 1 > $TMPFOLDER/hasError.$$
 		if [ "$LANG_DEP" = "fr" ]; then
-			echo "$HR"
-			echo -n "== KO == Erreur d'Installation"
-			echo
-			echo "$HR"
-			echo "== ATTENTION Debian 9 Stretch n'est officiellement plus supportée depuis le 30 juin 2022, merci de mettre à jour votre distribution !!!"
+			echo "== ATTENTION Debian 9 Stretch n'est officiellement plus supportée depuis le 30 juin 2022, merci de mettre à jour votre distribution !!!" >> $TMPFOLDER/errorLog.$$ 
 		else
-			echo "$HR"
-			echo -n "== KO == Installation Error"
-			echo
-			echo "$HR"
-			echo "== WARNING Debian 9 Stretch is not supported anymore since the 30rd of june 2022, thank you to update your distribution !!!"
+			echo "== WARNING Debian 9 Stretch is not supported anymore since the 30rd of june 2022, thank you to update your distribution !!!" >> $TMPFOLDER/errorLog.$$ 
 		fi
   		post
 		exit 1
@@ -132,18 +118,11 @@ fi
 #x86 32 bits not supported by nodesource anymore
 bits=$(getconf LONG_BIT)
 if { [ "$arch" = "i386" ] || [ "$arch" = "i686" ]; } && [ "$bits" -eq "32" ]; then
+	echo 1 > $TMPFOLDER/hasError.$$
 	if [ "$LANG_DEP" = "fr" ]; then
-		echo "$HR"
-		echo -n "== KO == Erreur d'Installation"
-		echo
-		echo "$HR"
-		echo "== ATTENTION Votre système est x86 en 32bits et NodeJS n'y est pas supporté, merci de passer en 64bits !!!"
+		echo "== ATTENTION Votre système est x86 en 32bits et NodeJS n'y est pas supporté, merci de passer en 64bits !!!" >> $TMPFOLDER/errorLog.$$ 
 	else
-		echo "$HR"
-		echo -n "== KO == Installation Error"
-		echo
-		echo "$HR"
-		echo "== WARNING Your system is x86 in 32bits and NodeJS does not support it anymore, thank you to reinstall in 64bits !!!"
+		echo "== WARNING Your system is x86 in 32bits and NodeJS does not support it anymore, thank you to reinstall in 64bits !!!" >> $TMPFOLDER/errorLog.$$ 
 	fi
  	post
 	exit 1 
