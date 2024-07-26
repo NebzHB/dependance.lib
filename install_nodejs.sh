@@ -55,10 +55,10 @@ if [ $? -eq 0 ]; then
  		echo 1 > $TMPFOLDER/hasError.$$
 		if [ "$LANG_DEP" = "fr" ]; then
   			echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
-			echo -e "== ATTENTION Debian 8 Jessie n'est officiellement plus supportée depuis le 30 juin 2020, merci de mettre à jour votre distribution !!!" >> $TMPFOLDER/errorLog.$$ 
+			echo -e "== ATTENTION Debian 8 Jessie n'est officiellement plus supportée depuis le 30 juin 2020, merci de mettre à jour votre système !!!" >> $TMPFOLDER/errorLog.$$ 
 		else
   			echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
-			echo -e "== WARNING Debian 8 Jessie is not supported anymore since the 30rd of june 2020, thank you to update your distribution !!!" >> $TMPFOLDER/errorLog.$$ 
+			echo -e "== WARNING Debian 8 Jessie is not supported anymore since the 30rd of june 2020, thank you to update your system !!!" >> $TMPFOLDER/errorLog.$$ 
 		fi
   		post
 		exit 1
@@ -73,10 +73,10 @@ if [ $? -eq 0 ]; then
  		echo 1 > $TMPFOLDER/hasError.$$
 		if [ "$LANG_DEP" = "fr" ]; then
   			echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
-			echo -e "== ATTENTION Debian 9 Stretch n'est officiellement plus supportée depuis le 30 juin 2022, merci de mettre à jour votre distribution !!!" >> $TMPFOLDER/errorLog.$$ 
+			echo -e "== ATTENTION Debian 9 Stretch n'est officiellement plus supportée depuis le 30 juin 2022, merci de mettre à jour votre système !!!" >> $TMPFOLDER/errorLog.$$ 
 		else
   			echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
-			echo -e "== WARNING Debian 9 Stretch is not supported anymore since the 30rd of june 2022, thank you to update your distribution !!!" >> $TMPFOLDER/errorLog.$$ 
+			echo -e "== WARNING Debian 9 Stretch is not supported anymore since the 30rd of june 2022, thank you to update your system !!!" >> $TMPFOLDER/errorLog.$$ 
 		fi
   		post
 		exit 1
@@ -92,13 +92,13 @@ if [ $? -eq 0 ]; then
   			echo 1 > $TMPFOLDER/hasError.$$
 			if [ "$LANG_DEP" = "fr" ]; then
    				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
-				echo -e ":fg-danger:== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre distribution !!!:/fg:" >> $TMPFOLDER/errorLog.$$ 
-	   			echo -e ":fg-danger:== Les dépendances sont bloquées afin d'éviter tout problème, soit $PLUGIN fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre distribution.:/fg:" >> $TMPFOLDER/errorLog.$$ 
+				echo -e ":fg-danger:== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre système !!!:/fg:" >> $TMPFOLDER/errorLog.$$ 
+	   			echo -e ":fg-danger:== Les dépendances sont bloquées afin d'éviter tout problème, soit $PLUGIN fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre système.:/fg:" >> $TMPFOLDER/errorLog.$$ 
        				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
 			else
    				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
-				echo -e ":fg-danger:== WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Please update your distribution!!!:/fg:" >> $TMPFOLDER/errorLog.$$ 
-	   			echo -e ":fg-danger:== Dependencies are blocked to avoid any issues. Either $PLUGIN works and so we don't touch the dependencies as long as it works, or it doesn't work anymore and you have to update your distribution.:/fg:" >> $TMPFOLDER/errorLog.$$ 
+				echo -e ":fg-danger:== WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Please update your system!!!:/fg:" >> $TMPFOLDER/errorLog.$$ 
+	   			echo -e ":fg-danger:== Dependencies are blocked to avoid any issues. Either $PLUGIN works and so we don't touch the dependencies as long as it works, or it doesn't work anymore and you have to update your system.:/fg:" >> $TMPFOLDER/errorLog.$$ 
        				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
 			fi
    			post
