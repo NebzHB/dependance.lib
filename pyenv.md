@@ -26,12 +26,12 @@ Here is the minimal content you will need in your `install_apt.sh` file:
 ```bash
 ######################### INCLUSION LIB ##########################
 BASE_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-wget https://raw.githubusercontent.com/Mips2648/dependance.lib/master/dependance.lib --no-cache -O ${BASE_DIR}/dependance.lib &>/dev/null
+wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib --no-cache -O ${BASE_DIR}/dependance.lib &>/dev/null
 PLUGIN=$(basename "$(realpath ${BASE_DIR}/..)")
 LANG_DEP=en
 . ${BASE_DIR}/dependance.lib
 ##################################################################
-wget https://raw.githubusercontent.com/Mips2648/dependance.lib/master/pyenv.lib --no-cache -O ${BASE_DIR}/pyenv.lib &>/dev/null
+wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/pyenv.lib --no-cache -O ${BASE_DIR}/pyenv.lib &>/dev/null
 . ${BASE_DIR}/pyenv.lib
 ##################################################################
 
@@ -94,12 +94,12 @@ It's not a problem, this use case has been foreseen: you are free to implement y
 ```bash
 ######################### INCLUSION LIB ##########################
 BASE_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-wget https://raw.githubusercontent.com/Mips2648/dependance.lib/master/dependance.lib --no-cache -O ${BASE_DIR}/dependance.lib &>/dev/null
+wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib --no-cache -O ${BASE_DIR}/dependance.lib &>/dev/null
 PLUGIN=$(basename "$(realpath ${BASE_DIR}/..)")
 LANG_DEP=en
 . ${BASE_DIR}/dependance.lib
 ##################################################################
-wget https://raw.githubusercontent.com/Mips2648/dependance.lib/master/pyenv.lib --no-cache -O ${BASE_DIR}/pyenv.lib &>/dev/null
+wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/pyenv.lib --no-cache -O ${BASE_DIR}/pyenv.lib &>/dev/null
 . ${BASE_DIR}/pyenv.lib
 ##################################################################
 
