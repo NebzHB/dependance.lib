@@ -125,7 +125,7 @@ if [ $buster -eq 0 ] && [ "${noSupport:-false}" != true ]; then
 		fi
  	fi
 fi
-if [ $buster -eq 0 ] && [ "${noSupport:-false}" == true ]; then
+if [ $buster -eq 0 ] && [ "${noSupport:-false}" != false ]; then
 	if [ "$LANG_DEP" = "fr" ]; then
 		echo -e ":fg-warning:== Vous avez refusé le support, L'installation des dépendances va se lancer mais il est possible que ça ne fonctionne pas...:/fg:"
   	else
