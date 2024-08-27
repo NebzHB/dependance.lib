@@ -133,7 +133,7 @@ if [ $buster -eq 0 ] && [ "${noSupport:-false}" != false ]; then
 		echo -e ":fg-warning:== You have denied any support, Dependencies install will start, but it's possible it doesn't work...:/fg:"
   		echo -e ":fg-danger:== End of September, Jeedom will upgrade to NodeJS 20 that's incompatible with Debian 10. NO SUPPORT WILL BE DONE ANYMORE !!! Please migrate ASAP !:/fg:"
 	fi
-}
+fi
 
 #x86 32 bits not supported by nodesource anymore
 bits=$(getconf LONG_BIT)
