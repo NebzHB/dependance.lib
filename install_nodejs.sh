@@ -126,7 +126,11 @@ if [ $buster -eq 0 ] && [ "${noSupport:-false}" != true ]; then
  	fi
 fi
 if [ $buster -eq 0 ] && [ "${noSupport:-false}" == true ]; then
-	echo -e ":fg-warning:== Vous avez refusé le support, L'installation des dépendances va se lancer mais il est possible que ça ne fonctionne pas...:/fg:"
+	if [ "$LANG_DEP" = "fr" ]; then
+		echo -e ":fg-warning:== Vous avez refusé le support, L'installation des dépendances va se lancer mais il est possible que ça ne fonctionne pas...:/fg:"
+  	else
+		echo -e ":fg-warning:== You have denied any support, Dependencies install will start, but it's possible it doesn't work...:/fg:"
+	fi
 }
 
 #x86 32 bits not supported by nodesource anymore
