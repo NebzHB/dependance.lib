@@ -85,7 +85,8 @@ fi
 
 #end of support buster except smart
 lsb_release -c | grep -q buster
-if [ $? -eq 0 ] && [ "${noSupport:-false}" != true ]; then
+buster=$?
+if [ $buster -eq 0 ] && [ "${noSupport:-false}" != true ]; then
 	if [ ! -f /media/boot/multiboot/meson64_odroidc2.dtb.linux ]; then
 		today=$(date +%Y%m%d)
 		if [[ "$today" > "20240630" ]]; then
@@ -124,6 +125,9 @@ if [ $? -eq 0 ] && [ "${noSupport:-false}" != true ]; then
 		fi
  	fi
 fi
+if [ $buster -eq 0 ] && [ "${noSupport:-false}" == true ]; then
+	echo -e ":fg-warning:== Vous avez refusé le support, L'installation des dépendances va se lancer mais il est possible que ça ne fonctionne pas...:/fg:"
+}
 
 #x86 32 bits not supported by nodesource anymore
 bits=$(getconf LONG_BIT)
