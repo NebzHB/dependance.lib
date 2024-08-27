@@ -127,9 +127,11 @@ if [ $buster -eq 0 ] && [ "${noSupport:-false}" != true ]; then
 fi
 if [ $buster -eq 0 ] && [ "${noSupport:-false}" != false ]; then
 	if [ "$LANG_DEP" = "fr" ]; then
-		echo -e ":fg-warning:== Vous avez refusé le support, L'installation des dépendances va se lancer mais il est possible que ça ne fonctionne pas...:/fg:"
+		echo -e ":fg-warning:== Vous avez refusé le support, Vous utilisez toujours Debian 10 Buster, L'installation des dépendances va se lancer mais il est possible que ça ne fonctionne pas...:/fg:"
+  		echo -e ":fg-danger:== Fin Septembre, Jeedom passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE SERA FAIT !!! Migrez donc au plus vite !:/fg:"
   	else
 		echo -e ":fg-warning:== You have denied any support, Dependencies install will start, but it's possible it doesn't work...:/fg:"
+  		echo -e ":fg-danger:== End of September, Jeedom will upgrade to NodeJS 20 that's incompatible with Debian 10. NO SUPPORT WILL BE DONE ANYMORE !!! Please migrate ASAP !:/fg:"
 	fi
 }
 
