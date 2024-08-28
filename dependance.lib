@@ -502,6 +502,7 @@ add_fix_handler "Certificate verification failed: The certificate is NOT trusted
 
 # fix armbian.com not available for buster anymore (same fix than the Atlas plugin does) :
 add_fix_handler "The repository 'http://apt.armbian.com buster Release' no longer has a Release file." "" "sudo sed -i 's|^deb http://apt.armbian.com|#deb http://apt.armbian.com|g' /etc/apt/sources.list.d/armbian.list"
+add_fix_handler "The repository 'http://apt.armbian.com buster Release' does not have a Release file." "" "sudo sed -i 's|^deb http://apt.armbian.com|#deb http://apt.armbian.com|g' /etc/apt/sources.list.d/armbian.list"
 add_fix_handler "Le dépôt http://apt.armbian.com buster Release ne contient plus de fichier Release." "" "sudo sed -i 's|^deb http://apt.armbian.com|#deb http://apt.armbian.com|g' /etc/apt/sources.list.d/armbian.list"
 
 # fix buster-backports not available anymore :
@@ -514,5 +515,6 @@ fix_buster_backport_not_available() {
 		sudo sed -i 's|^deb http://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
 	fi
 }
-add_fix_handler "The repository 'http://[[:alnum:].-]\+\.debian\.org/debian buster-backports Release' no longer has a Release file." "" fix_buster_backport_not_available
-add_fix_handler "Le dépôt http://[[:alnum:].-]\+\.debian\.org/debian buster-backports Release ne contient plus de fichier Release." "" fix_buster_backport_not_available
+add_fix_handler "The repository 'http://[[:alnum:].-]\+\.debian\.org/debian buster-backports Release' no longer has a Release file." "*The repository buster-backports no longer has a Release file." fix_buster_backport_not_available
+add_fix_handler "The repository 'http://[[:alnum:].-]\+\.debian\.org/debian buster-backports Release' does not have a Release file." "*The repository buster-backports does not have a Release file." fix_buster_backport_not_available
+add_fix_handler "Le dépôt http://[[:alnum:].-]\+\.debian\.org/debian buster-backports Release ne contient plus de fichier Release." "*Le dépôt buster-backports ne contient plus de fichier Release." fix_buster_backport_not_available

@@ -85,7 +85,8 @@ fi
 
 #end of support buster except smart
 lsb_release -c | grep -q buster
-if [ $? -eq 0 ]; then
+buster=$?
+if [ $buster -eq 0 ] && [ "${noSupport:-false}" != true ]; then
 	if [ ! -f /media/boot/multiboot/meson64_odroidc2.dtb.linux ]; then
 		today=$(date +%Y%m%d)
 		if [[ "$today" > "20240630" ]]; then
@@ -94,11 +95,13 @@ if [ $? -eq 0 ]; then
    				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
 				echo -e ":fg-danger:== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre système en version plus récente de Debian !!!:/fg:" >> $TMPFOLDER/errorLog.$$ 
 	   			echo -e ":fg-danger:== Les dépendances sont bloquées afin d'éviter tout problème, soit $PLUGIN fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre système en version plus récente de Debian.:/fg:" >> $TMPFOLDER/errorLog.$$ 
+       				echo -e ":fg-danger:== Fin Septembre, Jeedom passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE SERA FAIT !!! Migrez donc au plus vite !:/fg:" >> $TMPFOLDER/errorLog.$$ 
        				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
 			else
    				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
 				echo -e ":fg-danger:== WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Please update your system in a new Debian version!!!:/fg:" >> $TMPFOLDER/errorLog.$$ 
 	   			echo -e ":fg-danger:== Dependencies are blocked to avoid any issues. Either $PLUGIN works and so we don't touch the dependencies as long as it works, or it doesn't work anymore and you have to update your system in a new Debian version.:/fg:" >> $TMPFOLDER/errorLog.$$ 
+       				echo -e ":fg-danger:== End of September, Jeedom will upgrade to NodeJS 20 that's incompatible with Debian 10. NO SUPPORT WILL BE DONE ANYMORE !!! Please migrate ASAP !:/fg:" >> $TMPFOLDER/errorLog.$$ 
        				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
 			fi
    			post
@@ -121,6 +124,15 @@ if [ $? -eq 0 ]; then
 			echo ":fg-warning:== Dependancies will continue (but no support will be done if it fails). Watch for Jeedom news to update to Debian 11 as soon as they release the new image.:/fg:"
 		fi
  	fi
+fi
+if [ $buster -eq 0 ] && [ "${noSupport:-false}" != false ]; then
+	if [ "$LANG_DEP" = "fr" ]; then
+		echo -e ":fg-warning:== Vous avez refusé le support, Vous utilisez toujours Debian 10 Buster, L'installation des dépendances va se lancer mais il est possible que ça ne fonctionne pas...:/fg:"
+  		echo -e ":fg-danger:== Fin Septembre, Jeedom passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE SERA FAIT !!! Migrez donc au plus vite !:/fg:"
+  	else
+		echo -e ":fg-warning:== You have denied any support, Dependencies install will start, but it's possible it doesn't work...:/fg:"
+  		echo -e ":fg-danger:== End of September, Jeedom will upgrade to NodeJS 20 that's incompatible with Debian 10. NO SUPPORT WILL BE DONE ANYMORE !!! Please migrate ASAP !:/fg:"
+	fi
 fi
 
 #x86 32 bits not supported by nodesource anymore
