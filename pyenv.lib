@@ -53,6 +53,15 @@ initPython3() {
     testPython3Version
 }
 
+testMinTargetPythonVersion() {
+    vercomp $TARGET_PYTHON_VERSION "3.9"
+    local EXIT_CODE=$?
+    if [[ $EXIT_CODE -gt 1 ]]; then
+        echo "You cannot install a version of python lower than 3.9"
+        exit 1
+    fi
+}
+
 installPyEnv() {
     echo "** Install PyEnv **"
     curl https://pyenv.run | PYENV_ROOT="${PYENV_DIR}" bash
@@ -104,6 +113,8 @@ installOrUpdatePyEnv() {
 }
 
 installPython3WithPyEnv() {
+    testMinTargetPythonVersion
+
     availableVersion=$(PYENV_ROOT="${PYENV_DIR}" ${PYENV_DIR}/bin/pyenv latest ${TARGET_PYTHON_VERSION} 2> /dev/null)
     [[ -z "$availableVersion" ]] && availableVersion="0.0.0"
 
@@ -172,6 +183,7 @@ autoSetupVenv() {
 	numSubStepMax=5
 
     subStep "Init python3 & prerequisites"
+    tryOrStop testMinTargetPythonVersion
     tryOrStop initPython3
 
     subStep "Init pyEnv"
