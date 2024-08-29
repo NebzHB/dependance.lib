@@ -6,7 +6,6 @@ if [ -z $PROGRESS_FILENAME ]; then
 fi
 PROGRESS_FILE=${TMPFOLDER}/${PROGRESS_FILENAME}
 HR=$(printf '=%.0s' {1..70})
-TAB="echo -n "________""
 declare -A fix_handlers
 h=0 # no fix_handlers
 release=$(lsb_release -sc)
@@ -55,7 +54,6 @@ show_time() {
 
 # need to find a use for it...
 info() {
-	$TAB
 	local EXIT_CODE=0
 	if [ "$1" != "echo" ]; then
 		echo "$@"
