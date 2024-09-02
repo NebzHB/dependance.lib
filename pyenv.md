@@ -5,6 +5,8 @@ This lib manages also the installation of pyenv to get a dedicated version of py
 
 This has been done by @Mips2648 & @TiTidom-RC base on the great work of @NebzHB
 
+For any question or issue regarding *pyenv.lib*, please contact @Mips2648 via <https://github.com/Mips2648/dependance.lib> or [jeedom community](https://community.jeedom.com/)
+
 ## Prerequisites
 
 You will need to create two files in your plugin:
@@ -31,7 +33,7 @@ PLUGIN=$(basename "$(realpath ${BASE_DIR}/..)")
 LANG_DEP=en
 . ${BASE_DIR}/dependance.lib
 ##################################################################
-wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/pyenv.lib --no-cache -O ${BASE_DIR}/pyenv.lib &>/dev/null
+wget https://raw.githubusercontent.com/Mips2648/dependance.lib/master/pyenv.lib --no-cache -O ${BASE_DIR}/pyenv.lib &>/dev/null
 . ${BASE_DIR}/pyenv.lib
 ##################################################################
 
@@ -99,7 +101,7 @@ PLUGIN=$(basename "$(realpath ${BASE_DIR}/..)")
 LANG_DEP=en
 . ${BASE_DIR}/dependance.lib
 ##################################################################
-wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/pyenv.lib --no-cache -O ${BASE_DIR}/pyenv.lib &>/dev/null
+wget https://raw.githubusercontent.com/Mips2648/dependance.lib/master/pyenv.lib --no-cache -O ${BASE_DIR}/pyenv.lib &>/dev/null
 . ${BASE_DIR}/pyenv.lib
 ##################################################################
 
@@ -179,7 +181,7 @@ As said before, installing specific python version might take a very long time o
 
 Because we use a `requirements.txt` to manage dependencies version, it would be beneficial to use it as well for the dependencies check to avoid copy/pasting list of librairies in the PHP code.
 
-So here is an example of `dependancy_info()` function compatible with this lib:
+So here is an example of `dependancy_info()` function compatible with this lib. This is an example with default paths, you need to adapt them to match your plugin structure if you didn't followed the default:
 
 ```PHP
 public static function dependancy_info() {
@@ -189,7 +191,7 @@ public static function dependancy_info() {
     $return['state'] = 'ok';
     if (file_exists(jeedom::getTmpFolder(__CLASS__) . '/dependance')) {
         $return['state'] = 'in_progress';
-    } elseif (!self::pythonRequirementsInstalled(self::PYTHON_PATH, __DIR__ . '/../../resources/requirements.txt')) {
+    } elseif (!self::pythonRequirementsInstalled(__DIR__ . '/../../resources/venv/bin/python3', __DIR__ . '/../../resources/requirements.txt')) {
         $return['state'] = 'nok';
     }
     return $return;
