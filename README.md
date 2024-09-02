@@ -152,7 +152,7 @@ pre
 
 ## Error Handlers
 
-### Implement your own error handler : add your handler(s) anywhere after the *include header* and before the `post` cmd :
+Implement your own error handler : add your handler(s) anywhere after the *include header* and before the `post` cmd :
 
 ```
 add_fix_handler "string to grep in errors" "message to show if the string is found" "command to fix the error"
@@ -199,7 +199,7 @@ or
 add_fix_handler "string to grep in errors" "" "command to fix the error" #empty message uses the default message with "string to grep in errors"
 ```
 
-### Real life examples :
+Real life examples :
 
 ```
 test_npm_ver() {
