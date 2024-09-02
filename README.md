@@ -322,4 +322,4 @@ will display :
 
 - fix "The repository 'http://deb.debian.org/debian buster-backports Release' no longer has a Release file." with commenting the source in sources.list file.
 
-- Now the library remove repo.jeedom.com repository (accepted by Alex from Jeedom) and disable temporary deb-multimedia repository (often problem source)
+- Now the library removes repo.jeedom.com repository (accepted by Alex from Jeedom) and disables temporary deb-multimedia repository (often problem source)
