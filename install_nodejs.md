@@ -1,6 +1,6 @@
 Require to be launched by a script containing :
-1. the inclusion lib
-2. the wget of this file
+1. the inclusion lib dependance.lib
+2. the wget of install_nodejs.sh
 3. some parameters :
    - --firstSubStep numFirstStep : mandatory : first percentage for the first subStep
    - --lastSubStep numLastStep : mandatory : last percentage for the last subStep
