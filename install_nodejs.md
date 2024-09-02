@@ -1,11 +1,15 @@
 Require to be launched by a script containing :
 1. the inclusion lib
 2. the wget of this file
-3. the installVer as first parameter
-4. an apt-get update before launch
-5. pre-required packages already installed (nodejs required packages will be installed by this script)
-6. this script take care of percents from 10 to 50 if parameters are 10 and 50.
-7. the script read package.json file next to it and install nodejs version in engines>node and npm version in engines>npm (need >= no ^)
+3. some parameters :
+   - [--forceNodeVersion numVersion] : optional : force to install a precise NodeJS version
+   - [--forceUpdateNPM] : optional : force to update NPM to the latest version
+   - --firstSubStep numFirstStep : mandatory : first percentage for the first subStep
+   - --lastSubStep numLastStep : mandatory : last percentage for the last subStep
+5. an apt-get update before launch
+6. pre-required packages already installed (nodejs required packages will be installed by this script)
+7. this script take care of percents from 10 to 50 if parameters are --firstSubStep 10 and --lastSubStep 50.
+8. the script read package.json file next to it and install nodejs version in engines>node and npm version in engines>npm (needs >= no ^)
 
 ```
 #!/bin/bash
