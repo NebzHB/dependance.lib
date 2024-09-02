@@ -2,10 +2,10 @@ Require to be launched by a script containing :
 1. the inclusion lib
 2. the wget of this file
 3. some parameters :
-   - [--forceNodeVersion numVersion] : optional : force to install a precise NodeJS version
-   - [--forceUpdateNPM] : optional : force to update NPM to the latest version
    - --firstSubStep numFirstStep : mandatory : first percentage for the first subStep
    - --lastSubStep numLastStep : mandatory : last percentage for the last subStep
+   - [--forceNodeVersion numVersion] : optional : force to install a precise NodeJS version
+   - [--forceUpdateNPM] : optional : force to update NPM to the latest version
 5. an apt-get update before launch
 6. pre-required packages already installed (nodejs required packages will be installed by this script)
 7. this script take care of percents from 10 to 50 if parameters are --firstSubStep 10 and --lastSubStep 50.
