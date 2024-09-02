@@ -4,7 +4,8 @@ NB : for nodejs install, see [install_nodejs script Doc](https://github.com/Nebz
 
 NB : for python install, see [pyenv script Doc](https://github.com/NebzHB/dependance.lib/blob/master/pyenv.md)
 
-Bash HomeMade Dependance Library for Jeedom
+
+**Bash HomeMade Dependance Library for Jeedom**
 
 see : [CHANGELOG](https://github.com/NebzHB/dependance.lib/blob/master/CHANGELOG)
 
