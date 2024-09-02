@@ -228,7 +228,7 @@ Adding subStep for sub script that would want to have their own steps, please de
 
 - numSubStepMax= max number of call to subStep you'll make in your subscript (to compute the percentage increment of each of your step) (default 9 -> 5% for each steps)
 
-Example calling the subscript install-nodejs.sh here :
+Example calling the subscript install-something.sh here :
 
 ```
 #!/bin/bash
