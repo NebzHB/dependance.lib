@@ -6,7 +6,7 @@ NB : for python install, see [pyenv script Doc](https://github.com/NebzHB/depend
 
 Bash HomeMade Dependance Library for Jeedom
 
-**usage** :
+# Usage example :
 ```
 ######################### INCLUSION LIB ##########################
 BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
@@ -27,49 +27,8 @@ try wget ...
 echo "not silent"
 post
 ```
-**IMPORTANT** : dont use try or tryOrStop or silent if the command have >> | or > or < (output/input redirections), or in the last part of a piped command
 
-pre : display the header + prepare some stuff
-
-try : will try the commands of the line and catch errors (and display them at the end)
-
-tryOrStop : will try the commands of the line and catch errors (and stop the script by displaying the errors)
-
-silent : no matter if the commands fails, it'll be silent
-
-post : fix the errors found in error_handlers + display the Footer
-
-### add LANG_DEP=en before the `. ${BASEDIR}/dependance.lib` line if you want messages in english instead of french.
-
-**example** :
-```
-######################### INCLUSION LIB ##########################
-BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib -O $BASEDIR/dependance.lib &>/dev/null
-PLUGIN=$(basename "$(realpath $BASEDIR/..)")
-LANG_DEP=en
-. ${BASEDIR}/dependance.lib
-##################################################################
-
-pre
-```
-
-
-### add TIMED=1 before the `. ${BASEDIR}/dependance.lib` line to time each step.
-
-**example** :
-```
-######################### INCLUSION LIB ##########################
-BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib -O $BASEDIR/dependance.lib &>/dev/null
-PLUGIN=$(basename "$(realpath $BASEDIR/..)")
-TIMED=1
-. ${BASEDIR}/dependance.lib
-##################################################################
-
-pre
-```
-
+# Result example :
 
 **result if ok** :
 ```
@@ -135,15 +94,65 @@ E: Unable to locate package fdsfqfqfsqdf
 ======================================================================
 ```
 
-# NEW
+# Functions
+
+- pre : display the header + prepare some stuff (MANDATORY BEFORE ANY STEP)
+
+- try : will try the commands of the line and catch errors (and display them at the end)
 
 - tryOrStop : will try the commands of the line and catch errors (and stop the script by displaying the errors)
 
+- silent : no matter if the commands fails, it'll be silent
 
-- Now the library remove repo.jeedom.com repository (accepted by Alex from Jeedom) and disable temporary deb-multimedia repository (often problem source)
+> **IMPORTANT** : dont use try or tryOrStop or silent if the command uses >> | or > or < (output/input redirections), or only in the last part of a piped command
+
+- step : percentage + name of the step that will follow. Every Step will close the previous one (if any) with a percentage-1 closure message.
+
+- post : fix the errors found in error_handlers + display the Footer (MANDATORY AT THE END)
+
+# Variables
+
+## LANG_DEP=en 
+
+> Use it before the `. ${BASEDIR}/dependance.lib` line if you want messages in english instead of french.
+
+**example** :
+```
+######################### INCLUSION LIB ##########################
+BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib -O $BASEDIR/dependance.lib &>/dev/null
+PLUGIN=$(basename "$(realpath $BASEDIR/..)")
+LANG_DEP=en
+. ${BASEDIR}/dependance.lib
+##################################################################
+
+pre
+```
+
+## TIMED=1
+
+> Use it before the `. ${BASEDIR}/dependance.lib` line to time each step.
+
+**example** :
+```
+######################### INCLUSION LIB ##########################
+BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib -O $BASEDIR/dependance.lib &>/dev/null
+PLUGIN=$(basename "$(realpath $BASEDIR/..)")
+TIMED=1
+. ${BASEDIR}/dependance.lib
+##################################################################
+
+pre
+```
 
 
-- Implement your own error handler : add your handler anywhere after the *include header* and before the `post` cmd :
+
+# Other Features :
+
+## Error Handlers
+
+### Implement your own error handler : add your handler(s) anywhere after the *include header* and before the `post` cmd :
 
 ```
 add_fix_handler "string to grep in errors" "message to show if the string is found" "command to fix the error"
@@ -168,7 +177,7 @@ myTestFunct() {
 add_fix_handler myTestFunct "message to show if the string is found" "command to fix the error"
 ```
 
-or (NEW !)
+or
 
 ```
 myTestFunct() {
@@ -209,15 +218,15 @@ or
 add_fix_handler "EINTEGRITY" "" "sudo npm cache clean --force"
 ```
 
-# NEW : subStep
+## subStep
 
 Adding subStep for sub script that would want to have their own steps, please define those variables in your subscript (or by passing it as argument if you want a generic subscript for multiple plugins)
 
-firstSubStep= lower range of pourcentage your subscript will begin with (default 10)
+- firstSubStep= lower range of pourcentage your subscript will begin with (default 10)
 
-lastSubStep= higher range of pourcentage your subscript will finish with (default 50)
+- lastSubStep= higher range of pourcentage your subscript will finish with (default 50)
 
-numSubStepMax= max number of call to subStep you'll make in your subscript (to compute the percentage increment of each of your step) (default 9 -> 5% for each steps)
+- numSubStepMax= max number of call to subStep you'll make in your subscript (to compute the percentage increment of each of your step) (default 9 -> 5% for each steps)
 
 Example calling the subscript install-nodejs.sh here :
 
@@ -297,16 +306,18 @@ will display :
 ```
 
 
-# Auto fix alreday included for this common errors :
+# This library has some auto-fixes already included for this common errors :
 
- apt `apt --fix-broken install`
+- apt `apt --fix-broken install`
  
- dkpg `sudo dpkg --configure -a`
+- dkpg `sudo dpkg --configure -a`
  
- apt `changed its 'Suite' value from 'testing' to 'oldstable'`
+- apt `changed its 'Suite' value from 'testing' to 'oldstable'`
 
- NEW : fix issue with mdjr.net certificate
+- fix issue with mdjr.net certificate
 
- NEW : fix "The repository 'http://apt.armbian.com buster Release' no longer has a Release file." with commenting the source in source file (same fix than the official Atlas Plugin does)
+- fix "The repository 'http://apt.armbian.com buster Release' no longer has a Release file." with commenting the source in source file (same fix than the official Atlas Plugin does)
 
- NEW : fix "The repository 'http://deb.debian.org/debian buster-backports Release' no longer has a Release file." with commenting the source in sources.list file.
+- fix "The repository 'http://deb.debian.org/debian buster-backports Release' no longer has a Release file." with commenting the source in sources.list file.
+
+- Now the library remove repo.jeedom.com repository (accepted by Alex from Jeedom) and disable temporary deb-multimedia repository (often problem source)
