@@ -6,6 +6,8 @@ NB : for python install, see [pyenv script Doc](https://github.com/NebzHB/depend
 
 Bash HomeMade Dependance Library for Jeedom
 
+see : [CHANGELOG](https://github.com/NebzHB/dependance.lib/blob/master/CHANGELOG)
+
 # Usage example :
 ```
 ######################### INCLUSION LIB ##########################
