@@ -5,7 +5,7 @@ This lib manages also the installation of pyenv to get a dedicated version of py
 
 This has been done by @Mips2648 & @TiTidom-RC base on the great work of @NebzHB
 
-For any question or issue regarding *pyenv.lib*, please contact @Mips2648 via <https://github.com/Mips2648/dependance.lib> or [jeedom community](https://community.jeedom.com/)
+For any question or issue regarding *pyenv.lib*, please contact @Mips2648 via <https://github.com/NebzHB/dependance.lib> or [jeedom community](https://community.jeedom.com/)
 
 ## Prerequisites
 
@@ -33,7 +33,7 @@ PLUGIN=$(basename "$(realpath ${BASE_DIR}/..)")
 LANG_DEP=en
 . ${BASE_DIR}/dependance.lib
 ##################################################################
-wget https://raw.githubusercontent.com/Mips2648/dependance.lib/master/pyenv.lib --no-cache -O ${BASE_DIR}/pyenv.lib &>/dev/null
+wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/pyenv.lib --no-cache -O ${BASE_DIR}/pyenv.lib &>/dev/null
 . ${BASE_DIR}/pyenv.lib
 ##################################################################
 
@@ -101,7 +101,7 @@ PLUGIN=$(basename "$(realpath ${BASE_DIR}/..)")
 LANG_DEP=en
 . ${BASE_DIR}/dependance.lib
 ##################################################################
-wget https://raw.githubusercontent.com/Mips2648/dependance.lib/master/pyenv.lib --no-cache -O ${BASE_DIR}/pyenv.lib &>/dev/null
+wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/pyenv.lib --no-cache -O ${BASE_DIR}/pyenv.lib &>/dev/null
 . ${BASE_DIR}/pyenv.lib
 ##################################################################
 
