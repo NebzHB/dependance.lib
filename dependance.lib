@@ -16,7 +16,7 @@ if [ "$LANG_DEP" != "fr" ]; then
 	
 	prepTrad() {
 		mkdir -p $BASEDIR/i18n
-		wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/i18n/${LANG_DEP}.json -O ${TRAD_FILE} #&>/dev/null
+		wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/i18n/${LANG_DEP}.json -O ${TRAD_FILE} &>/dev/null
 	}
 	prepTrad
 fi
@@ -29,7 +29,7 @@ tr() {
 	fi
 
 	local script_name=$(basename "${BASH_SOURCE[1]}")
-	local translation=$(jq -r --arg k "$key" --arg s "$script_name" '.[$s][$k] // $k' "$TRAD_FILE" 2>/dev/null)
+	local translation=$(jq -r --arg k "$key" --arg s "$script_name" '.[$s][$k] // $k' "$TRAD_FILE" )
 	echo -n "$translation"
 }
 
