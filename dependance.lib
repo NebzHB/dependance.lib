@@ -86,7 +86,7 @@ info() {
 pre() {
 	[[ $TIMED -eq 1 ]] && startFull=`date +%s`
 	echo "$HR"
-	echo "== $(date +'%d/%m/%Y %H:%M:%S') == $(t Installation des dépendances de) $PLUGIN"
+	echo "== $(date +'%d/%m/%Y %H:%M:%S') == $(t "Installation des dépendances de") $PLUGIN"
 	echo "$HR"
 	echo
 	touch $TMPFOLDER/errorLog.$$
@@ -439,13 +439,13 @@ post() {
 		next
 	fi
 	echo 100 > ${PROGRESS_FILE}
-	echo "[100% ] : $(t Terminé) !"
+	echo "[100% ] : $(t "Terminé") !"
 
 	[[ -f $TMPFOLDER/hasError.$$ ]] && { hasError=$(< $TMPFOLDER/hasError.$$); rm -f $TMPFOLDER/hasError.$$; }
 	echo
 	if [[ $hasError -eq 1 ]]; then
 		echo "$HR"
-		echo -n "== KO == $(t Erreur d'Installation) "
+		echo -n "== KO == $(t "Erreur d'Installation") "
 		[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
 		echo
 		echo "$HR"
@@ -473,7 +473,7 @@ post() {
 		}
 	else
 		echo "$HR"
-		echo -n "== OK == $(t Installation Réussie) "
+		echo -n "== OK == $(t "Installation Réussie") "
 		[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
 		echo
 		echo "$HR"
