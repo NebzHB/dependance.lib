@@ -12,11 +12,11 @@ release=$(lsb_release -sc)
 
 LANG_DEP=${LANG_DEP:-"fr"}
 if [ "$LANG_DEP" != "fr" ]; then
-	TRAD_FILE="$BASEDIR/i18n/${LANG_DEP}.json"
+	TRAD_FILE="${BASEDIR}/i18n/${LANG_DEP}.json"
 	
 	prepTrad() {
 		mkdir -p $BASEDIR/i18n
-		wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/i18n/${LANG_DEP}.json -O $BASEDIR/i18n/${LANG_DEP}.json &>/dev/null
+		wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/i18n/${LANG_DEP}.json -O ${TRAD_FILE} #&>/dev/null
 	}
 	prepTrad
 fi
