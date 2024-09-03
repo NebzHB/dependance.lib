@@ -11,30 +11,26 @@ h=0 # no fix_handlers
 release=$(lsb_release -sc)
 
 LANG_DEP=${LANG_DEP:-"fr"}
-TRAD_FILE="i18n/${LANG_DEP}.json"
-
-prepTrad() {
-	mkdir -p $BASEDIR/i18n
-	wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/i18n/${LANG_DEP}.json -O $BASEDIR/i18n/${LANG_DEP}.json &>/dev/null
-}
-prepTrad
+if [ "$LANG_DEP" != "fr" ]; then
+	TRAD_FILE="i18n/${LANG_DEP}.json"
+	
+	prepTrad() {
+		mkdir -p $BASEDIR/i18n
+		wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/i18n/${LANG_DEP}.json -O $BASEDIR/i18n/${LANG_DEP}.json &>/dev/null
+	}
+	prepTrad
+fi
 
 tr() {
 	local key=$1
-	
-	local script_name=$(basename "${BASH_SOURCE[1]}")
-	
-	if [ "$LANG_DEP" == "fr" ]; then
+	if [ "$LANG_DEP" == "fr" ] || [ -z "$TRAD_FILE" ]; then
 		echo -n "$key"
-	else
-		local translation=$(jq -r --arg k "$key" --arg s "$script_name" '.[$s][$k] // empty' "$TRAD_FILE" 2>/dev/null)
-
-		if [ -z "$translation" ]; then
-			echo -n "$key"
-		else
-			echo -n "$translation"
-		fi
+		return
 	fi
+
+	local script_name=$(basename "${BASH_SOURCE[1]}")
+	local translation=$(jq -r --arg k "$key" --arg s "$script_name" '.[$s][$k] // $k' "$TRAD_FILE" 2>/dev/null)
+	echo -n "$translation"
 }
 
 add_fix_handler() {
