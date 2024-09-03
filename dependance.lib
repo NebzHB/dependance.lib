@@ -22,7 +22,7 @@ if [ "$LANG_DEP" != "fr" ]; then
 fi
 
 tr() {
-	local key=$1
+	local key="$*"
 	if [ "$LANG_DEP" == "fr" ] || [ -z "$TRAD_FILE" ]; then
 		echo -n "$key"
 		return
