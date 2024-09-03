@@ -205,7 +205,7 @@ try() {
 		else
 			echo -e "== Error in step : $STEP_NAME" >> $TMPFOLDER/errorLog.$$
 			echo -e "== Line $LINE" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Command \`$*' have an issue" >> $TMPFOLDER/errorLog.$$
+			echo -e "== Command \`$*' has an issue" >> $TMPFOLDER/errorLog.$$
 			echo -e "== Return code is $EXIT_CODE" >> $TMPFOLDER/errorLog.$$
 			echo -e "== Error message :" >> $TMPFOLDER/errorLog.$$
 		fi
