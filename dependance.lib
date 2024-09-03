@@ -25,14 +25,14 @@ tr() {
 	local script_name=$(basename "${BASH_SOURCE[1]}")
 	
 	if [ "$LANG_DEP" == "fr" ]; then
-		echo "$key"
+		echo -n "$key"
 	else
 		local translation=$(jq -r --arg k "$key" --arg s "$script_name" '.[$s][$k]' "$TRAD_FILE")
 		
 		if [ -z "$translation" ]; then
-			echo "$key"
+			echo -n "$key"
 		else
-			echo "$translation"
+			echo -n "$translation"
 		fi
 	fi
 }
