@@ -10,9 +10,26 @@ declare -A fix_handlers
 h=0 # no fix_handlers
 release=$(lsb_release -sc)
 
-if [ -z $LANG_DEP ]; then
-	LANG_DEP=fr
-fi
+LANG_DEP=${LANG_DEP:-"fr"}
+TRAD_FILE="i18n/${LANG_DEP}.json"
+
+tr() {
+    local key=$1
+
+    local script_name=$(basename "${BASH_SOURCE[1]}")
+
+    if [ "$LANG_DEP" == "fr" ]; then
+        echo "$key"
+    else
+        local translation=$(jq -r --arg k "$key" --arg s "$script_name" '.[$s][$k]' "$TRAD_FILE")
+
+        if [ -z "$translation" ]; then
+            echo "$key"
+        else
+            echo "$translation"
+        fi
+    fi
+}
 
 add_fix_handler() {
 	fix_handlers[$h,grepOrFunct]=$1
@@ -67,11 +84,7 @@ info() {
 pre() {
 	[[ $TIMED -eq 1 ]] && startFull=`date +%s`
 	echo "$HR"
-	if [ "$LANG_DEP" = "fr" ]; then
-		echo "== $(date +'%d/%m/%Y %H:%M:%S') == Installation des dépendances de $PLUGIN"
-	else
-		echo "== $(date +'%d/%m/%Y %H:%M:%S') == Dependencies installation for $PLUGIN"
-	fi
+	echo "== $(date +'%d/%m/%Y %H:%M:%S') == $(tr 'Installation des dépendances de') $PLUGIN"
 	echo "$HR"
 	echo
 	touch $TMPFOLDER/errorLog.$$
