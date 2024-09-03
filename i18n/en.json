@@ -33,4 +33,38 @@
     "AUCUNE ERREUR CONNUE DÉTECTÉE":"NO KNOWN ERROR DETECTED",
     "Installation Réussie":"Installation Successful"
   }
+  "install_nodejs.sh":{
+    "Prérequis":"Prerequisites",
+    "Installation des packages nécessaires":"Mandatory packages installation",
+    "Vérification du système":"System Check",
+    "ATTENTION Debian 8 Jessie n'est officiellement plus supportée depuis le 30 juin 2020, merci de mettre à jour votre système en version plus récente de Debian !!!":"WARNING Debian 8 Jessie is not supported anymore since the 30rd of june 2020, thank you to update your system in a new Debian version !!!",
+    "ATTENTION Debian 9 Stretch n'est officiellement plus supportée depuis le 30 juin 2022, merci de mettre à jour votre système en version plus récente de Debian !!!":"WARNING Debian 9 Stretch is not supported anymore since the 30rd of june 2022, thank you to update your system in a new Debian version !!!",
+    "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre système en version plus récente de Debian !!!":"WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Please update your system in a new Debian version!!!",
+    "Les dépendances sont bloquées afin d'éviter tout problème, soit $PLUGIN fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre système en version plus récente de Debian.":"Dependencies are blocked to avoid any issues. Either $PLUGIN works and so we don't touch the dependencies as long as it works, or it doesn't work anymore and you have to update your system in a new Debian version.",
+    "Fin Septembre, Jeedom passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE SERA FAIT !!! Migrez donc au plus vite !":"End of September, Jeedom will upgrade to NodeJS 20 that's incompatible with Debian 10. NO SUPPORT WILL BE DONE ANYMORE !!! Please migrate ASAP !",
+    "A VERIFIER AU PLUS VITE":"TO CHECK SOON",
+    "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est en cours de finalisation par Jeedom.":"WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Nevertheless, the Debian 11 image for the Smart box is still under development by Jeedom.",
+    "Les dépendances vont quand même se lancer (mais aucun support ne sera fait si celles-ci ne fonctionnent pas !), surveillez les nouvelles de Jeedom afin de mettre à jour en Debian 11 au plus vite quand ils auront sorti leur nouvelle image.":"Dependancies will continue (but no support will be done if it fails). Watch for Jeedom news to update to Debian 11 as soon as they release the new image.",
+    "Vous avez refusé le support, Vous utilisez toujours Debian 10 Buster, L'installation des dépendances va se lancer mais il est possible que ça ne fonctionne pas...":"You have denied any support, Dependencies install will start, but it's possible it doesn't work...",
+    "Fin Septembre, Jeedom passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE SERA FAIT !!! Migrez donc au plus vite !":"End of September, Jeedom will upgrade to NodeJS 20 that's incompatible with Debian 10. NO SUPPORT WILL BE DONE ANYMORE !!! Please migrate ASAP !",
+    "ATTENTION Votre système est x86 en 32bits et NodeJS n'y est pas supporté, merci de passer en 64bits !!!":"WARNING Your system is x86 in 32bits and NodeJS does not support it anymore, thank you to reinstall in 64bits !!!",
+    "Vérification de la version de NodeJS installée":"Installed NodeJS version check",
+    "Erreur: NODE_MAJOR est vide","Error: NODE_MAJOR is empty",
+    "Contenu de":"Content of",
+    "Version de node trouvée requiredNodeVersion":"Node version found via requiredNodeVersion",
+    "jq n'est pas installé.":"jq is not installed",
+    "Aucune":"None",
+    "Check Version NodeJS actuelle":"Check Current NodeJS Version",
+    "Correction...":"Fixing...",
+    "Installation de NodeJS":"Installing NodeJS",
+    "Jeedom Mini ou Raspberry 1, 2 ou zéro détecté, non supporté mais on essaye l'utilisation du paquet non-officiel v${armVer} pour armv6l":"Jeedom Mini or Raspberry 1, 2 or zero detected, unsupported but we try to install unofficial packet v${armVer} for armv6l",
+    "Utilisation du dépot officiel":"Using official repository",
+    "Check Version NodeJS après install":"Check NodeJS Version after install",
+    "relancez les dépendances":"restart the dependancies",
+    "Installation de npm car non présent":"Installing npm because not present",
+    "Check Version NPM":"NPM Version Check",
+    "MàJ demandée":"Update requested",
+    "Mise à jour de npm":"Updating npm",
+    "Nettoyage":"Cleaning"
+  }
 }
