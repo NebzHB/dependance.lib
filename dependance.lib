@@ -30,6 +30,10 @@ tr() {
 
 	local script_name=$(basename "${BASH_SOURCE[1]}")
 	local translation=$(jq -r --arg k "$key" --arg s "$script_name" '.[$s][$k] // $k' "$TRAD_FILE" )
+	if [ -z "$translation" ]; then
+		echo -n "$key"
+		return
+	fi
 	echo -n "$translation"
 }
 
