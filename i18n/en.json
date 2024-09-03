@@ -49,7 +49,7 @@
     "Fin Septembre, Jeedom passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE SERA FAIT !!! Migrez donc au plus vite !":"End of September, Jeedom will upgrade to NodeJS 20 that's incompatible with Debian 10. NO SUPPORT WILL BE DONE ANYMORE !!! Please migrate ASAP !",
     "ATTENTION Votre système est x86 en 32bits et NodeJS n'y est pas supporté, merci de passer en 64bits !!!":"WARNING Your system is x86 in 32bits and NodeJS does not support it anymore, thank you to reinstall in 64bits !!!",
     "Vérification de la version de NodeJS installée":"Installed NodeJS version check",
-    "Erreur: NODE_MAJOR est vide","Error: NODE_MAJOR is empty",
+    "Erreur: NODE_MAJOR est vide":"Error: NODE_MAJOR is empty",
     "Contenu de":"Content of",
     "Version de node trouvée requiredNodeVersion":"Node version found via requiredNodeVersion",
     "jq n'est pas installé.":"jq is not installed",
