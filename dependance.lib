@@ -27,7 +27,7 @@ tr() {
 	if [ "$LANG_DEP" == "fr" ]; then
 		echo -n "$key"
 	else
-		local translation=$(jq -r --arg k "$key" --arg s "$script_name" '.[$s][$k]' "$TRAD_FILE" 2>/dev/null)
+		local translation=$(jq -r --arg k "$key" --arg s "$script_name" '.[$s][$k] // empty' "$TRAD_FILE" 2>/dev/null)
 
 		if [ -z "$translation" ]; then
 			echo -n "$key"
