@@ -32,7 +32,7 @@
     "ANALYSE DES ERREURS":"ANALYSING ERRORS",
     "AUCUNE ERREUR CONNUE DÉTECTÉE":"NO KNOWN ERROR DETECTED",
     "Installation Réussie":"Installation Successful"
-  }
+  },
   "install_nodejs.sh":{
     "Prérequis":"Prerequisites",
     "Installation des packages nécessaires":"Mandatory packages installation",
