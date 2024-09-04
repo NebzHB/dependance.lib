@@ -15,11 +15,11 @@ Require to be launched by a script containing :
 #!/bin/bash
 ######################### INCLUSION LIB ##########################
 BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib --no-cache -O $BASEDIR/dependance.lib &>/dev/null
+wget -4 https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib --no-cache -O $BASEDIR/dependance.lib &>/dev/null
 PLUGIN=$(basename "$(realpath $BASEDIR/..)")
 . ${BASEDIR}/dependance.lib
 ##################################################################
-wget https://raw.githubusercontent.com/NebzHB/dependance.lib/master/install_nodejs.sh --no-cache -O $BASEDIR/install_nodejs.sh &>/dev/null
+wget -4 https://raw.githubusercontent.com/NebzHB/dependance.lib/master/install_nodejs.sh --no-cache -O $BASEDIR/install_nodejs.sh &>/dev/null
 
 pre
 step 0 "Vérifications diverses"
