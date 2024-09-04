@@ -129,6 +129,24 @@ LANG_DEP=en
 pre
 ```
 
+## DEF_LANG=en (for subscript only !! (like install_nodejs.sh or pyenv.lib))
+
+> Use it before the `. ${BASEDIR}/dependance.lib` line if you use english keys in your subscript using dependance.lib.
+
+**example** :
+```
+######################### INCLUSION LIB ##########################
+BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+wget -4 https://raw.githubusercontent.com/NebzHB/dependance.lib/master/dependance.lib --no-cache -O $BASEDIR/dependance.lib &>/dev/null
+PLUGIN=$(basename "$(realpath $BASEDIR/..)")
+DEF_LANG=en
+. ${BASEDIR}/dependance.lib
+##################################################################
+wget -4 https://raw.githubusercontent.com/NebzHB/dependance.lib/master/install_nodejs.sh --no-cache -O $BASEDIR/install_nodejs.sh &>/dev/null
+
+pre
+```
+
 ## TIMED=1
 
 > Use it before the `. ${BASEDIR}/dependance.lib` line to time each step.
@@ -305,6 +323,24 @@ will display :
 ======================================================================
 ```
 
+## language choice between english or french for error messages (for subscript only !! (like install_nodejs.sh or pyenv.lib))
+
+use that form : $(t "Clé en francais par défaut") in your bash file
+
+example :
+```
+echo 1 > $TMPFOLDER/hasError.$$
+echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
+echo -e ":fg-danger:== $(t "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre système en version plus récente de Debian !!!"):/fg:" >> $TMPFOLDER/errorLog.$$ 
+echo -e ":fg-danger:== $(t "Les dépendances sont bloquées afin d'éviter tout problème, soit") $PLUGIN $(t "fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre système en version plus récente de Debian."):/fg:" >> $TMPFOLDER/errorLog.$$ 
+echo -e ":fg-danger:== $(t "Fin Septembre, Jeedom passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE SERA FAIT !!! Migrez donc au plus vite !"):/fg:" >> $TMPFOLDER/errorLog.$$ 
+echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
+post
+exit 1
+```
+> Note that variables cannot be included in translation strings, so you need to split !
+
+> If you want to use English keys, set LANG_DEF=en in the header
 
 # This library has some auto-fixes already included for this common errors :
 
