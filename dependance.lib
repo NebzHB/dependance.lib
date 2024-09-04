@@ -414,6 +414,11 @@ post() {
 	rm -f ${PROGRESS_FILE}
 }
 
+if ! command -v jq &>/dev/null; then
+    sudo apt-get -o Acquire::ForceIPv4=true update &>/dev/null
+    sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::ForceIPv4=true install -y jq &>/dev/null
+fi
+
 # fix apt broken install
 add_fix_handler "apt --fix-broken install" "" "yes | sudo apt --fix-broken install"
 
