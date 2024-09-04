@@ -129,7 +129,7 @@ fi
 silent type node
 if [ $? -eq 0 ]; then actual=`node -v`; else actual='Aucune'; fi
 testVer=$(php -r "echo version_compare('${actual}','v${requiredNodeVersion}','${requiredNodeOperator}');")
-echo -n "[$(t "Check Version NodeJS actuelle") : ${actual} : "
+echo -n "[$(t "Vérification Version NodeJS actuelle") : ${actual} : "
 if [[ $testVer == "1" ]]; then
 	echo_success
 	new=$actual
@@ -189,7 +189,7 @@ else
 	silent npm config set prefix ${npmPrefix}
 
 	new=`node -v`;
-	echo -n "[$(t "Check Version NodeJS après install") : ${new} : "
+	echo -n "[$(t "Vérification Version NodeJS après install") : ${new} : "
 	testVerAfter=$(php -r "echo version_compare('${new}','v${requiredNodeVersion}','${requiredNodeOperator}');")
 	if [[ $testVerAfter != "1" ]]; then
 		echo_failure -n
@@ -207,7 +207,7 @@ if [ $? -ne 0 ]; then
 fi
 
 npmver=`npm -v`;
-echo -n "[Check Version NPM : ${npmver} : "
+echo -n "[Vérification Version NPM : ${npmver} : "
 echo $npmver | grep "8.11.0" &>/dev/null
 if [ $? -eq 0 ]; then
 	echo_failure
