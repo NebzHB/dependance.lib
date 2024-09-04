@@ -11,7 +11,7 @@ while [[ "$#" -gt 0 ]]; do
 		--firstSubStep) firstSubStep=$2; shift ;;
 		--lastSubStep) lastSubStep=$2; shift ;;
 		--forceUpdateNPM) forceUpdateNPM=1 ;;
-		*) echo "Unknown Option: $1"; tryOrStop false ;;
+		*) echo "$(t "Option Inconnue"): $1"; tryOrStop false ;;
 	esac
 	shift
 done
