@@ -85,6 +85,7 @@ info() {
 
 pre() {
 	[[ $TIMED -eq 1 ]] && startFull=`date +%s`
+	START_DATE=$(date +'%d/%m/%Y %H:%M:%S')
 	touch $TMPFOLDER/errorLog.$$
 	echo 0 > $TMPFOLDER/hasError.$$
 	touch $PROGRESS_FILE
@@ -124,7 +125,7 @@ pre() {
 	fi
 
 	echo "$HR"
-	echo "== $(date +'%d/%m/%Y %H:%M:%S') == $(t "Installation des dépendances de") $PLUGIN"
+	echo "== ${START_DATE} == $(t "Installation des dépendances de") $PLUGIN"
 	echo "$HR"
 	echo
 }
