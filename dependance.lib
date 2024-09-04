@@ -14,7 +14,7 @@ LANG_DEP=${LANG_DEP:-"fr"}
 if [ "$LANG_DEP" != "fr" ]; then
 	TRAD_FILE="${BASEDIR}/i18n/${LANG_DEP}.json"
 	mkdir -p $(dirname "$TRAD_FILE")
-	wget -4 https://raw.githubusercontent.com/NebzHB/dependance.lib/master/i18n/${LANG_DEP}.json -O ${TRAD_FILE} &>/dev/null
+	wget -4 https://raw.githubusercontent.com/NebzHB/dependance.lib/beta/i18n/${LANG_DEP}.json -O ${TRAD_FILE} &>/dev/null
 fi
 
 t() {
