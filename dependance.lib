@@ -150,11 +150,7 @@ subStep() {
 	if [ -z "${pcIncrement}" ]; then
 		pcIncrement=$(( (lastSubStep - firstSubStep) / (numSubStepMax - 1) ))
 		if (( pcIncrement < 2 )); then
-			if [ "$LANG_DEP" = "fr" ]; then
-				echo "Avertissement Développeur: L'incrément de pourcentage par étape (${pcIncrement}%) est inférieur à 2%. Augmentez le range ou diminuez le nombre d'étapes."
-			else
-				echo "Developer Warning: The percentage increment per step (${pcIncrement}%) is less than 2%. Increase the range or reduce the number of steps"
-			fi
+			echo $(t "Avertissement Développeur: L'incrément de pourcentage par étape (${pcIncrement}%) est inférieur à 2%. Augmentez le range ou diminuez le nombre d'étapes.")
 			return
 		fi
 	fi
@@ -168,11 +164,7 @@ subStep() {
 
 	# Check if we don't call subStep more than numSubStepMax
 	if [ "$subStepCount" -gt "$numSubStepMax" ]; then
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo "Avertissement Développeur: subStep appelée $subStepCount fois, mais numSubStepMax est défini à $numSubStepMax. Adaptez la valeur de numSubStepMax"
-		else
-			echo "Developer Warning: subStep has been called $subStepCount times, but you've defined numSubStepMax to $numSubStepMax. Please adapt numSubStepMax"
-		fi
+		echo $(t "Avertissement Développeur: subStep appelée $subStepCount fois, mais numSubStepMax est défini à $numSubStepMax. Adaptez la valeur de numSubStepMax")
 		return
 	fi
 	
@@ -211,19 +203,11 @@ try() {
 		echo 1 > $TMPFOLDER/hasError.$$
 
 		local LINE=${BASH_LINENO[0]}
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo -e "== Erreur à l'étape : $STEP_NAME" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Ligne $LINE" >> $TMPFOLDER/errorLog.$$
-			echo -e "== La commande \`$*' pose problème" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Le code de retour est $EXIT_CODE" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Le message d'erreur :" >> $TMPFOLDER/errorLog.$$
-		else
-			echo -e "== Error in step : $STEP_NAME" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Line $LINE" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Command \`$*' has an issue" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Return code is $EXIT_CODE" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Error message :" >> $TMPFOLDER/errorLog.$$
-		fi
+		echo -e "== $(t "Erreur à l'étape") : $STEP_NAME" >> $TMPFOLDER/errorLog.$$
+		echo -e "== $(t "Ligne") $LINE" >> $TMPFOLDER/errorLog.$$
+		echo -e "== $(t "La commande") \`$*' $(t "pose problème")" >> $TMPFOLDER/errorLog.$$
+		echo -e "== $(t "Le code de retour est") $EXIT_CODE" >> $TMPFOLDER/errorLog.$$
+		echo -e "== $(t "Le message d'erreur") :" >> $TMPFOLDER/errorLog.$$
 		echo -e "$cmdout\n" >> $TMPFOLDER/errorLog.$$
 		echo -e "$HR" >> $TMPFOLDER/errorLog.$$
 	fi
@@ -246,11 +230,7 @@ comment_source() {
 	local src_error=$2
 	while IFS= read -r line; do
 		commented_sources+=("$file:$line")
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo "║ Source trouvée dans $file, on la retire temporairement"
-		else
-			echo "║ Source found in $file, temporary disabling it"
-		fi
+		echo "║ $(t "Source trouvée dans") $file, $(t "on la retire temporairement")"
 		sudo sed -i 's|.*'"$src_error"'.*|#&|' "$file"
 	done < <(grep "$src_error" "$file")
 }
@@ -267,12 +247,7 @@ aptUpdate() {
 		if [ ! -z "$APT_ERROR" ]; then
 			APT_SRC_ERROR=$(echo $APT_ERROR | sed 's/.*http/http/g' | sed 's/ Release//g')
 			if ! echo "$APT_SRC_ERROR" | grep -Eq "($release main|$release-updates main)"; then
-				if [ "$LANG_DEP" = "fr" ]; then
-					echo "╔ Problème détecté sur la source : $APT_SRC_ERROR, correction en cours..."
-				else
-					echo "╔ Issue detected on the source : $APT_SRC_ERROR, fixing in progress..."
-				fi
-	
+				echo "╔ $(t "Problème détecté sur la source") : $APT_SRC_ERROR, $(t "correction en cours")..."
 				if grep -q "$APT_SRC_ERROR" "/etc/apt/sources.list"; then
 					comment_source "/etc/apt/sources.list" "$APT_SRC_ERROR"
 				else
@@ -284,28 +259,16 @@ aptUpdate() {
 				fi
 				
 				if [ "$NUM_UPDATE" -ge "$MAX_UPDATE" ]; then
-					if [ "$LANG_DEP" = "fr" ]; then
-						echo "╚!!!!!  : Trop d'essais ($NUM_UPDATE/$MAX_UPDATE), on sort avec erreur"
-					else
-						echo "╚!!!!!  : Too many tries ($NUM_UPDATE/$MAX_UPDATE), exiting with error"
-					fi
+					echo "╚!!!!!  : $(t "Trop d'essais") ($NUM_UPDATE/$MAX_UPDATE), $("on sort avec erreur")"
 					post
 					exit $EXIT_CODE
 				else
-					if [ "$LANG_DEP" = "fr" ]; then
-						echo "║ Relance de apt-get update..."
-					else
-						echo "║ Restarting apt-get update..."
-					fi
+					echo "║ $(t "Relance de apt-get update")..."
 					aptUpdate
 					return $?
 				fi
 			else
-				if [ "$LANG_DEP" = "fr" ]; then
-					echo "╚!!!!!  : Erreur sur une source principale de la distribution, impossible à corriger"
-				else
-					echo "╚!!!!!  : Error on a main source of the distribution, cannot fix"
-				fi
+				echo "╚!!!!!  : $(t "Erreur sur une source principale de la distribution, impossible à corriger")"
 				post
 				exit $EXIT_CODE
 			fi
@@ -318,23 +281,13 @@ aptUpdate() {
 	        for entry in "${commented_sources[@]}"; do
 			local file="${entry%%:*}"
 			local line="${entry#*:}"
-			if [ "$LANG_DEP" = "fr" ]; then
-				echo "║ On réactive la source $line"
-			else
-				echo "║ Re-enabling the source $line"
-			fi
+			echo "║ $(t "On réactive la source") $line"
 			sudo sed -i "s|#\($line\)|\1|" "$file"
 	        done
 
 		if [ "$NUM_UPDATE" -ge "2" ]; then
-			if [ "$LANG_DEP" = "fr" ]; then
-				echo "║ Ouf ! apt-get update a bien fonctionné après $NUM_UPDATE essais !"
-				echo "╚ Cette étape s'est bien déroulée ici, mais attention, d'autres plugins peuvent avoir le problème avec cette source !"
-			else
-				echo "║ Phew ! apt-get update did worked fine after $NUM_UPDATE tries !"
-				echo "╚ This step went fine in the end, but be aware that other plugins may have the same issue with that source !"
-			fi
-			
+			echo "║ $(t "Ouf ! apt-get update a bien fonctionné après") $NUM_UPDATE $(t "essais") !"
+			echo "╚ $(t "Cette étape s'est bien déroulée ici, mais attention, d'autres plugins peuvent avoir le problème avec cette source !")"
 		fi
 	        commented_sources=()
 		unset NUM_UPDATE
@@ -372,11 +325,7 @@ fixNO_PUBKEY() {
 	missing_keys=$(grep 'NO_PUBKEY' $TMPFOLDER/errorLog.$$ | sed -n 's/.*NO_PUBKEY \([^ ]*\).*/\1/p')
 
 	for key in $missing_keys; do
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo "== TROUVÉ 'NO_PUBKEY $key' dans l'erreur, je lance une commande pour corriger (ignorez le warning), attendez 45sec et relancez les dépendances pour réessayer"
-		else
-			echo "== FOUND 'NO_PUBKEY $key' in error, launching countermeasures (ignore warning), wait 45sec and relaunch dependencies to retry"
-		fi
+		echo "== $(t "TROUVÉ") 'NO_PUBKEY $key' $(t "dans l'erreur, je lance une commande pour corriger (ignorez le warning), attendez 45sec et relancez les dépendances pour réessayer")"
 		sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "$key"
 		HAS_FIX=1
 	done
@@ -393,18 +342,10 @@ fix () {
 		fi
 		if [ "$SEARCH_RESULT" -eq 0 ];then
 			if [ "${fix_handlers[$f,msgIfFound]}" = "" ]; then
-				if [ "$LANG_DEP" = "fr" ]; then
-					echo "== TROUVÉ '${fix_handlers[$f,grepOrFunct]}' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
-				else
-					echo "== FOUND '${fix_handlers[$f,grepOrFunct]}' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
-				fi
+				echo "== $(t "TROUVÉ") '${fix_handlers[$f,grepOrFunct]}' $(t "dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer")"
 			else
 				if [ "${fix_handlers[$f,msgIfFound]:0:1}" = "*" ]; then
-					if [ "$LANG_DEP" = "fr" ]; then
-						echo "== TROUVÉ '${fix_handlers[$f,msgIfFound]:1}' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
-					else
-						echo "== FOUND '${fix_handlers[$f,msgIfFound]:1}' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
-					fi
+					echo "== $(t "TROUVÉ") '${fix_handlers[$f,msgIfFound]:1}' $(t "dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer")"
 				else
 					echo ${fix_handlers[$f,msgIfFound]}
 				fi
@@ -451,22 +392,14 @@ post() {
 		echo "$HR"
 		[[ -f $TMPFOLDER/errorLog.$$ ]] && {
 			HAS_FIX=0
-			if [ "$LANG_DEP" = "fr" ]; then
-				echo "== ANALYSE DES ERREURS..."
-			else
-				echo "== ANALYSING ERRORS..."
-			fi
+			echo "== $(t "ANALYSE DES ERREURS")..."
 			
 			#try to fix if possible
 			fix
 
 			if [[ $HAS_FIX -eq 0 ]]; then
 				#show the error
-				if [ "$LANG_DEP" = "fr" ]; then
-					echo "== AUCUNE ERREUR CONNUE DÉTECTÉE"
-				else
-					echo "== NO KNOWN ERROR DETECTED"
-				fi
+				echo "== $(t "AUCUNE ERREUR CONNUE DÉTECTÉE")"
 				cat $TMPFOLDER/errorLog.$$;
 			fi
 			rm -f $TMPFOLDER/errorLog.$$; 
