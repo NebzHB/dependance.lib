@@ -207,7 +207,7 @@ if [ $? -ne 0 ]; then
 fi
 
 npmver=`npm -v`;
-echo -n "[Vérification Version NPM : ${npmver} : "
+echo -n "[$(t "Vérification Version NPM") : ${npmver} : "
 echo $npmver | grep "8.11.0" &>/dev/null
 if [ $? -eq 0 ]; then
 	echo_failure
