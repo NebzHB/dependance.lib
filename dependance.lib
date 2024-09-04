@@ -85,10 +85,6 @@ info() {
 
 pre() {
 	[[ $TIMED -eq 1 ]] && startFull=`date +%s`
-	echo "$HR"
-	echo "== $(date +'%d/%m/%Y %H:%M:%S') == $(t "Installation des dépendances de") $PLUGIN"
-	echo "$HR"
-	echo
 	touch $TMPFOLDER/errorLog.$$
 	echo 0 > $TMPFOLDER/hasError.$$
 	touch $PROGRESS_FILE
@@ -103,6 +99,7 @@ pre() {
 			fi
 		fi
 	fi
+
 	# remove repo.jeedom.com (validated by Alex)
 	if [ -f "/media/boot/multiboot/meson64_odroidc2.dtb.linux" ]; then
 		hasRepo=$(grep "repo.jeedom.com" /etc/apt/sources.list | wc -l)
@@ -110,6 +107,7 @@ pre() {
 			sudo apt-add-repository -r "deb http://repo.jeedom.com/odroid/ stable main" &>/dev/null
 		fi
 	fi
+
 	# remove repo.distrib.works
 	DISTRIB_WORKS=`grep "repo.distrib.works" /etc/apt/sources.list`
 	if [[ $? -eq 0 ]]; then
@@ -118,6 +116,17 @@ pre() {
 	else
 		reAddDistribWorks=0
 	fi
+
+	# install jq if not exists
+	if ! command -v jq &>/dev/null; then
+		sudo apt-get -o Acquire::ForceIPv4=true update &>/dev/null
+		sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::ForceIPv4=true install -y jq &>/dev/null
+	fi
+
+	echo "$HR"
+	echo "== $(date +'%d/%m/%Y %H:%M:%S') == $(t "Installation des dépendances de") $PLUGIN"
+	echo "$HR"
+	echo
 }
 
 step() {
@@ -413,11 +422,6 @@ post() {
 	fi
 	rm -f ${PROGRESS_FILE}
 }
-
-if ! command -v jq &>/dev/null; then
-    sudo apt-get -o Acquire::ForceIPv4=true update &>/dev/null
-    sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::ForceIPv4=true install -y jq &>/dev/null
-fi
 
 # fix apt broken install
 add_fix_handler "apt --fix-broken install" "" "yes | sudo apt --fix-broken install"
