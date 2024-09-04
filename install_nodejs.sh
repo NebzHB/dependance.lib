@@ -30,7 +30,7 @@ EOL
 
 subStep "$(t "Installation des packages nécessaires")"
 # apt-get update should have been done in the calling file
-try sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::ForceIPv4=true install -y lsb-release build-essential apt-utils git gnupg jq
+try sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::ForceIPv4=true install -y lsb-release build-essential apt-utils git gnupg
 
 subStep "$(t "Vérification du système")"
 arch=`arch`;
