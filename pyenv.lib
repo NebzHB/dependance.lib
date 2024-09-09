@@ -43,10 +43,7 @@ testPython3Version() {
     vercomp ${CURRENT_PYTHON_VERSION} "0.0.0"
     local EXIT_CODE=$?
     if [[ $EXIT_CODE -eq 0 ]]; then
-	echo 1 > $TMPFOLDER/hasError.$$
-	echo "$HR" >> $TMPFOLDER/errorLog.$$ 
-        echo "== Impossible to detect python3 version, is python3 installed?" >> $TMPFOLDER/errorLog.$$ 
-	post
+        echo "Impossible to detect python3 version, is python3 installed?"
         exit 1
     fi
 }
@@ -60,10 +57,7 @@ testMinTargetPythonVersion() {
     vercomp $TARGET_PYTHON_VERSION "3.9"
     local EXIT_CODE=$?
     if [[ $EXIT_CODE -gt 1 ]]; then
-	echo 1 > $TMPFOLDER/hasError.$$
-	echo "$HR" >> $TMPFOLDER/errorLog.$$ 
-        echo "== You cannot install a version of python lower than 3.9" >> $TMPFOLDER/errorLog.$$
-	post
+        echo "You cannot install a version of python lower than 3.9"
         exit 1
     fi
 }
@@ -113,10 +107,7 @@ installOrUpdatePyEnv() {
     fi
 
     if [ ! -d ${PYENV_DIR} ]; then
-	echo 1 > $TMPFOLDER/hasError.$$
-	echo "$HR" >> $TMPFOLDER/errorLog.$$ 
-        echo "== Problem to install PyEnv" >> $TMPFOLDER/errorLog.$$
-	post
+        echo "Problem to install PyEnv"
         exit 1
     fi
 }
@@ -142,10 +133,7 @@ installPython3WithPyEnv() {
     vercomp $installedVersion $TARGET_PYTHON_VERSION
     local EXIT_CODE=$?
     if [[ $EXIT_CODE -eq 2 ]]; then
-	echo 1 > $TMPFOLDER/hasError.$$
-	echo "$HR" >> $TMPFOLDER/errorLog.$$ 
-        echo "== Problem to install requested python version" >> $TMPFOLDER/errorLog.$$
-	post
+        echo "Problem to install requested python version"
         exit 1
     fi
 }
@@ -164,10 +152,7 @@ getPython3Path() {
 
 createVenv() {
     if [ -z ${VENV_DIR} ]; then
-	echo 1 > $TMPFOLDER/hasError.$$
-	echo "$HR" >> $TMPFOLDER/errorLog.$$ 
-        echo "== Please declare variable VENV_DIR in your script. e.g. ´VENV_DIR=${BASE_DIR}/venv´" >> $TMPFOLDER/errorLog.$$ 
-	post
+        echo "Please declare variable VENV_DIR in your script. e.g. ´VENV_DIR=${BASE_DIR}/venv´"
         exit 1
     fi
     pythonPath=$(getPython3Path)
@@ -175,10 +160,7 @@ createVenv() {
 
     installedVersion=$($pythonPath --version | awk -F'[ ]' '{print $2}')
     if [[ -z "$installedVersion" ]]; then
-	echo 1 > $TMPFOLDER/hasError.$$
-	echo "$HR" >> $TMPFOLDER/errorLog.$$ 
-        echo "== Could not get a python version matching $TARGET_PYTHON_VERSION" >> $TMPFOLDER/errorLog.$$
-	post
+        echo "Could not get a python version matching $TARGET_PYTHON_VERSION"
         exit 1
     fi
 
