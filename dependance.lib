@@ -191,18 +191,15 @@ subStep() {
 	
 	# Call step with pcInprog and any other arguments sent to subStep
 	step "$pcInProg" "$@"
-	
-	# If the end of the steps is reached, reinit the variables
-	echo "pcInProg $pcInProg"
-	echo "lastSubStep $lastSubStep"
-	if [  "$pcInProg" -ge "$lastSubStep"  ]; then
-		unset pcInProg
-		unset pcIncrement
-		unset firstSubStep
-		unset lastSubStep
-		unset numSubStepMax
-		unset subStepCount
-	fi
+}
+
+postSubStep() {
+	unset pcInProg
+	unset pcIncrement
+	unset firstSubStep
+	unset lastSubStep
+	unset numSubStepMax
+	unset subStepCount
 }
 
 
