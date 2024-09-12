@@ -97,6 +97,8 @@
     "Initialisation de python3 et des prérequis":"Init python3 & prerequisites",
     "Initialisation de PyEnv":"Init PyEnv",
     "Installation ou Mise à jour de PyEnv":"install or update PyEnv",
+    "Installation de Python":"Install Python",
+    "avec PyEnv":"with PyEnv",
     "Chemin de python3":"python3 path",
     "Configuration de l'environnement virtuel":"Setting up virtual environment",
     "Version de Python dans le Venv":"Version of python in VENV",
