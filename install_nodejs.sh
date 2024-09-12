@@ -312,3 +312,5 @@ add_fix_handler "npm \(ERR\!\|error\) dest /usr/\(local/\)\?lib/node_modules/\.h
 # fix when sometimes node source is not correct
 #add_fix_handler "deb.nodesource.com/node_.x" "" "sudo sed -i 's|node_.x|node_${$NODE_MAJOR}.x|' /etc/apt/sources.list.d/nodesource.list"
 #add_fix_handler "deb.nodesource.com/node_.x" "" "sudo sed -i 's|node_.x|node_18.x|' /etc/apt/sources.list.d/nodesource.list"
+
+postSubScript
