@@ -399,7 +399,7 @@ post() {
 		echo "$HR"
 		[[ -f $TMPFOLDER/errorLog.$$ ]] && {
 			HAS_FIX=0
-			echo "== $(t "ANALYSE DES ERREURS")..."
+			echo "== $(t "ANALYSE DES LOGS")..."
 			
 			#try to fix if possible
 			fix
