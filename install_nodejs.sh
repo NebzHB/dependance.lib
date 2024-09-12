@@ -41,8 +41,8 @@ if [ $? -eq 0 ]; then
 	today=$(date +%Y%m%d)
 	if [[ "$today" > "20200630" ]]; then
  		echo 1 > $TMPFOLDER/hasError.$$
-		echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
-		echo -e "== $(t "ATTENTION Debian 8 Jessie n'est officiellement plus supportée depuis le 30 juin 2020, merci de mettre à jour votre système en version plus récente de Debian !!!")" >> $TMPFOLDER/errorLog.$$ 
+		echo "$HR" >> $TMPFOLDER/errorLog.$$ 
+		echo "== [ERROR] $(t "ATTENTION Debian 8 Jessie n'est officiellement plus supportée depuis le 30 juin 2020, merci de mettre à jour votre système en version plus récente de Debian !!!")" >> $TMPFOLDER/errorLog.$$ 
   		post
 		exit 1
 	fi
@@ -54,8 +54,8 @@ if [ $? -eq 0 ]; then
 	today=$(date +%Y%m%d)
 	if [[ "$today" > "20220630" ]]; then
  		echo 1 > $TMPFOLDER/hasError.$$
-		echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
-		echo -e "== $(t "ATTENTION Debian 9 Stretch n'est officiellement plus supportée depuis le 30 juin 2022, merci de mettre à jour votre système en version plus récente de Debian !!!")" >> $TMPFOLDER/errorLog.$$ 
+		echo "$HR" >> $TMPFOLDER/errorLog.$$ 
+		echo "== [ERROR] $(t "ATTENTION Debian 9 Stretch n'est officiellement plus supportée depuis le 30 juin 2022, merci de mettre à jour votre système en version plus récente de Debian !!!")" >> $TMPFOLDER/errorLog.$$ 
   		post
 		exit 1
 	fi
@@ -69,34 +69,34 @@ if [ $buster -eq 0 ] && [ "${noSupport:-false}" != true ]; then
 		today=$(date +%Y%m%d)
 		if [[ "$today" > "20240630" ]]; then
   			echo 1 > $TMPFOLDER/hasError.$$
-			echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
-			echo -e ":fg-danger:== $(t "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre système en version plus récente de Debian !!!"):/fg:" >> $TMPFOLDER/errorLog.$$ 
-			echo -e ":fg-danger:== $(t "Les dépendances sont bloquées afin d'éviter tout problème, soit") $PLUGIN $(t "fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre système en version plus récente de Debian."):/fg:" >> $TMPFOLDER/errorLog.$$ 
-			echo -e ":fg-danger:== $(t "Fin Septembre, Jeedom passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE SERA FAIT !!! Migrez donc au plus vite !"):/fg:" >> $TMPFOLDER/errorLog.$$ 
-			echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
+			echo "$HR" >> $TMPFOLDER/errorLog.$$ 
+			echo "== [ERROR] $(t "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre système en version plus récente de Debian !!!")" >> $TMPFOLDER/errorLog.$$ 
+			echo "== [ERROR] $(t "Les dépendances sont bloquées afin d'éviter tout problème, soit") $PLUGIN $(t "fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre système en version plus récente de Debian.")" >> $TMPFOLDER/errorLog.$$ 
+			echo "== [ERROR] $(t "Fin Septembre, Jeedom passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE SERA FAIT !!! Migrez donc au plus vite !")" >> $TMPFOLDER/errorLog.$$ 
+			echo "$HR" >> $TMPFOLDER/errorLog.$$ 
    			post
 	  		exit 1
 		fi
 	else
-		echo ":fg-warning:$HR:/fg:"
-		echo ":fg-warning:== $(t "ATTENTION") == $(t "A VERIFIER AU PLUS VITE"):/fg:"
+		echo "$HR"
+		echo "== [WARNING] == $(t "A VERIFIER AU PLUS VITE")"
 		echo
-		echo ":fg-warning:$HR:/fg:"
-		echo ":fg-warning:== $(t "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est en cours de finalisation par Jeedom."):/fg:"
-		echo ":fg-warning:== $(t "Les dépendances vont quand même se lancer (mais aucun support ne sera fait si celles-ci ne fonctionnent pas !), surveillez les nouvelles de Jeedom afin de mettre à jour en Debian 11 au plus vite quand ils auront sorti leur nouvelle image."):/fg:"
+		echo "$HR"
+		echo "== [WARNING] $(t "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est en cours de finalisation par Jeedom.")"
+		echo "== [WARNING] $(t "Les dépendances vont quand même se lancer (mais aucun support ne sera fait si celles-ci ne fonctionnent pas !), surveillez les nouvelles de Jeedom afin de mettre à jour en Debian 11 au plus vite quand ils auront sorti leur nouvelle image.")"
  	fi
 fi
 if [ $buster -eq 0 ] && [ "${noSupport:-false}" != false ]; then
-	echo -e ":fg-warning:== $(t "Vous avez refusé le support, Vous utilisez toujours Debian 10 Buster, L'installation des dépendances va se lancer mais il est possible que ça ne fonctionne pas..."):/fg:"
-  	echo -e ":fg-danger:== $(t "Fin Septembre, Jeedom passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE SERA FAIT !!! Migrez donc au plus vite !"):/fg:"
+	echo "== [WARNING] $(t "Vous avez refusé le support, Vous utilisez toujours Debian 10 Buster, L'installation des dépendances va se lancer mais il est possible que ça ne fonctionne pas...")"
+  	echo "== [ERROR] $(t "Jeedom 4.4.17 passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT N'EST FAIT !!! Migrez donc au plus vite !")"
 fi
 
 #x86 32 bits not supported by nodesource anymore
 bits=$(getconf LONG_BIT)
 if { [ "$arch" = "i386" ] || [ "$arch" = "i686" ]; } && [ "$bits" -eq "32" ]; then
 	echo 1 > $TMPFOLDER/hasError.$$
-	echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
-	echo -e "== $(t "ATTENTION Votre système est x86 en 32bits et NodeJS n'y est pas supporté, merci de passer en 64bits !!!")" >> $TMPFOLDER/errorLog.$$ 
+	echo "$HR" >> $TMPFOLDER/errorLog.$$ 
+	echo "== [ERROR] $(t "ATTENTION Votre système est x86 en 32bits et NodeJS n'y est pas supporté, merci de passer en 64bits !!!")" >> $TMPFOLDER/errorLog.$$ 
  	post
 	exit 1 
 fi
@@ -115,7 +115,7 @@ NODE_MAJOR=$( [[ $requiredNodeVersion == *.* ]] && echo $requiredNodeVersion | c
 
 if [ -z "$NODE_MAJOR" ]; then
 	echo 1 > $TMPFOLDER/hasError.$$
-	echo "$(t "Erreur: NODE_MAJOR est vide")" >> $TMPFOLDER/errorLog.$$ 
+	echo "== [ERROR] $(t "NODE_MAJOR est vide")" >> $TMPFOLDER/errorLog.$$ 
 	echo "$(t "Contenu de") ${BASEDIR}/package.json:" >> $TMPFOLDER/errorLog.$$ 
 	cat "${BASEDIR}/package.json" >> $TMPFOLDER/errorLog.$$ 
 	echo "$(t "Version de node trouvée requiredNodeVersion"): $requiredNodeVersion" >> $TMPFOLDER/errorLog.$$ 
