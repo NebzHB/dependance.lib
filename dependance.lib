@@ -160,8 +160,7 @@ subStep() {
 	if [ -z "${pcIncrement}" ]; then
 		pcIncrement=$(( (lastSubStep - firstSubStep) / (numSubStepMax - 1) ))
 		if (( pcIncrement < 2 )); then
-			echo "$(t "Avertissement Développeur: L'incrément de pourcentage par étape") (${pcIncrement}%) $(t "est inférieur à 2%. Augmentez le range ou diminuez le nombre d'étapes.")"
-			return
+			echo ":fg-warning:$(t "Avertissement Développeur: L'incrément de pourcentage par étape") (${pcIncrement}%) $(t "est inférieur à 2%. Augmentez le range ou diminuez le nombre d'étapes."):/fg:"
 		fi
 	fi
 	
@@ -174,8 +173,7 @@ subStep() {
 
 	# Check if we don't call subStep more than numSubStepMax
 	if [ "$subStepCount" -gt "$numSubStepMax" ]; then
-		echo "$(t "Avertissement Développeur: subStep appelée") $subStepCount $(t "fois, mais numSubStepMax est défini à") $numSubStepMax. $(t "Adaptez la valeur de numSubStepMax") ($@)"
-		return
+		echo ":fg-warning:$(t "Avertissement Développeur: subStep appelée") $subStepCount $(t "fois, mais numSubStepMax est défini à") $numSubStepMax. $(t "Adaptez la valeur de numSubStepMax"):/fg:"
 	fi
 	
 	# Init pcInprog, then increment on each call
