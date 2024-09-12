@@ -29,7 +29,7 @@
     "dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer":"in error, launching countermeasures, wait 45sec and relaunch dependencies to retry",
     "Terminé":"Finished",
     "Erreur d'Installation":"Installation Error",
-    "ANALYSE DES ERREURS":"ANALYSING ERRORS",
+    "ANALYSE DES LOGS":"ANALYSING LOGS",
     "AUCUNE ERREUR CONNUE DÉTECTÉE":"NO KNOWN ERROR DETECTED",
     "Installation Réussie":"Installation Successful"
   },
