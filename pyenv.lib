@@ -193,7 +193,7 @@ autoSetupVenv() {
 		subStep "$(t "Installation ou Mise à jour de PyEnv")"
 		tryOrStop installOrUpdatePyEnv
 
-		subStep Install Python $TARGET_PYTHON_VERSION with PyEnv
+		subStep "$(t "Install Python") $TARGET_PYTHON_VERSION $(t "avec PyEnv")"
 		tryOrStop installPython3WithPyEnv
 	fi
 	echo "** $(t "Chemin de python3"): $(getPython3Path) **"
