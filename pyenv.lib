@@ -182,45 +182,45 @@ autoSetupVenv() {
 	[ -n "${lastSubStep}" ] || lastSubStep=70
 	numSubStepMax=5
 
-	subStep "$(t "Initialisation de python3 et des prérequis")"
+	subStep "Init python3 & prerequisites"
 	tryOrStop testMinTargetPythonVersion
 	tryOrStop initPython3
 
-	subStep "$(t "Initialisation de PyEnv")"
+	subStep "Init pyEnv"
 	isPyEnvNeeded
 	local EXIT_CODE=$?
 	if [[ $EXIT_CODE -eq 1 ]]; then
-		subStep "$(t "Installation ou Mise à jour de PyEnv")"
+		subStep "install or update PyEnv"
 		tryOrStop installOrUpdatePyEnv
 
 		subStep Install Python $TARGET_PYTHON_VERSION with PyEnv
 		tryOrStop installPython3WithPyEnv
 	fi
-	echo "** $(t "Chemin de python3"): $(getPython3Path) **"
+	echo "** python3 path: $(getPython3Path) **"
 
-	subStep "$(t "Configuration de l'environnement virtuel")"
+	subStep "Setting up virtual environment"
 	tryOrStop createVenv
-	echo "** $(t "Version de Python dans le Venv"):" $(${VENV_DIR}/bin/python3 --version)
+	echo "** Version of python in VENV:" $(${VENV_DIR}/bin/python3 --version)
 }
 
 launchInstall() {
 	pre
-	step 5 "$(t "Nettoyage APT")"
+	step 5 "Clean apt"
 	try apt-get clean
-	step 10 "$(t "Mise à jour APT")"
+	step 10 "Update apt"
 	try apt-get update
 
 	if [[ ! -z "${APT_PACKAGES}" ]]; then
-		step 15 "$(t "Installation des paquets APT")"
+		step 15 "Install apt packages"
 		tryOrStop apt-get install -y ${APT_PACKAGES}
 	fi
 
 	autoSetupVenv
 
-	step 80 "$(t "Installation des paquets python nécessaires")"
+	step 80 "Install the required python packages"
 	try ${VENV_DIR}/bin/python3 -m pip install --upgrade -r ${BASE_DIR}/requirements.txt
 
-	step 90 "$(t "Résumé des paquets installés")"
+	step 90 "Summary of installed packages"
 	${VENV_DIR}/bin/python3 -m pip freeze
 
 	post
