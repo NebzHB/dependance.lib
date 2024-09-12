@@ -193,7 +193,7 @@ subStep() {
 	step "$pcInProg" "$@"
 	
 	# If the end of the steps is reached, reinit the variables
-	if [ "$pcInProg" -ge "$lastSubStep" ]; then
+	if [ "$subStepCount" -eq "$numSubStepMax" ]; then
 		unset pcInProg
 		unset pcIncrement
 		unset firstSubStep
