@@ -201,6 +201,7 @@ autoSetupVenv() {
 	subStep "$(t "Configuration de l'environnement virtuel")"
 	tryOrStop createVenv
 	echo "** $(t "Version de Python dans le Venv"):" $(${VENV_DIR}/bin/python3 --version)
+	postSubScript
 }
 
 launchInstall() {
