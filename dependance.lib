@@ -10,9 +10,28 @@ declare -A fix_handlers
 h=0 # no fix_handlers
 release=$(lsb_release -sc)
 
-if [ -z $LANG_DEP ]; then
-	LANG_DEP=fr
+LANG_DEP=${LANG_DEP:-${DEF_LANG:-"fr"}}
+if [ "$LANG_DEP" != "$DEF_LANG" ]; then
+	TRAD_FILE="${BASEDIR}/i18n/${LANG_DEP}.json"
+	mkdir -p $(dirname "$TRAD_FILE")
+	wget -4 https://raw.githubusercontent.com/NebzHB/dependance.lib/master/i18n/${LANG_DEP}.json --no-cache -O ${TRAD_FILE} &>/dev/null
 fi
+
+t() {
+	local key="$*"
+	if [ "$LANG_DEP" == "$DEF_LANG" ] || [ -z "$TRAD_FILE" ]; then
+		echo -n "$key"
+		return
+	fi
+
+	local script_name=$(basename "${BASH_SOURCE[1]}")
+	local translation=$(jq -r --arg k "$key" --arg s "$script_name" '.[$s][$k] // $k' "$TRAD_FILE" 2>/dev/null)
+	if [ $? -ne 0 ] || [ -z "$translation" ]; then
+		echo -n "$key"
+		return
+	fi
+	echo -n "$translation"
+}
 
 add_fix_handler() {
 	fix_handlers[$h,grepOrFunct]=$1
@@ -66,14 +85,7 @@ info() {
 
 pre() {
 	[[ $TIMED -eq 1 ]] && startFull=`date +%s`
-	echo "$HR"
-	if [ "$LANG_DEP" = "fr" ]; then
-		echo "== $(date +'%d/%m/%Y %H:%M:%S') == Installation des dépendances de $PLUGIN"
-	else
-		echo "== $(date +'%d/%m/%Y %H:%M:%S') == Dependencies installation for $PLUGIN"
-	fi
-	echo "$HR"
-	echo
+	START_DATE=$(date +'%d/%m/%Y %H:%M:%S')
 	touch $TMPFOLDER/errorLog.$$
 	echo 0 > $TMPFOLDER/hasError.$$
 	touch $PROGRESS_FILE
@@ -88,6 +100,7 @@ pre() {
 			fi
 		fi
 	fi
+
 	# remove repo.jeedom.com (validated by Alex)
 	if [ -f "/media/boot/multiboot/meson64_odroidc2.dtb.linux" ]; then
 		hasRepo=$(grep "repo.jeedom.com" /etc/apt/sources.list | wc -l)
@@ -95,6 +108,7 @@ pre() {
 			sudo apt-add-repository -r "deb http://repo.jeedom.com/odroid/ stable main" &>/dev/null
 		fi
 	fi
+
 	# remove repo.distrib.works
 	DISTRIB_WORKS=`grep "repo.distrib.works" /etc/apt/sources.list`
 	if [[ $? -eq 0 ]]; then
@@ -103,6 +117,17 @@ pre() {
 	else
 		reAddDistribWorks=0
 	fi
+
+	# install jq if not exists
+	if ! command -v jq &>/dev/null; then
+		sudo apt-get -o Acquire::ForceIPv4=true update &>/dev/null
+		sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::ForceIPv4=true install -y jq &>/dev/null
+	fi
+
+	echo "$HR"
+	echo "== ${START_DATE} == $(t "Installation des dépendances de") $PLUGIN"
+	echo "$HR"
+	echo
 }
 
 step() {
@@ -135,12 +160,7 @@ subStep() {
 	if [ -z "${pcIncrement}" ]; then
 		pcIncrement=$(( (lastSubStep - firstSubStep) / (numSubStepMax - 1) ))
 		if (( pcIncrement < 2 )); then
-			if [ "$LANG_DEP" = "fr" ]; then
-				echo "Avertissement Développeur: L'incrément de pourcentage par étape (${pcIncrement}%) est inférieur à 2%. Augmentez le range ou diminuez le nombre d'étapes."
-			else
-				echo "Developer Warning: The percentage increment per step (${pcIncrement}%) is less than 2%. Increase the range or reduce the number of steps"
-			fi
-			return
+			echo "== [WARNING] $(t "Avertissement Développeur: L'incrément de pourcentage par étape") (${pcIncrement}%) $(t "est inférieur à 2%. Augmentez le range ou diminuez le nombre d'étapes.")"
 		fi
 	fi
 	
@@ -153,12 +173,7 @@ subStep() {
 
 	# Check if we don't call subStep more than numSubStepMax
 	if [ "$subStepCount" -gt "$numSubStepMax" ]; then
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo "Avertissement Développeur: subStep appelée $subStepCount fois, mais numSubStepMax est défini à $numSubStepMax. Adaptez la valeur de numSubStepMax"
-		else
-			echo "Developer Warning: subStep has been called $subStepCount times, but you've defined numSubStepMax to $numSubStepMax. Please adapt numSubStepMax"
-		fi
-		return
+		echo "== [WARNING] $(t "Avertissement Développeur: subStep appelée") $subStepCount $(t "fois, mais numSubStepMax est défini à") $numSubStepMax. $(t "Adaptez la valeur de numSubStepMax")"
 	fi
 	
 	# Init pcInprog, then increment on each call
@@ -174,16 +189,15 @@ subStep() {
 	
 	# Call step with pcInprog and any other arguments sent to subStep
 	step "$pcInProg" "$@"
-	
-	# If the end of the steps is reached, reinit the variables
-	if [ "$pcInProg" -ge "$lastSubStep" ]; then
-		unset pcInProg
-		unset pcIncrement
-		unset firstSubStep
-		unset lastSubStep
-		unset numSubStepMax
-		unset subStepCount
-	fi
+}
+
+postSubScript() {
+	unset pcInProg
+	unset pcIncrement
+	unset firstSubStep
+	unset lastSubStep
+	unset numSubStepMax
+	unset subStepCount
 }
 
 
@@ -196,19 +210,11 @@ try() {
 		echo 1 > $TMPFOLDER/hasError.$$
 
 		local LINE=${BASH_LINENO[0]}
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo -e "== Erreur à l'étape : $STEP_NAME" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Ligne $LINE" >> $TMPFOLDER/errorLog.$$
-			echo -e "== La commande \`$*' pose problème" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Le code de retour est $EXIT_CODE" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Le message d'erreur :" >> $TMPFOLDER/errorLog.$$
-		else
-			echo -e "== Error in step : $STEP_NAME" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Line $LINE" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Command \`$*' has an issue" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Return code is $EXIT_CODE" >> $TMPFOLDER/errorLog.$$
-			echo -e "== Error message :" >> $TMPFOLDER/errorLog.$$
-		fi
+		echo -e "== $(t "Erreur à l'étape") : $STEP_NAME" >> $TMPFOLDER/errorLog.$$
+		echo -e "== $(t "Ligne") $LINE" >> $TMPFOLDER/errorLog.$$
+		echo -e "== $(t "La commande") \`$*' $(t "pose problème")" >> $TMPFOLDER/errorLog.$$
+		echo -e "== $(t "Le code de retour est") $EXIT_CODE" >> $TMPFOLDER/errorLog.$$
+		echo -e "== $(t "Le message d'erreur") :" >> $TMPFOLDER/errorLog.$$
 		echo -e "$cmdout\n" >> $TMPFOLDER/errorLog.$$
 		echo -e "$HR" >> $TMPFOLDER/errorLog.$$
 	fi
@@ -231,11 +237,7 @@ comment_source() {
 	local src_error=$2
 	while IFS= read -r line; do
 		commented_sources+=("$file:$line")
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo "║ Source trouvée dans $file, on la retire temporairement"
-		else
-			echo "║ Source found in $file, temporary disabling it"
-		fi
+		echo "║ $(t "Source trouvée dans") $file, $(t "on la retire temporairement")"
 		sudo sed -i 's|.*'"$src_error"'.*|#&|' "$file"
 	done < <(grep "$src_error" "$file")
 }
@@ -252,12 +254,7 @@ aptUpdate() {
 		if [ ! -z "$APT_ERROR" ]; then
 			APT_SRC_ERROR=$(echo $APT_ERROR | sed 's/.*http/http/g' | sed 's/ Release//g')
 			if ! echo "$APT_SRC_ERROR" | grep -Eq "($release main|$release-updates main)"; then
-				if [ "$LANG_DEP" = "fr" ]; then
-					echo "╔ Problème détecté sur la source : $APT_SRC_ERROR, correction en cours..."
-				else
-					echo "╔ Issue detected on the source : $APT_SRC_ERROR, fixing in progress..."
-				fi
-	
+				echo "╔ $(t "Problème détecté sur la source") : $APT_SRC_ERROR, $(t "correction en cours")..."
 				if grep -q "$APT_SRC_ERROR" "/etc/apt/sources.list"; then
 					comment_source "/etc/apt/sources.list" "$APT_SRC_ERROR"
 				else
@@ -269,28 +266,16 @@ aptUpdate() {
 				fi
 				
 				if [ "$NUM_UPDATE" -ge "$MAX_UPDATE" ]; then
-					if [ "$LANG_DEP" = "fr" ]; then
-						echo "╚!!!!!  : Trop d'essais ($NUM_UPDATE/$MAX_UPDATE), on sort avec erreur"
-					else
-						echo "╚!!!!!  : Too many tries ($NUM_UPDATE/$MAX_UPDATE), exiting with error"
-					fi
+					echo "╚!!!!!  : $(t "Trop d'essais") ($NUM_UPDATE/$MAX_UPDATE), $("on sort avec erreur")"
 					post
 					exit $EXIT_CODE
 				else
-					if [ "$LANG_DEP" = "fr" ]; then
-						echo "║ Relance de apt-get update..."
-					else
-						echo "║ Restarting apt-get update..."
-					fi
+					echo "║ $(t "Relance de apt-get update")..."
 					aptUpdate
 					return $?
 				fi
 			else
-				if [ "$LANG_DEP" = "fr" ]; then
-					echo "╚!!!!!  : Erreur sur une source principale de la distribution, impossible à corriger"
-				else
-					echo "╚!!!!!  : Error on a main source of the distribution, cannot fix"
-				fi
+				echo "╚!!!!!  : $(t "Erreur sur une source principale de la distribution, impossible à corriger")"
 				post
 				exit $EXIT_CODE
 			fi
@@ -303,23 +288,13 @@ aptUpdate() {
 	        for entry in "${commented_sources[@]}"; do
 			local file="${entry%%:*}"
 			local line="${entry#*:}"
-			if [ "$LANG_DEP" = "fr" ]; then
-				echo "║ On réactive la source $line"
-			else
-				echo "║ Re-enabling the source $line"
-			fi
+			echo "║ $(t "On réactive la source") $line"
 			sudo sed -i "s|#\($line\)|\1|" "$file"
 	        done
 
 		if [ "$NUM_UPDATE" -ge "2" ]; then
-			if [ "$LANG_DEP" = "fr" ]; then
-				echo "║ Ouf ! apt-get update a bien fonctionné après $NUM_UPDATE essais !"
-				echo "╚ Cette étape s'est bien déroulée ici, mais attention, d'autres plugins peuvent avoir le problème avec cette source !"
-			else
-				echo "║ Phew ! apt-get update did worked fine after $NUM_UPDATE tries !"
-				echo "╚ This step went fine in the end, but be aware that other plugins may have the same issue with that source !"
-			fi
-			
+			echo "║ $(t "Ouf ! apt-get update a bien fonctionné après") $NUM_UPDATE $(t "essais") !"
+			echo "╚ $(t "Cette étape s'est bien déroulée ici, mais attention, d'autres plugins peuvent avoir le problème avec cette source !")"
 		fi
 	        commented_sources=()
 		unset NUM_UPDATE
@@ -357,11 +332,7 @@ fixNO_PUBKEY() {
 	missing_keys=$(grep 'NO_PUBKEY' $TMPFOLDER/errorLog.$$ | sed -n 's/.*NO_PUBKEY \([^ ]*\).*/\1/p')
 
 	for key in $missing_keys; do
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo "== TROUVÉ 'NO_PUBKEY $key' dans l'erreur, je lance une commande pour corriger (ignorez le warning), attendez 45sec et relancez les dépendances pour réessayer"
-		else
-			echo "== FOUND 'NO_PUBKEY $key' in error, launching countermeasures (ignore warning), wait 45sec and relaunch dependencies to retry"
-		fi
+		echo "== $(t "TROUVÉ") 'NO_PUBKEY $key' $(t "dans l'erreur, je lance une commande pour corriger (ignorez le warning), attendez 45sec et relancez les dépendances pour réessayer")"
 		sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "$key"
 		HAS_FIX=1
 	done
@@ -378,18 +349,10 @@ fix () {
 		fi
 		if [ "$SEARCH_RESULT" -eq 0 ];then
 			if [ "${fix_handlers[$f,msgIfFound]}" = "" ]; then
-				if [ "$LANG_DEP" = "fr" ]; then
-					echo "== TROUVÉ '${fix_handlers[$f,grepOrFunct]}' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
-				else
-					echo "== FOUND '${fix_handlers[$f,grepOrFunct]}' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
-				fi
+				echo "== $(t "TROUVÉ") '${fix_handlers[$f,grepOrFunct]}' $(t "dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer")"
 			else
 				if [ "${fix_handlers[$f,msgIfFound]:0:1}" = "*" ]; then
-					if [ "$LANG_DEP" = "fr" ]; then
-						echo "== TROUVÉ '${fix_handlers[$f,msgIfFound]:1}' dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer"
-					else
-						echo "== FOUND '${fix_handlers[$f,msgIfFound]:1}' in error, launching countermeasures, wait 45sec and relaunch dependencies to retry"
-					fi
+					echo "== $(t "TROUVÉ") '${fix_handlers[$f,msgIfFound]:1}' $(t "dans l'erreur, je lance une commande pour corriger, attendez 45sec et relancez les dépendances pour réessayer")"
 				else
 					echo ${fix_handlers[$f,msgIfFound]}
 				fi
@@ -424,55 +387,34 @@ post() {
 		next
 	fi
 	echo 100 > ${PROGRESS_FILE}
-	if [ "$LANG_DEP" = "fr" ]; then
-		echo "[100% ] : Terminé !"
-	else
-		echo "[100% ] : Finished !"
-	fi
+	echo "[100% ] : $(t "Terminé") !"
+
 	[[ -f $TMPFOLDER/hasError.$$ ]] && { hasError=$(< $TMPFOLDER/hasError.$$); rm -f $TMPFOLDER/hasError.$$; }
 	echo
 	if [[ $hasError -eq 1 ]]; then
 		echo "$HR"
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo -n "== KO == Erreur d'Installation "
-			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
-		else
-			echo -n "== KO == Installation Error "
-			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
-		fi
+		echo -n "== KO == $(t "Erreur d'Installation") "
+		[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
 		echo
 		echo "$HR"
 		[[ -f $TMPFOLDER/errorLog.$$ ]] && {
 			HAS_FIX=0
-			if [ "$LANG_DEP" = "fr" ]; then
-				echo "== ANALYSE DES ERREURS..."
-			else
-				echo "== ANALYSING ERRORS..."
-			fi
+			echo "== $(t "ANALYSE DES LOGS")..."
 			
 			#try to fix if possible
 			fix
 
 			if [[ $HAS_FIX -eq 0 ]]; then
 				#show the error
-				if [ "$LANG_DEP" = "fr" ]; then
-					echo "== AUCUNE ERREUR CONNUE DÉTECTÉE"
-				else
-					echo "== NO KNOWN ERROR DETECTED"
-				fi
+				echo "== $(t "AUCUNE ERREUR CONNUE DÉTECTÉE")"
 				cat $TMPFOLDER/errorLog.$$;
 			fi
 			rm -f $TMPFOLDER/errorLog.$$; 
 		}
 	else
 		echo "$HR"
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo -n "== OK == Installation Réussie "
-			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
-		else
-			echo -n "== OK == Installation Successful "
-			[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
-		fi
+		echo -n "== OK == $(t "Installation Réussie") "
+		[[ $TIMED -eq 1 ]] && show_time $((`date +%s`-$startFull)) "noEndPoints"
 		echo
 		echo "$HR"
 	fi
@@ -499,8 +441,7 @@ fix_certif_chain_issue_mdrjr() {
 add_fix_handler "Certificate verification failed: The certificate is NOT trusted. The certificate chain uses expired certificate.  Could not handshake: Error in the certificate verification. [IP: 216.155.132.189 443]" "*Error in the certificate verification on oph.mdrjr.net" fix_certif_chain_issue_mdrjr
 
 # fix armbian.com not available for buster anymore (same fix than the Atlas plugin does) :
-add_fix_handler "The repository 'http://apt.armbian.com buster Release' no longer has a Release file." "" "sudo sed -i 's|^deb http://apt.armbian.com|#deb http://apt.armbian.com|g' /etc/apt/sources.list.d/armbian.list"
-add_fix_handler "The repository 'http://apt.armbian.com buster Release' does not have a Release file." "" "sudo sed -i 's|^deb http://apt.armbian.com|#deb http://apt.armbian.com|g' /etc/apt/sources.list.d/armbian.list"
+add_fix_handler "The repository 'http://apt.armbian.com buster Release' \(no longer has\|does not have\) a Release file." "" "sudo sed -i 's|^deb http://apt.armbian.com|#deb http://apt.armbian.com|g' /etc/apt/sources.list.d/armbian.list"
 add_fix_handler "Le dépôt http://apt.armbian.com buster Release ne contient plus de fichier Release." "" "sudo sed -i 's|^deb http://apt.armbian.com|#deb http://apt.armbian.com|g' /etc/apt/sources.list.d/armbian.list"
 
 # fix buster-backports not available anymore :
@@ -513,6 +454,5 @@ fix_buster_backport_not_available() {
 		sudo sed -i 's|^deb http://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb http://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
 	fi
 }
-add_fix_handler "The repository 'http://[[:alnum:].-]\+\.debian\.org/debian buster-backports Release' no longer has a Release file." "*The repository buster-backports no longer has a Release file." fix_buster_backport_not_available
-add_fix_handler "The repository 'http://[[:alnum:].-]\+\.debian\.org/debian buster-backports Release' does not have a Release file." "*The repository buster-backports does not have a Release file." fix_buster_backport_not_available
+add_fix_handler "The repository 'http://[[:alnum:].-]\+\.debian\.org/debian buster-backports Release' \(no longer has\|does not have\) a Release file." "*The repository buster-backports no longer has/does not have a Release file." fix_buster_backport_not_available
 add_fix_handler "Le dépôt http://[[:alnum:].-]\+\.debian\.org/debian buster-backports Release ne contient plus de fichier Release." "*Le dépôt buster-backports ne contient plus de fichier Release." fix_buster_backport_not_available

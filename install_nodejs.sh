@@ -11,16 +11,12 @@ while [[ "$#" -gt 0 ]]; do
 		--firstSubStep) firstSubStep=$2; shift ;;
 		--lastSubStep) lastSubStep=$2; shift ;;
 		--forceUpdateNPM) forceUpdateNPM=1 ;;
-		*) echo "Unknown Option: $1"; tryOrStop false ;;
+		*) echo "$(t "Option Inconnue"): $1"; tryOrStop false ;;
 	esac
 	shift
 done
 
-if [ "$LANG_DEP" = "fr" ]; then
-	subStep "Prérequis"
-else
-	subStep "Prerequisites"
-fi
+subStep "$(t "Prérequis")"
 
 #ipv4 first for dns (like before nodejs 18)
 export NODE_OPTIONS="--dns-result-order=ipv4first"
@@ -32,19 +28,11 @@ Pin: origin deb.nodesource.com
 Pin-Priority: 600
 EOL
 
-if [ "$LANG_DEP" = "fr" ]; then
-	subStep "Installation des packages nécessaires"
-else
-	subStep "Mandatory packages installation"
-fi
+subStep "$(t "Installation des packages nécessaires")"
 # apt-get update should have been done in the calling file
-try sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::ForceIPv4=true install -y lsb-release build-essential apt-utils git gnupg jq
+try sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::ForceIPv4=true install -y lsb-release build-essential apt-utils git gnupg
 
-if [ "$LANG_DEP" = "fr" ]; then
-	subStep "Vérification du système"
-else
-	subStep "System Check"
-fi
+subStep "$(t "Vérification du système")"
 arch=`arch`;
 
 #jessie as libstdc++ > 4.9 needed for nodejs 12+
@@ -53,13 +41,8 @@ if [ $? -eq 0 ]; then
 	today=$(date +%Y%m%d)
 	if [[ "$today" > "20200630" ]]; then
  		echo 1 > $TMPFOLDER/hasError.$$
-		if [ "$LANG_DEP" = "fr" ]; then
-  			echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
-			echo -e "== ATTENTION Debian 8 Jessie n'est officiellement plus supportée depuis le 30 juin 2020, merci de mettre à jour votre système en version plus récente de Debian !!!" >> $TMPFOLDER/errorLog.$$ 
-		else
-  			echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
-			echo -e "== WARNING Debian 8 Jessie is not supported anymore since the 30rd of june 2020, thank you to update your system in a new Debian version !!!" >> $TMPFOLDER/errorLog.$$ 
-		fi
+		echo "$HR" >> $TMPFOLDER/errorLog.$$ 
+		echo "== [ERROR] $(t "ATTENTION Debian 8 Jessie n'est officiellement plus supportée depuis le 30 juin 2020, merci de mettre à jour votre système en version plus récente de Debian !!!")" >> $TMPFOLDER/errorLog.$$ 
   		post
 		exit 1
 	fi
@@ -71,13 +54,8 @@ if [ $? -eq 0 ]; then
 	today=$(date +%Y%m%d)
 	if [[ "$today" > "20220630" ]]; then
  		echo 1 > $TMPFOLDER/hasError.$$
-		if [ "$LANG_DEP" = "fr" ]; then
-  			echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
-			echo -e "== ATTENTION Debian 9 Stretch n'est officiellement plus supportée depuis le 30 juin 2022, merci de mettre à jour votre système en version plus récente de Debian !!!" >> $TMPFOLDER/errorLog.$$ 
-		else
-  			echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
-			echo -e "== WARNING Debian 9 Stretch is not supported anymore since the 30rd of june 2022, thank you to update your system in a new Debian version !!!" >> $TMPFOLDER/errorLog.$$ 
-		fi
+		echo "$HR" >> $TMPFOLDER/errorLog.$$ 
+		echo "== [ERROR] $(t "ATTENTION Debian 9 Stretch n'est officiellement plus supportée depuis le 30 juin 2022, merci de mettre à jour votre système en version plus récente de Debian !!!")" >> $TMPFOLDER/errorLog.$$ 
   		post
 		exit 1
 	fi
@@ -91,70 +69,39 @@ if [ $buster -eq 0 ] && [ "${noSupport:-false}" != true ]; then
 		today=$(date +%Y%m%d)
 		if [[ "$today" > "20240630" ]]; then
   			echo 1 > $TMPFOLDER/hasError.$$
-			if [ "$LANG_DEP" = "fr" ]; then
-   				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
-				echo -e ":fg-danger:== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre système en version plus récente de Debian !!!:/fg:" >> $TMPFOLDER/errorLog.$$ 
-	   			echo -e ":fg-danger:== Les dépendances sont bloquées afin d'éviter tout problème, soit $PLUGIN fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre système en version plus récente de Debian.:/fg:" >> $TMPFOLDER/errorLog.$$ 
-       				echo -e ":fg-danger:== Fin Septembre, Jeedom passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE SERA FAIT !!! Migrez donc au plus vite !:/fg:" >> $TMPFOLDER/errorLog.$$ 
-       				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
-			else
-   				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
-				echo -e ":fg-danger:== WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Please update your system in a new Debian version!!!:/fg:" >> $TMPFOLDER/errorLog.$$ 
-	   			echo -e ":fg-danger:== Dependencies are blocked to avoid any issues. Either $PLUGIN works and so we don't touch the dependencies as long as it works, or it doesn't work anymore and you have to update your system in a new Debian version.:/fg:" >> $TMPFOLDER/errorLog.$$ 
-       				echo -e ":fg-danger:== End of September, Jeedom will upgrade to NodeJS 20 that's incompatible with Debian 10. NO SUPPORT WILL BE DONE ANYMORE !!! Please migrate ASAP !:/fg:" >> $TMPFOLDER/errorLog.$$ 
-       				echo -e ":fg-danger:$HR:/fg:" >> $TMPFOLDER/errorLog.$$ 
-			fi
+			echo "$HR" >> $TMPFOLDER/errorLog.$$ 
+			echo "== [ERROR] $(t "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre système en version plus récente de Debian !!!")" >> $TMPFOLDER/errorLog.$$ 
+			echo "== [ERROR] $(t "Les dépendances sont bloquées afin d'éviter tout problème, soit") $PLUGIN $(t "fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre système en version plus récente de Debian.")" >> $TMPFOLDER/errorLog.$$ 
+			echo "== [ERROR] $(t "Fin Septembre, Jeedom passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE SERA FAIT !!! Migrez donc au plus vite !")" >> $TMPFOLDER/errorLog.$$ 
+			echo "$HR" >> $TMPFOLDER/errorLog.$$ 
    			post
 	  		exit 1
 		fi
 	else
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo ":fg-warning:$HR:/fg:"
-			echo ":fg-warning:== WARNING == A VERIFIER AU PLUS VITE:/fg:"
-			echo
-			echo ":fg-warning:$HR:/fg:"
-			echo ":fg-warning:== ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est en cours de finalisation par Jeedom.:/fg:"
-			echo ":fg-warning:== Les dépendances vont quand même se lancer (mais aucun support ne sera fait si celles-ci ne fonctionnent pas !), surveillez les nouvelles de Jeedom afin de mettre à jour en Debian 11 au plus vite quand ils auront sorti leur nouvelle image.:/fg:"
-		else
-			echo ":fg-warning:$HR:/fg:"
-			echo ":fg-warning:== WARNING == TO CHECK SOON:/fg:"
-			echo
-			echo ":fg-warning:$HR:/fg:"
-			echo ":fg-warning:== WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Nevertheless, the Debian 11 image for the Smart box is still under development by Jeedom.:/fg:"
-			echo ":fg-warning:== Dependancies will continue (but no support will be done if it fails). Watch for Jeedom news to update to Debian 11 as soon as they release the new image.:/fg:"
-		fi
+		echo "$HR"
+		echo "== [WARNING] == $(t "A VERIFIER AU PLUS VITE")"
+		echo
+		echo "$HR"
+		echo "== [WARNING] $(t "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est en cours de finalisation par Jeedom.")"
+		echo "== [WARNING] $(t "Les dépendances vont quand même se lancer (mais aucun support ne sera fait si celles-ci ne fonctionnent pas !), surveillez les nouvelles de Jeedom afin de mettre à jour en Debian 11 au plus vite quand ils auront sorti leur nouvelle image.")"
  	fi
 fi
 if [ $buster -eq 0 ] && [ "${noSupport:-false}" != false ]; then
-	if [ "$LANG_DEP" = "fr" ]; then
-		echo -e ":fg-warning:== Vous avez refusé le support, Vous utilisez toujours Debian 10 Buster, L'installation des dépendances va se lancer mais il est possible que ça ne fonctionne pas...:/fg:"
-  		echo -e ":fg-danger:== Fin Septembre, Jeedom passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE SERA FAIT !!! Migrez donc au plus vite !:/fg:"
-  	else
-		echo -e ":fg-warning:== You have denied any support, Dependencies install will start, but it's possible it doesn't work...:/fg:"
-  		echo -e ":fg-danger:== End of September, Jeedom will upgrade to NodeJS 20 that's incompatible with Debian 10. NO SUPPORT WILL BE DONE ANYMORE !!! Please migrate ASAP !:/fg:"
-	fi
+	echo "== [WARNING] $(t "Vous avez refusé le support, Vous utilisez toujours Debian 10 Buster, L'installation des dépendances va se lancer mais il est possible que ça ne fonctionne pas...")"
+  	echo "== [ERROR] $(t "Jeedom 4.4.17 passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT N'EST FAIT !!! Migrez donc au plus vite !")"
 fi
 
 #x86 32 bits not supported by nodesource anymore
 bits=$(getconf LONG_BIT)
 if { [ "$arch" = "i386" ] || [ "$arch" = "i686" ]; } && [ "$bits" -eq "32" ]; then
 	echo 1 > $TMPFOLDER/hasError.$$
-	if [ "$LANG_DEP" = "fr" ]; then
- 		echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
-		echo -e "== ATTENTION Votre système est x86 en 32bits et NodeJS n'y est pas supporté, merci de passer en 64bits !!!" >> $TMPFOLDER/errorLog.$$ 
-	else
- 		echo -e "$HR" >> $TMPFOLDER/errorLog.$$ 
-		echo -e "== WARNING Your system is x86 in 32bits and NodeJS does not support it anymore, thank you to reinstall in 64bits !!!" >> $TMPFOLDER/errorLog.$$ 
-	fi
+	echo "$HR" >> $TMPFOLDER/errorLog.$$ 
+	echo "== [ERROR] $(t "ATTENTION Votre système est x86 en 32bits et NodeJS n'y est pas supporté, merci de passer en 64bits !!!")" >> $TMPFOLDER/errorLog.$$ 
  	post
 	exit 1 
 fi
 
-if [ "$LANG_DEP" = "fr" ]; then
-	subStep "Vérification de la version de NodeJS installée"
-else
-	subStep "Installed NodeJS version check"
-fi
+subStep "$(t "Vérification de la version de NodeJS installée")"
 
 if [ -z "$forceNodeVersion" ]; then
 	requiredNodeVersion=$(jq -r ".engines.node" ${BASEDIR}/package.json)
@@ -168,12 +115,12 @@ NODE_MAJOR=$( [[ $requiredNodeVersion == *.* ]] && echo $requiredNodeVersion | c
 
 if [ -z "$NODE_MAJOR" ]; then
 	echo 1 > $TMPFOLDER/hasError.$$
-	echo "Erreur: NODE_MAJOR est vide" >> $TMPFOLDER/errorLog.$$ 
-	echo "Contenu de ${BASEDIR}/package.json:" >> $TMPFOLDER/errorLog.$$ 
+	echo "== [ERROR] $(t "NODE_MAJOR est vide")" >> $TMPFOLDER/errorLog.$$ 
+	echo "$(t "Contenu de") ${BASEDIR}/package.json:" >> $TMPFOLDER/errorLog.$$ 
 	cat "${BASEDIR}/package.json" >> $TMPFOLDER/errorLog.$$ 
-	echo "Version de node trouvée requiredNodeVersion: $requiredNodeVersion" >> $TMPFOLDER/errorLog.$$ 
+	echo "$(t "Version de node trouvée requiredNodeVersion"): $requiredNodeVersion" >> $TMPFOLDER/errorLog.$$ 
 	if ! command -v jq &> /dev/null; then
-		echo "jq n'est pas installé." >> $TMPFOLDER/errorLog.$$ 
+		echo "$(t "jq n'est pas installé.")" >> $TMPFOLDER/errorLog.$$ 
 	fi
  	post
     	exit 1
@@ -182,22 +129,13 @@ fi
 silent type node
 if [ $? -eq 0 ]; then actual=`node -v`; else actual='Aucune'; fi
 testVer=$(php -r "echo version_compare('${actual}','v${requiredNodeVersion}','${requiredNodeOperator}');")
-if [ "$LANG_DEP" = "fr" ]; then
-	echo -n "[Check Version NodeJS actuelle : ${actual} : "
-else
-	echo -n "[Check Current NodeJS Version : ${actual} : "
-fi
+echo -n "[$(t "Vérification Version NodeJS actuelle") : ${actual} : "
 if [[ $testVer == "1" ]]; then
 	echo_success
 	new=$actual
 else
-	if [ "$LANG_DEP" = "fr" ]; then
-		echo "Correction..."
-		subStep "Installation de NodeJS $NODE_MAJOR"
-	else
-		echo "Fixing..."
-		subStep "Installing NodeJS $NODE_MAJOR"
-	fi
+	echo "$(t "Correction...")"
+	subStep "$(t "Installation de NodeJS") $NODE_MAJOR"
   
 	#if npm exists
 	silent type npm
@@ -224,11 +162,7 @@ else
 		elif [[ $NODE_MAJOR == "20" ]]; then
 			armVer="20.12.2"
 		fi
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo "Jeedom Mini ou Raspberry 1, 2 ou zéro détecté, non supporté mais on essaye l'utilisation du paquet non-officiel v${armVer} pour armv6l"
-		else
-			echo "Jeedom Mini or Raspberry 1, 2 or zero detected, unsupported but we try to install unofficial packet v${armVer} for armv6l"
-		fi
+		echo "$(t "Jeedom Mini ou Raspberry 1, 2 ou zéro détecté, non supporté mais on essaye l'utilisation du paquet non-officiel") v${armVer} $(t "pour") armv6l"
 		try wget -4 https://unofficial-builds.nodejs.org/download/release/v${armVer}/node-v${armVer}-linux-armv6l.tar.gz
 		try tar -xvf node-v${armVer}-linux-armv6l.tar.gz
 		cd node-v${armVer}-linux-armv6l
@@ -240,11 +174,7 @@ else
 		#upgrade to recent npm
 		forceUpdateNPM=1
 	else
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo "Utilisation du dépot officiel"
-		else
-			echo "Using official repository"
-		fi
+		echo "$("Utilisation du dépot officiel")"
     
 		#new method
 		sudo mkdir -p /etc/apt/keyrings
@@ -259,19 +189,11 @@ else
 	silent npm config set prefix ${npmPrefix}
 
 	new=`node -v`;
-	if [ "$LANG_DEP" = "fr" ]; then
-		echo -n "[Check Version NodeJS après install : ${new} : "
-	else
-		echo -n "[Check NodeJS Version after install : ${new} : "
-	fi
+	echo -n "[$(t "Vérification Version NodeJS après install") : ${new} : "
 	testVerAfter=$(php -r "echo version_compare('${new}','v${requiredNodeVersion}','${requiredNodeOperator}');")
 	if [[ $testVerAfter != "1" ]]; then
 		echo_failure -n
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo " -> relancez les dépendances"
-		else
-			echo " -> restart the dependancies"
-		fi
+		echo " -> $(t "relancez les dépendances")"
 	else
 		echo_success
 	fi
@@ -279,28 +201,20 @@ fi
 
 silent type npm
 if [ $? -ne 0 ]; then
-	if [ "$LANG_DEP" = "fr" ]; then
-		subStep "Installation de npm car non présent"
-	else
-		subStep "Installing npm because not present"
-	fi
+	subStep "$(t "Installation de npm car non présent")"
 	try sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::ForceIPv4=true install -y npm  
 	forceUpdateNPM=1
 fi
 
 npmver=`npm -v`;
-echo -n "[Check Version NPM : ${npmver} : "
+echo -n "[$(t "Vérification Version NPM") : ${npmver} : "
 echo $npmver | grep "8.11.0" &>/dev/null
 if [ $? -eq 0 ]; then
 	echo_failure
 	forceUpdateNPM=1
 else
 	if [[ $forceUpdateNPM == "1" ]]; then
-		if [ "$LANG_DEP" = "fr" ]; then
-			echo "[ MàJ demandée ]"
-		else
-			echo "[ Update requested ]"
-		fi
+		echo "[ $(t "MàJ demandée") ]"
 	else
  		requiredNPMVersion=$(jq -r ".engines.npm" ${BASEDIR}/package.json)
 		requiredNPMOperator=$(echo "$requiredNPMVersion" | grep -o "^[<>=]*")
@@ -311,11 +225,7 @@ else
 			if [[ $testNPMVer == "1" ]]; then
 	   			echo_success
 	      		else
-				if [ "$LANG_DEP" = "fr" ]; then
-					echo "[ MàJ demandée ]"
-				else
-					echo "[ Update requested ]"
-				fi
+				echo "[ $(t "MàJ demandée") ]"
 	   			forceUpdateNPM=1
 	 		fi
     		else
@@ -325,11 +235,7 @@ else
 fi
 
 if [[ $forceUpdateNPM == "1" ]]; then
-	if [ "$LANG_DEP" = "fr" ]; then
-		subStep "Mise à jour de npm"
-	else
-		subStep "Updating npm"
-	fi
+	subStep "$(t "Mise à jour de npm")"
 	try sudo -E npm install -g npm
 fi
 
@@ -338,43 +244,23 @@ if [ $? -eq 0 ]; then
 	npmPrefix=`npm --silent prefix -g`
 	npmPrefixSudo=`sudo npm --silent prefix -g`
 	npmPrefixwwwData=`sudo -u www-data npm --silent  prefix -g`
-	if [ "$LANG_DEP" = "fr" ]; then
-		echo -n "[Check Prefixe : $npmPrefix et sudo prefixe : $npmPrefixSudo et www-data prefixe : $npmPrefixwwwData : "
-	else
-		echo -n "[Check Prefix : $npmPrefix and sudo prefix : $npmPrefixSudo and www-data prefix : $npmPrefixwwwData : "
-	fi
+	echo -n "[$(t "Vérification") $(t "Prefixe") : $npmPrefix $(t "et") sudo $(t "prefixe") : $npmPrefixSudo $(t "et") www-data $(t "prefixe") : $npmPrefixwwwData : "
 	if [[ "$npmPrefixSudo" != "/usr" ]] && [[ "$npmPrefixSudo" != "/usr/local" ]]; then 
 		echo_failure
 		if [[ "$npmPrefixwwwData" == "/usr" ]] || [[ "$npmPrefixwwwData" == "/usr/local" ]]; then
-			if [ "$LANG_DEP" = "fr" ]; then
-		      		subStep "Réinitialisation prefixe ($npmPrefixwwwData) pour npm `sudo whoami`"
-			else
-				subStep "Prefix reset ($npmPrefixwwwData) for npm `sudo whoami`"
-			fi
+		      	subStep "$(t "Réinitialisation prefixe") ($npmPrefixwwwData) $(t "pour") npm `sudo whoami`"
 	      		sudo npm config set prefix $npmPrefixwwwData
 		else
 			if [[ "$npmPrefix" == "/usr" ]] || [[ "$npmPrefix" == "/usr/local" ]]; then
-				if [ "$LANG_DEP" = "fr" ]; then
-					subStep "Réinitialisation prefixe ($npmPrefix) pour npm `sudo whoami`"
-				else
-					subStep "Prefix reset ($npmPrefix) for npm `sudo whoami`"
-				fi
+				subStep "$(t "Réinitialisation prefixe") ($npmPrefix) $(t "pour") npm `sudo whoami`"
 				sudo npm config set prefix $npmPrefix
 			else
 				[ -f /usr/bin/raspi-config ] && { rpi="1"; } || { rpi="0"; }
 				if [[ "$rpi" == "1" ]]; then
-  					if [ "$LANG_DEP" = "fr" ]; then
-						subStep "Réinitialisation prefixe (/usr) pour npm `sudo whoami`"
-					else
-	  					subStep "Prefix reset (/usr) for npm `sudo whoami`"
-					fi
+					subStep "$(t "Réinitialisation prefixe") (/usr) $(t "pour") npm `sudo whoami`"
 					sudo npm config set prefix /usr
 				else
-					if [ "$LANG_DEP" = "fr" ]; then
-	 				 	subStep "Réinitialisation prefixe (/usr/local) pour npm `sudo whoami`"
-					else
-          					subStep "Prefix reset (/usr/local) for npm `sudo whoami`"
-					fi
+ 				 	subStep "$(t "Réinitialisation prefixe") (/usr/local) $(t "pour") npm `sudo whoami`"
 					sudo npm config set prefix /usr/local
 				fi
 			fi
@@ -385,37 +271,21 @@ if [ $? -eq 0 ]; then
 				echo_success
 			else
 				echo_failure
-				if [ "$LANG_DEP" = "fr" ]; then
-        				subStep "Réinitialisation prefixe ($npmPrefixwwwData) pour npm `sudo whoami`"
-				else
-					subStep "Prefix reset ($npmPrefixwwwData) for npm `sudo whoami`"
-				fi
+       				subStep "$(t "Réinitialisation prefixe") ($npmPrefixwwwData) $(t "pour") npm `sudo whoami`"
 				sudo npm config set prefix $npmPrefixwwwData
 			fi
 		else
 			echo_failure
 			if [[ "$npmPrefix" == "/usr" ]] || [[ "$npmPrefix" == "/usr/local" ]]; then
-				if [ "$LANG_DEP" = "fr" ]; then
-        				subStep "Réinitialisation prefixe ($npmPrefix) pour npm `sudo whoami`"
-				else
-					subStep "Prefix reset ($npmPrefix) for npm `sudo whoami`"
-				fi
+       				subStep "$(t "Réinitialisation prefixe") ($npmPrefix) $(t "pour") npm `sudo whoami`"
 				sudo npm config set prefix $npmPrefix
 			else
 				[ -f /usr/bin/raspi-config ] && { rpi="1"; } || { rpi="0"; }
 				if [[ "$rpi" == "1" ]]; then
-					if [ "$LANG_DEP" = "fr" ]; then
-	  					subStep "Réinitialisation prefixe (/usr) pour npm `sudo whoami`"
-				  	else
-						subStep "Prefix reset (/usr) for npm `sudo whoami`"
-					fi
+  					subStep "$(t "Réinitialisation prefixe") (/usr) $(t "pour") npm `sudo whoami`"
 					sudo npm config set prefix /usr
 				else
-					if [ "$LANG_DEP" = "fr" ]; then
-						subStep "Réinitialisation prefixe (/usr/local) pour npm `sudo whoami`"
-					else
-						subStep "Prefix reset (/usr/local) for npm `sudo whoami`"
-					fi
+					subStep "$(t "Réinitialisation prefixe") (/usr/local) $(t "pour") npm `sudo whoami`"
 					sudo npm config set prefix /usr/local
 				fi
 			fi
@@ -423,11 +293,7 @@ if [ $? -eq 0 ]; then
 	fi
 fi
 
-if [ "$LANG_DEP" = "fr" ]; then
-	subStep "Nettoyage"
-else
-	subStep "Cleaning"
-fi
+subStep "$(t "Nettoyage")"
 # on nettoie la priorité nodesource
 silent sudo rm -f /etc/apt/preferences.d/nodesource
 
@@ -446,3 +312,5 @@ add_fix_handler "npm \(ERR\!\|error\) dest /usr/\(local/\)\?lib/node_modules/\.h
 # fix when sometimes node source is not correct
 #add_fix_handler "deb.nodesource.com/node_.x" "" "sudo sed -i 's|node_.x|node_${$NODE_MAJOR}.x|' /etc/apt/sources.list.d/nodesource.list"
 #add_fix_handler "deb.nodesource.com/node_.x" "" "sudo sed -i 's|node_.x|node_18.x|' /etc/apt/sources.list.d/nodesource.list"
+
+postSubScript
