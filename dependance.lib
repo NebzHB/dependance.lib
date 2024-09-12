@@ -193,7 +193,7 @@ subStep() {
 	step "$pcInProg" "$@"
 }
 
-postSubStep() {
+postSubScript() {
 	unset pcInProg
 	unset pcIncrement
 	unset firstSubStep
