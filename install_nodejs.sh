@@ -174,7 +174,7 @@ else
 		#upgrade to recent npm
 		forceUpdateNPM=1
 	else
-		echo "$("Utilisation du dépot officiel")"
+		echo "$(t "Utilisation du dépot officiel")"
     
 		#new method
 		sudo mkdir -p /etc/apt/keyrings
