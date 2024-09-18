@@ -45,7 +45,7 @@
     "ATTENTION":"WARNING",
     "Option Inconnue":"Unknown Option",
     "A VERIFIER AU PLUS VITE":"TO CHECK SOON",
-    "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est en cours de finalisation par Jeedom.":"WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Nevertheless, the Debian 11 image for the Smart box is still under development by Jeedom.",
+    "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart a été finalisée par Jeedom (consultez le blog).":"WARNING Debian 10 Buster is not supported anymore since June 30, 2024. Nevertheless, the Debian 11 image for the Smart box is still under development by Jeedom.",
     "Les dépendances vont quand même se lancer (mais aucun support ne sera fait si celles-ci ne fonctionnent pas !), surveillez les nouvelles de Jeedom afin de mettre à jour en Debian 11 au plus vite quand ils auront sorti leur nouvelle image.":"Dependancies will continue (but no support will be done if it fails). Watch for Jeedom news to update to Debian 11 as soon as they release the new image.",
     "Vous avez refusé le support, Vous utilisez toujours Debian 10 Buster, L'installation des dépendances va se lancer mais il est possible que ça ne fonctionne pas...":"You have denied any support, Dependencies install will start, but it's possible it doesn't work...",
     "Jeedom 4.4.17 est passé à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE PEUT ÊTRE FAIT !!! Migrez donc au plus vite !":"Jeedom 4.4.17 upgrade NodeJS 18 to NodeJS 20, that's incompatible with Debian 10. NO SUPPORT WILL BE DONE ANYMORE !!! Please migrate ASAP !",
