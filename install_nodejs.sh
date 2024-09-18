@@ -72,18 +72,29 @@ if [ $buster -eq 0 ] && [ "${noSupport:-false}" != true ]; then
 			echo "$HR" >> $TMPFOLDER/errorLog.$$ 
 			echo "== [ERROR] $(t "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre système en version plus récente de Debian !!!")" >> $TMPFOLDER/errorLog.$$ 
 			echo "== [ERROR] $(t "Les dépendances sont bloquées afin d'éviter tout problème, soit") $PLUGIN $(t "fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre système en version plus récente de Debian.")" >> $TMPFOLDER/errorLog.$$ 
-			echo "== [ERROR] $(t "Fin Septembre, Jeedom passe à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE SERA FAIT !!! Migrez donc au plus vite !")" >> $TMPFOLDER/errorLog.$$ 
+			echo "== [ERROR] $(t "Jeedom 4.4.17 est passé à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE PEUT ÊTRE FAIT !!! Migrez donc au plus vite !")" >> $TMPFOLDER/errorLog.$$ 
 			echo "$HR" >> $TMPFOLDER/errorLog.$$ 
    			post
 	  		exit 1
 		fi
 	else
-		echo "$HR"
-		echo "== [WARNING] == $(t "A VERIFIER AU PLUS VITE")"
-		echo
-		echo "$HR"
-		echo "== [WARNING] $(t "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est en cours de finalisation par Jeedom.")"
-		echo "== [WARNING] $(t "Les dépendances vont quand même se lancer (mais aucun support ne sera fait si celles-ci ne fonctionnent pas !), surveillez les nouvelles de Jeedom afin de mettre à jour en Debian 11 au plus vite quand ils auront sorti leur nouvelle image.")"
+ 		if [[ "$today" > "20241031" ]]; then
+			echo 1 > $TMPFOLDER/hasError.$$
+			echo "$HR" >> $TMPFOLDER/errorLog.$$ 
+			echo "== [ERROR] $(t "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, merci de mettre à jour votre système en version plus récente de Debian !!!")" >> $TMPFOLDER/errorLog.$$ 
+			echo "== [ERROR] $(t "Les dépendances sont bloquées afin d'éviter tout problème, soit") $PLUGIN $(t "fonctionne et donc on y touche plus tant qu'il tourne, soit il ne fonctionne plus et donc il faut mettre à jour votre système en version plus récente de Debian.")" >> $TMPFOLDER/errorLog.$$ 
+   			echo "== [ERROR] $(t "Jeedom 4.4.17 est passé à NodeJS 20 qui est incompatible avec Debian 10. PLUS AUCUN SUPPORT NE PEUT ÊTRE FAIT !!! Migrez donc au plus vite !")" >> $TMPFOLDER/errorLog.$$ 
+			echo "$HR" >> $TMPFOLDER/errorLog.$$ 
+   			post
+	  		exit 1
+   		else
+			echo "$HR"
+			echo "== [WARNING] == $(t "A VERIFIER AU PLUS VITE")"
+			echo
+			echo "$HR"
+			echo "== [WARNING] $(t "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est en cours de finalisation par Jeedom.")"
+			echo "== [WARNING] $(t "Les dépendances vont quand même se lancer (mais aucun support ne sera fait si celles-ci ne fonctionnent pas !), surveillez les nouvelles de Jeedom afin de mettre à jour en Debian 11 au plus vite quand ils auront sorti leur nouvelle image.")"
+  		fi
  	fi
 fi
 if [ $buster -eq 0 ] && [ "${noSupport:-false}" != false ]; then
