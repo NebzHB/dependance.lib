@@ -92,7 +92,7 @@ if [ $buster -eq 0 ] && [ "${noSupport:-false}" != true ]; then
 			echo "== [WARNING] == $(t "A VERIFIER AU PLUS VITE")"
 			echo
 			echo "$HR"
-			echo "== [WARNING] $(t "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart est en cours de finalisation par Jeedom.")"
+			echo "== [WARNING] $(t "ATTENTION Debian 10 Buster n'est officiellement plus supportée depuis le 30 juin 2024, cependant l'image Debian 11 de la Smart a été finalisée par Jeedom (consultez le blog).")"
 			echo "== [WARNING] $(t "Les dépendances vont quand même se lancer (mais aucun support ne sera fait si celles-ci ne fonctionnent pas !), surveillez les nouvelles de Jeedom afin de mettre à jour en Debian 11 au plus vite quand ils auront sorti leur nouvelle image.")"
   		fi
  	fi
