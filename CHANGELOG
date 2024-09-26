@@ -1,13 +1,17 @@
-Changelog
----------
+# Changelog
 
-# 12/09/2024 - BaseVersion
+## 26/09/2024
+
+- Add restore rights step in pyenv.lib
+
+## 12/09/2024 - BaseVersion
+
 - Manage translation command (needed only for the lib, the dependancies per plugins are one language only) and put english in an external json file (open the door for other languages)
 - Change doc to use the -4 parameter for wget to force ipv4
 - Change doc to use the --no-cache parameter for wget to force re-download
 - Simplification of some of the fix_handlers
 - add postSubScript to be used at the end of a subScript to clean vars (only for subScripts)
 
+## 02/09/2024 - First Changelog
 
-# 02/09/2024 - First Changelog
 - Rewrite documentation
