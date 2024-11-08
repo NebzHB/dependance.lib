@@ -342,7 +342,7 @@ exit 1
 
 > If you want to use English keys, set LANG_DEF=en in the header
 
-# This library has some auto-fixes already included for this common errors :
+# This library has some auto-fixes already included for these common errors :
 
 - apt `apt --fix-broken install`
  
