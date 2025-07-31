@@ -455,11 +455,9 @@ add_fix_handler "Le dépôt http\?://apt.armbian.com buster Release ne contient 
 # fix buster-backports not available anymore :
 fix_buster_backport_not_available() {
 	if [ -f /etc/apt/sources.list.d/buster-backports.list ]; then
-		sudo sed -i 's|^deb-src http\(s\?\)://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb-src http\1://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
-		sudo sed -i 's|^deb http\(s\?\)://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb http\1://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
+		sudo sed -i 's|^deb\(-src\)\? http\(s\?\)://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb\1 http\2://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list.d/buster-backports.list
 	else
-		sudo sed -i 's|^deb-src http\(s\?\)://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb-src http\1://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
-		sudo sed -i 's|^deb http\(s\?\)://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb http\1://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
+		sudo sed -i 's|^deb\(-src\)\? http\(s\?\)://[a-zA-Z0-9.-]\+\.debian\.org/debian buster-backports|deb\1 http\2://archive.debian.org/debian buster-backports|g' /etc/apt/sources.list
 	fi
 }
 add_fix_handler "The repository 'https\?://[[:alnum:].-]\+\.debian\.org/debian buster-backports Release' \(no longer has\|does not have\) a Release file." "*The repository buster-backports no longer has/does not have a Release file." fix_buster_backport_not_available
@@ -468,11 +466,9 @@ add_fix_handler "Le dépôt https\?://[[:alnum:].-]\+\.debian\.org/debian buster
 # fix bullseye-backports not available anymore :
 fix_bullseye_backport_not_available() {
 	if [ -f /etc/apt/sources.list.d/bullseye-backports.list ]; then
-		sudo sed -i 's|^deb-src http\(s\?\)://[a-zA-Z0-9.-]\+\.debian\.org/debian bullseye-backports|deb-src http\1://archive.debian.org/debian bullseye-backports|g' /etc/apt/sources.list.d/bullseye-backports.list
-		sudo sed -i 's|^deb http\(s\?\)://[a-zA-Z0-9.-]\+\.debian\.org/debian bullseye-backports|deb http\1://archive.debian.org/debian bullseye-backports|g' /etc/apt/sources.list.d/bullseye-backports.list
+		sudo sed -i 's|^deb\(-src\)\? http\(s\?\)://[a-zA-Z0-9.-]\+\.debian\.org/debian bullseye-backports|deb\1 http\2://archive.debian.org/debian bullseye-backports|g' /etc/apt/sources.list.d/bullseye-backports.list
 	else
-		sudo sed -i 's|^deb-src http\(s\?\)://[a-zA-Z0-9.-]\+\.debian\.org/debian bullseye-backports|deb-src http\1://archive.debian.org/debian bullseye-backports|g' /etc/apt/sources.list
-		sudo sed -i 's|^deb http\(s\?\)://[a-zA-Z0-9.-]\+\.debian\.org/debian bullseye-backports|deb http\1://archive.debian.org/debian bullseye-backports|g' /etc/apt/sources.list
+		sudo sed -i 's|^deb\(-src\)\? http\(s\?\)://[a-zA-Z0-9.-]\+\.debian\.org/debian bullseye-backports|deb\1 http\2://archive.debian.org/debian bullseye-backports|g' /etc/apt/sources.list
 	fi
 }
 add_fix_handler "The repository 'https\?://[[:alnum:].-]\+\.debian\.org/debian bullseye-backports Release' \(no longer has\|does not have\) a Release file." "*The repository bullseye-backports no longer has/does not have a Release file." fix_bullseye_backport_not_available
