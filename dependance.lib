@@ -103,7 +103,7 @@ pre() {
 
 	# remove repo.jeedom.com (validated by Alex)
 	if [ -f "/media/boot/multiboot/meson64_odroidc2.dtb.linux" ]; then
-		hasRepo=$(grep "repo.jeedom.com" /etc/apt/sources.list | wc -l)
+		hasRepo=$(grep "repo.jeedom.com" /etc/apt/sources.list 2>/dev/null | wc -l)
 		if [ "$hasRepo" -ne "0" ]; then
 			sudo apt-add-repository -r "deb http://repo.jeedom.com/odroid/ stable main" &>/dev/null
 		fi
