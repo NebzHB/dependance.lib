@@ -110,7 +110,7 @@ pre() {
 	fi
 
 	# remove repo.distrib.works
-	DISTRIB_WORKS=`grep "repo.distrib.works" /etc/apt/sources.list`
+	DISTRIB_WORKS=`grep "repo.distrib.works" /etc/apt/sources.list 2>/dev/null`
 	if [[ $? -eq 0 ]]; then
 		reAddDistribWorks=1
 		sudo sed -i '/repo.distrib.works/d' /etc/apt/sources.list
@@ -255,7 +255,7 @@ aptUpdate() {
 			APT_SRC_ERROR=$(echo $APT_ERROR | sed 's/.*http/http/g' | sed 's/ Release//g')
 			if ! echo "$APT_SRC_ERROR" | grep -Eq "($release main|$release-updates main)"; then
 				echo "╔ $(t "Problème détecté sur la source") : $APT_SRC_ERROR, $(t "correction en cours")..."
-				if grep -q "$APT_SRC_ERROR" "/etc/apt/sources.list"; then
+				if grep -q "$APT_SRC_ERROR" "/etc/apt/sources.list" 2>/dev/null; then
 					comment_source "/etc/apt/sources.list" "$APT_SRC_ERROR"
 				else
 					for file in /etc/apt/sources.list.d/*.list; do
