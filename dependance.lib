@@ -338,13 +338,13 @@ fixNO_PUBKEY() {
 			sudo wget https://apt.armbian.com/armbian.key -O key
 			sudo gpg --dearmor < key | sudo tee /usr/share/keyrings/armbian.gpg > /dev/null
 			sudo chmod go+r /usr/share/keyrings/armbian.gpg
-			echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/armbian.gpg] http://apt.armbian.com $(lsb_release -cs) main  $(lsb_release -cs)-utils  $(lsb_release -cs)-desktop" | sudo tee /etc/apt/sources.list.d/armbian.list
+			echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/armbian.gpg] http://apt.armbian.com ${release} main  ${release}-utils  ${release}-desktop" | sudo tee /etc/apt/sources.list.d/armbian.list
 		else
 			if [ "$key" == "1EB30FAF236099FE" ] && [ ! -f "/etc/update-motd.d/10-armbian-header-jeedomatlas" ]; then
 				sudo wget https://apt.armbian.com/armbian.key -O key
 				sudo gpg --dearmor < key | sudo tee /usr/share/keyrings/armbian.gpg > /dev/null
 				sudo chmod go+r /usr/share/keyrings/armbian.gpg
-				echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/armbian.gpg] http://apt.armbian.com $(lsb_release -cs) main  $(lsb_release -cs)-utils  $(lsb_release -cs)-desktop" | sudo tee /etc/apt/sources.list.d/armbian.list
+				echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/armbian.gpg] http://apt.armbian.com ${release} main  ${release}-utils  ${release}-desktop" | sudo tee /etc/apt/sources.list.d/armbian.list
 			else
 				sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "$key"
 			fi
